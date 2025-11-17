@@ -57,7 +57,7 @@ export function SiteFooter() {
   }[];
 
   return (
-    <footer className="border-t py-4 text-center text-sm text-gray-500 dark:text-slate-400">
+    <footer className="py-4 text-center text-sm text-gray-500 dark:text-slate-400">
       <div>
         © {new Date().getFullYear()} {siteConfig.author}
       </div>
