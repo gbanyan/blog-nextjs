@@ -47,12 +47,13 @@ export function RightSidebar() {
               else if (count >= 3) sizeClass = 'text-xs font-medium';
 
               return (
-                <span
+                <Link
                   key={tag}
-                  className={`${sizeClass} rounded-full bg-slate-100 px-2 py-0.5 text-slate-700 dark:bg-slate-800 dark:text-slate-200`}
+                  href={`/tags/${encodeURIComponent(tag)}`}
+                  className={`${sizeClass} rounded-full bg-slate-100 px-2 py-0.5 text-slate-700 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700`}
                 >
                   {tag}
-                </span>
+                </Link>
               );
             })}
           </div>

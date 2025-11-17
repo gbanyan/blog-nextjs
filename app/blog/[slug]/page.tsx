@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
 import { allPosts } from 'contentlayer/generated';
@@ -55,12 +56,13 @@ export default function BlogPostPage({ params }: Props) {
             {post.tags && (
               <div className="flex flex-wrap gap-2 pt-1">
                 {post.tags.map((t) => (
-                  <span
+                  <Link
                     key={t}
-                    className="rounded-full bg-slate-100 px-2 py-0.5 text-xs text-slate-700 dark:bg-slate-800 dark:text-slate-300"
+                    href={`/tags/${encodeURIComponent(t)}`}
+                    className="rounded-full bg-slate-100 px-2 py-0.5 text-xs text-slate-700 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700"
                   >
                     #{t}
-                  </span>
+                  </Link>
                 ))}
               </div>
             )}

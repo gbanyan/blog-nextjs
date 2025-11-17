@@ -43,12 +43,13 @@ export function PostListItem({ post }: Props) {
             {post.tags && post.tags.length > 0 && (
               <div className="flex flex-wrap gap-2 pt-0.5">
                 {post.tags.slice(0, 4).map((t) => (
-                  <span
+                  <Link
                     key={t}
-                    className="rounded-full bg-slate-100 px-2 py-0.5 text-[11px] text-slate-600 group-hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:group-hover:bg-slate-700"
+                    href={`/tags/${encodeURIComponent(t)}`}
+                    className="rounded-full bg-slate-100 px-2 py-0.5 text-[11px] text-slate-600 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700"
                   >
                     #{t}
-                  </span>
+                  </Link>
                 ))}
               </div>
             )}
