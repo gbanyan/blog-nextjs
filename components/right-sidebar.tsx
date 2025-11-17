@@ -36,9 +36,9 @@ export function RightSidebar() {
   ].filter(Boolean) as { key: string; href: string; icon: any; label: string }[];
 
   return (
-    <aside className="hidden lg:block">
+    <aside className="hidden lg:block text-sm">
       <div className="sticky top-20 flex flex-col gap-4">
-        <section className="rounded-xl border bg-white px-4 py-4 text-sm shadow-sm dark:border-slate-800 dark:bg-slate-900 dark:text-slate-100">
+        <section className="rounded-xl border bg-white px-4 py-4 shadow-sm dark:border-slate-800 dark:bg-slate-900 dark:text-slate-100">
           <div className="flex flex-col items-center">
             <Link
               href={aboutPage?.url || '/pages/關於作者'}
@@ -75,7 +75,7 @@ export function RightSidebar() {
               </div>
             )}
             {siteConfig.aboutShort && (
-              <p className="mt-2 max-w-[11rem] text-center text-xs text-slate-600 dark:text-slate-200">
+              <p className="mt-2 max-w-[11rem] text-center text-[13px] text-slate-600 dark:text-slate-200">
                 {siteConfig.aboutShort}
               </p>
             )}
@@ -83,15 +83,15 @@ export function RightSidebar() {
         </section>
 
         {tags.length > 0 && (
-          <section className="rounded-xl border bg-white px-4 py-3 text-sm shadow-sm dark:border-slate-800 dark:bg-slate-900 dark:text-slate-100">
+          <section className="rounded-xl border bg-white px-4 py-3 shadow-sm dark:border-slate-800 dark:bg-slate-900 dark:text-slate-100">
             <h2 className="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">
               熱門標籤
             </h2>
-            <div className="mt-2 flex flex-wrap gap-2 text-xs">
+            <div className="mt-2 flex flex-wrap gap-2 text-[13px]">
               {tags.map(({ tag, slug, count }) => {
-                let sizeClass = 'text-[11px]';
-                if (count >= 5) sizeClass = 'text-sm font-semibold';
-                else if (count >= 3) sizeClass = 'text-xs font-medium';
+                let sizeClass = '';
+                if (count >= 5) sizeClass = 'font-semibold';
+                else if (count >= 3) sizeClass = 'font-medium';
 
                 return (
                   <Link
