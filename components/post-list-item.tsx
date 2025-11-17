@@ -26,31 +26,29 @@ export function PostListItem({ post }: Props) {
               />
             </div>
           )}
-          <div className="flex-1 space-y-1">
-            <div className="flex flex-wrap items-center gap-2 text-xs text-slate-500 dark:text-slate-400">
-              {post.published_at && (
-                <time>
-                  {new Date(post.published_at).toLocaleDateString(
-                    siteConfig.defaultLocale
-                  )}
-                </time>
-              )}
-              {post.tags && post.tags.length > 0 && (
-                <span className="flex flex-wrap gap-1">
-                  {post.tags.slice(0, 3).map((t) => (
-                    <span
-                      key={t}
-                      className="rounded bg-slate-100 px-1.5 py-0.5 text-[11px] text-slate-600 group-hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-200 dark:group-hover:bg-slate-700"
-                    >
-                      #{t}
-                    </span>
-                  ))}
-                </span>
-              )}
-            </div>
-            <h2 className="text-base font-semibold text-slate-900 group-hover:text-blue-600 dark:text-slate-50 dark:group-hover:text-blue-400">
+          <div className="flex-1 space-y-1.5">
+            {post.published_at && (
+              <p className="text-xs text-slate-500 dark:text-slate-400">
+                {new Date(post.published_at).toLocaleDateString(
+                  siteConfig.defaultLocale
+                )}
+              </p>
+            )}
+            <h2 className="text-base font-semibold leading-snug text-slate-900 group-hover:text-blue-600 sm:text-lg dark:text-slate-50 dark:group-hover:text-blue-400">
               {post.title}
             </h2>
+            {post.tags && post.tags.length > 0 && (
+              <div className="flex flex-wrap gap-2 pt-0.5">
+                {post.tags.slice(0, 4).map((t) => (
+                  <span
+                    key={t}
+                    className="rounded-full bg-slate-100 px-2 py-0.5 text-[11px] text-slate-600 group-hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-200 dark:group-hover:bg-slate-700"
+                  >
+                    #{t}
+                  </span>
+                ))}
+              </div>
+            )}
             {post.description && (
               <p className="line-clamp-2 text-sm text-slate-600 group-hover:text-slate-800 dark:text-slate-200 dark:group-hover:text-slate-100">
                 {post.description}
@@ -62,4 +60,3 @@ export function PostListItem({ post }: Props) {
     </li>
   );
 }
-
