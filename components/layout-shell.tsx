@@ -1,6 +1,7 @@
 import { SiteHeader } from './site-header';
 import { SiteFooter } from './site-footer';
 import { RightSidebar } from './right-sidebar';
+import { BackToTop } from './back-to-top';
 
 export function LayoutShell({ children }: { children: React.ReactNode }) {
   return (
@@ -13,6 +14,7 @@ export function LayoutShell({ children }: { children: React.ReactNode }) {
         </div>
       </main>
       <SiteFooter />
+      <BackToTop />
     </div>
   );
 }
