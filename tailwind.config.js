@@ -41,7 +41,8 @@ module.exports = {
         },
         dark: {
           css: {
-            color: theme('colors.slate.50'),
+            // Slightly softer than pure white for body text
+            color: theme('colors.slate.200'),
             a: {
               color: theme('colors.blue.400'),
               '&:hover': {
@@ -57,9 +58,9 @@ module.exports = {
             blockquote: {
               borderLeftColor: theme('colors.blue.500'),
               backgroundColor: theme('colors.slate.800'),
-              color: theme('colors.slate.50'),
+              color: theme('colors.slate.200'),
               p: {
-                color: theme('colors.slate.50')
+                color: theme('colors.slate.200')
               }
             },
             code: {

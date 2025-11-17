@@ -43,7 +43,7 @@ export default function BlogPostPage({ params }: Props) {
         <div className="flex-1">
           <header className="mb-6 space-y-2">
             {post.published_at && (
-              <p className="text-xs text-slate-500 dark:text-slate-400">
+              <p className="text-xs text-slate-500 dark:text-slate-500">
                 {new Date(post.published_at).toLocaleDateString(
                   siteConfig.defaultLocale
                 )}
@@ -57,7 +57,7 @@ export default function BlogPostPage({ params }: Props) {
                 {post.tags.map((t) => (
                   <span
                     key={t}
-                    className="rounded-full bg-slate-100 px-2 py-0.5 text-xs text-slate-700 dark:bg-slate-800 dark:text-slate-200"
+                    className="rounded-full bg-slate-100 px-2 py-0.5 text-xs text-slate-700 dark:bg-slate-800 dark:text-slate-300"
                   >
                     #{t}
                   </span>
