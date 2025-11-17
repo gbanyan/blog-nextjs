@@ -1,4 +1,5 @@
 import { defineDocumentType, makeSource } from 'contentlayer/source-files';
+import { visit } from 'unist-util-visit';
 import rehypeSlug from 'rehype-slug';
 import rehypeAutolinkHeadings from 'rehype-autolink-headings';
 import remarkGfm from 'remark-gfm';
@@ -86,7 +87,27 @@ export default makeSource({
     remarkPlugins: [remarkGfm],
     rehypePlugins: [
       rehypeSlug,
-      [rehypeAutolinkHeadings, { behavior: 'wrap' }]
+      [rehypeAutolinkHeadings, { behavior: 'wrap' }],
+      /**
+       * Rewrite markdown image src from relative "../assets/..." to
+       * absolute "/assets/..." so they are served from Next.js public/.
+       */
+      () => (tree: any) => {
+        visit(tree, 'element', (node: any) => {
+          if (
+            node.tagName === 'img' &&
+            node.properties &&
+            typeof node.properties.src === 'string'
+          ) {
+            const src: string = node.properties.src;
+            if (src.startsWith('../assets/')) {
+              node.properties.src = src.replace('../assets', '/assets');
+            } else if (src.startsWith('assets/')) {
+              node.properties.src = '/' + src.replace(/^\/?/, '');
+            }
+          }
+        });
+      }
     ]
   },
   // we've configured TS paths; also silence noisy warning

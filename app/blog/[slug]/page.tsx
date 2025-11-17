@@ -33,6 +33,15 @@ export default function BlogPostPage({ params }: Props) {
   return (
     <article className="prose dark:prose-invert max-w-none">
       <h1>{post.title}</h1>
+      {post.feature_image && (
+        // feature_image is stored as "../assets/xyz", serve from "/assets/xyz"
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          src={post.feature_image.replace('../assets', '/assets')}
+          alt={post.title}
+          className="my-4 rounded"
+        />
+      )}
       {post.published_at && (
         <p className="text-xs text-gray-500">
           {new Date(post.published_at).toLocaleDateString('zh-TW')}

@@ -33,6 +33,15 @@ export default function StaticPage({ params }: Props) {
   return (
     <article className="prose dark:prose-invert max-w-none">
       <h1>{page.title}</h1>
+      {page.feature_image && (
+        // feature_image is stored as "../assets/xyz", serve from "/assets/xyz"
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          src={page.feature_image.replace('../assets', '/assets')}
+          alt={page.title}
+          className="my-4 rounded"
+        />
+      )}
       <div dangerouslySetInnerHTML={{ __html: page.body.html }} />
     </article>
   );
