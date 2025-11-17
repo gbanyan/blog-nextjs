@@ -14,6 +14,7 @@ export const siteConfig = {
       ? Number(process.env.NEXT_PUBLIC_POSTS_PER_PAGE)
       : 5,
   defaultLocale: process.env.NEXT_PUBLIC_DEFAULT_LOCALE || 'zh-TW',
+  avatar: process.env.NEXT_PUBLIC_SITE_AVATAR_URL || '',
   social: {
     twitter: process.env.NEXT_PUBLIC_TWITTER_HANDLE || '',
     github: process.env.NEXT_PUBLIC_GITHUB_URL || '',

@@ -1,83 +1,152 @@
 import Link from 'next/link';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faGithub, faMastodon, faLinkedin } from '@fortawesome/free-brands-svg-icons';
 import { siteConfig } from '@/lib/config';
 import { getAllPostsSorted, getAllTagsWithCount } from '@/lib/posts';
+import { allPages } from 'contentlayer/generated';
 
 export function RightSidebar() {
   const latest = getAllPostsSorted().slice(0, 5);
   const tags = getAllTagsWithCount().slice(0, 5);
 
+  const aboutPage =
+    allPages.find((p) => p.title.includes('關於作者')) ??
+    allPages.find((p) => p.slug === 'about-me');
+
+  const avatarSrc = siteConfig.avatar;
+
+  const socialItems = [
+    siteConfig.social.github && {
+      key: 'github',
+      href: siteConfig.social.github,
+      icon: faGithub,
+      label: 'GitHub'
+    },
+    siteConfig.social.mastodon && {
+      key: 'mastodon',
+      href: siteConfig.social.mastodon,
+      icon: faMastodon,
+      label: 'Mastodon'
+    },
+    siteConfig.social.linkedin && {
+      key: 'linkedin',
+      href: siteConfig.social.linkedin,
+      icon: faLinkedin,
+      label: 'LinkedIn'
+    }
+  ].filter(Boolean) as { key: string; href: string; icon: any; label: string }[];
+
   return (
     <aside className="hidden lg:block">
       <div className="sticky top-20 flex flex-col gap-4">
-        <section className="rounded-xl border bg-white px-4 py-3 text-sm shadow-sm dark:border-slate-800 dark:bg-slate-900 dark:text-slate-100">
-        <h2 className="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">
-          關於本站
-        </h2>
-        <p className="mt-1 text-xs text-slate-600 dark:text-slate-200">
-          {siteConfig.description}
-        </p>
-      </section>
-
-      <section className="rounded-xl border bg-white px-4 py-3 text-sm shadow-sm dark:border-slate-800 dark:bg-slate-900 dark:text-slate-100">
-        <h2 className="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">
-          最新文章
-        </h2>
-        <ul className="mt-2 space-y-1">
-          {latest.map((post) => (
-            <li key={post._id}>
-              <Link
-                href={post.url}
-                className="line-clamp-2 text-xs text-slate-700 hover:text-blue-600 dark:text-slate-100 dark:hover:text-blue-400"
-              >
-                {post.title}
-              </Link>
-            </li>
-          ))}
-        </ul>
-      </section>
-
-      {tags.length > 0 && (
-        <section className="rounded-xl border bg-white px-4 py-3 text-sm shadow-sm dark:border-slate-800 dark:bg-slate-900 dark:text-slate-100">
-          <h2 className="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">
-            熱門標籤
-          </h2>
-          <div className="mt-2 flex flex-wrap gap-2 text-xs">
-            {tags.map(({ tag, slug, count }, index) => {
-              let sizeClass = 'text-[11px]';
-              if (count >= 5) sizeClass = 'text-sm font-semibold';
-              else if (count >= 3) sizeClass = 'text-xs font-medium';
-
-              const colorClasses = [
-                'bg-rose-100 text-rose-700 dark:bg-rose-900/60 dark:text-rose-200',
-                'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/60 dark:text-emerald-200',
-                'bg-sky-100 text-sky-700 dark:bg-sky-900/60 dark:text-sky-200',
-                'bg-amber-100 text-amber-700 dark:bg-amber-900/60 dark:text-amber-200',
-                'bg-violet-100 text-violet-700 dark:bg-violet-900/60 dark:text-violet-200'
-              ];
-              const color =
-                colorClasses[index % colorClasses.length];
-
-              return (
-                <Link
-                  key={tag}
-                  href={`/tags/${slug}`}
-                  className={`${sizeClass} rounded-full px-2 py-0.5 transition ${color}`}
-                >
-                  {tag}
-                </Link>
-              );
-            })}
-          </div>
-          <div className="mt-2 text-right text-[11px]">
+        <section className="rounded-xl border bg-white px-4 py-4 text-sm shadow-sm dark:border-slate-800 dark:bg-slate-900 dark:text-slate-100">
+          <div className="flex flex-col items-center">
             <Link
-              href="/tags"
-              className="text-slate-500 hover:text-blue-600 dark:text-slate-400 dark:hover:text-blue-400"
+              href={aboutPage?.url || '/pages/關於作者'}
+              aria-label="關於作者"
+              className="mb-2 inline-block"
             >
-              查看全部標籤 →
+              {avatarSrc ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={avatarSrc}
+                  alt={siteConfig.name}
+                  className="h-16 w-16 rounded-full border border-slate-200 object-cover dark:border-slate-700"
+                />
+              ) : (
+                <div className="flex h-16 w-16 items-center justify-center rounded-full bg-slate-900 text-lg font-semibold text-slate-50 dark:bg-slate-100 dark:text-slate-900">
+                  {siteConfig.name.charAt(0).toUpperCase()}
+                </div>
+              )}
             </Link>
+            {socialItems.length > 0 && (
+              <div className="flex items-center gap-3 text-base text-slate-500 dark:text-slate-400">
+                {socialItems.map((item) => (
+                  <a
+                    key={item.key}
+                    href={item.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={item.label}
+                    className="transition hover:text-slate-800 dark:hover:text-slate-100"
+                  >
+                    <FontAwesomeIcon icon={item.icon} className="h-4 w-4" />
+                  </a>
+                ))}
+              </div>
+            )}
           </div>
         </section>
-      )}
+
+        <section className="rounded-xl border bg-white px-4 py-3 text-sm shadow-sm dark:border-slate-800 dark:bg-slate-900 dark:text-slate-100">
+          <h2 className="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">
+            關於本站
+          </h2>
+          <p className="mt-1 text-xs text-slate-600 dark:text-slate-200">
+            {siteConfig.description}
+          </p>
+        </section>
+
+        <section className="rounded-xl border bg-white px-4 py-3 text-sm shadow-sm dark:border-slate-800 dark:bg-slate-900 dark:text-slate-100">
+          <h2 className="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">
+            最新文章
+          </h2>
+          <ul className="mt-2 space-y-1">
+            {latest.map((post) => (
+              <li key={post._id}>
+                <Link
+                  href={post.url}
+                  className="line-clamp-2 text-xs text-slate-700 hover:text-blue-600 dark:text-slate-100 dark:hover:text-blue-400"
+                >
+                  {post.title}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </section>
+
+        {tags.length > 0 && (
+          <section className="rounded-xl border bg-white px-4 py-3 text-sm shadow-sm dark:border-slate-800 dark:bg-slate-900 dark:text-slate-100">
+            <h2 className="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">
+              熱門標籤
+            </h2>
+            <div className="mt-2 flex flex-wrap gap-2 text-xs">
+              {tags.map(({ tag, slug, count }, index) => {
+                let sizeClass = 'text-[11px]';
+                if (count >= 5) sizeClass = 'text-sm font-semibold';
+                else if (count >= 3) sizeClass = 'text-xs font-medium';
+
+                const colorClasses = [
+                  'bg-rose-100 text-rose-700 dark:bg-rose-900/60 dark:text-rose-200',
+                  'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/60 dark:text-emerald-200',
+                  'bg-sky-100 text-sky-700 dark:bg-sky-900/60 dark:text-sky-200',
+                  'bg-amber-100 text-amber-700 dark:bg-amber-900/60 dark:text-amber-200',
+                  'bg-violet-100 text-violet-700 dark:bg-violet-900/60 dark:text-violet-200'
+                ];
+                const color =
+                  colorClasses[index % colorClasses.length];
+
+                return (
+                  <Link
+                    key={tag}
+                    href={`/tags/${slug}`}
+                    className={`${sizeClass} rounded-full px-2 py-0.5 transition ${color}`}
+                  >
+                    {tag}
+                  </Link>
+                );
+              })}
+            </div>
+            <div className="mt-2 text-right text-[11px]">
+              <Link
+                href="/tags"
+                className="text-slate-500 hover:text-blue-600 dark:text-slate-400 dark:hover:text-blue-400"
+              >
+                查看全部標籤 →
+              </Link>
+            </div>
+          </section>
+        )}
       </div>
     </aside>
   );
