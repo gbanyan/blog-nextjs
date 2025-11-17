@@ -56,7 +56,11 @@ module.exports = {
             },
             blockquote: {
               borderLeftColor: theme('colors.blue.500'),
-              backgroundColor: theme('colors.slate.900')
+              backgroundColor: theme('colors.slate.800'),
+              color: theme('colors.slate.50'),
+              p: {
+                color: theme('colors.slate.50')
+              }
             },
             code: {
               backgroundColor: theme('colors.slate.800')
