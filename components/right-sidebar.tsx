@@ -4,7 +4,7 @@ import { getAllPostsSorted, getAllTagsWithCount } from '@/lib/posts';
 
 export function RightSidebar() {
   const latest = getAllPostsSorted().slice(0, 5);
-  const tags = getAllTagsWithCount().slice(0, 30);
+  const tags = getAllTagsWithCount().slice(0, 5);
 
   return (
     <aside className="hidden lg:block">
@@ -39,7 +39,7 @@ export function RightSidebar() {
       {tags.length > 0 && (
         <section className="rounded-xl border bg-white px-4 py-3 text-sm shadow-sm dark:border-slate-800 dark:bg-slate-900 dark:text-slate-100">
           <h2 className="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">
-            標籤雲
+            熱門標籤
           </h2>
           <div className="mt-2 flex flex-wrap gap-2 text-xs">
             {tags.map(({ tag, slug, count }, index) => {
@@ -67,6 +67,14 @@ export function RightSidebar() {
                 </Link>
               );
             })}
+          </div>
+          <div className="mt-2 text-right text-[11px]">
+            <Link
+              href="/tags"
+              className="text-slate-500 hover:text-blue-600 dark:text-slate-400 dark:hover:text-blue-400"
+            >
+              查看全部標籤 →
+            </Link>
           </div>
         </section>
       )}
