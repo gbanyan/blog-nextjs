@@ -74,16 +74,12 @@ export function RightSidebar() {
                 ))}
               </div>
             )}
+            {siteConfig.aboutShort && (
+              <p className="mt-2 max-w-[11rem] text-center text-xs text-slate-600 dark:text-slate-200">
+                {siteConfig.aboutShort}
+              </p>
+            )}
           </div>
-        </section>
-
-        <section className="rounded-xl border bg-white px-4 py-3 text-sm shadow-sm dark:border-slate-800 dark:bg-slate-900 dark:text-slate-100">
-          <h2 className="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">
-            關於本站
-          </h2>
-          <p className="mt-1 text-xs text-slate-600 dark:text-slate-200">
-            {siteConfig.description}
-          </p>
         </section>
 
         {tags.length > 0 && (

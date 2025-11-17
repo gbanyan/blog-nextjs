@@ -15,6 +15,9 @@ export const siteConfig = {
       : 5,
   defaultLocale: process.env.NEXT_PUBLIC_DEFAULT_LOCALE || 'zh-TW',
   avatar: process.env.NEXT_PUBLIC_SITE_AVATAR_URL || '',
+  aboutShort:
+    process.env.NEXT_PUBLIC_SITE_ABOUT_SHORT ||
+    '醫師，喜歡寫作與技術分享。',
   social: {
     twitter: process.env.NEXT_PUBLIC_TWITTER_HANDLE || '',
     github: process.env.NEXT_PUBLIC_GITHUB_URL || '',
