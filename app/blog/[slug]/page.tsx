@@ -40,7 +40,7 @@ export default function BlogPostPage({ params }: Props) {
         <aside className="hidden w-56 shrink-0 lg:block">
           <PostToc />
         </aside>
-        <article className="prose dark:prose-invert max-w-none flex-1">
+        <article className="prose max-w-none flex-1">
           <h1>{post.title}</h1>
           {post.feature_image && (
             // feature_image is stored as "../assets/xyz", serve from "/assets/xyz"
@@ -52,18 +52,18 @@ export default function BlogPostPage({ params }: Props) {
             />
           )}
           {post.published_at && (
-            <p className="text-xs text-gray-500">
+            <p className="text-xs text-slate-500 dark:text-slate-400">
               {new Date(post.published_at).toLocaleDateString(
                 siteConfig.defaultLocale
               )}
             </p>
           )}
           {post.tags && (
-            <p className="mt-1 text-xs">
+            <p className="mt-1 text-xs text-slate-600 dark:text-slate-200">
               {post.tags.map((t) => (
                 <span
                   key={t}
-                  className="mr-1 rounded bg-gray-200 px-1 dark:bg-gray-800"
+                  className="mr-1 rounded bg-slate-100 px-1 dark:bg-slate-800"
                 >
                   #{t}
                 </span>
