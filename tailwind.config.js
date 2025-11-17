@@ -49,6 +49,17 @@ module.exports = {
                 color: theme('colors.blue.300')
               }
             },
+            strong: {
+              color: theme('colors.slate.50'),
+              fontWeight: '700'
+            },
+            b: {
+              color: theme('colors.slate.50'),
+              fontWeight: '700'
+            },
+            em: {
+              color: theme('colors.slate.100')
+            },
             h1: {
               color: theme('colors.slate.50')
             },
