@@ -28,7 +28,7 @@ export function PostToc() {
   if (items.length === 0) return null;
 
   return (
-    <nav className="sticky top-20 text-xs text-slate-500">
+    <nav className="sticky top-20 text-xs text-slate-500 dark:text-slate-400">
       <div className="mb-2 font-semibold text-slate-700 dark:text-slate-200">
         目錄
       </div>
@@ -47,4 +47,3 @@ export function PostToc() {
     </nav>
   );
 }
-

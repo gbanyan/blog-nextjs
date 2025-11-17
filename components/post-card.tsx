@@ -15,12 +15,14 @@ export function PostCard({ post }: PostCardProps) {
   return (
     <article className="group overflow-hidden rounded-xl border bg-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-md dark:border-slate-800 dark:bg-slate-900">
       {cover && (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img
-          src={cover}
-          alt={post.title}
-          className="h-44 w-full object-cover"
-        />
+        <div className="w-full bg-slate-100 dark:bg-slate-800">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={cover}
+            alt={post.title}
+            className="mx-auto max-h-60 w-full object-contain"
+          />
+        </div>
       )}
       <div className="space-y-2 px-4 py-4">
         <h2 className="text-lg font-semibold leading-snug">
@@ -53,7 +55,7 @@ export function PostCard({ post }: PostCardProps) {
           )}
         </div>
         {post.description && (
-          <p className="line-clamp-3 text-sm text-slate-600 dark:text-slate-300">
+          <p className="line-clamp-3 text-sm text-slate-700 dark:text-slate-100">
             {post.description}
           </p>
         )}
@@ -61,4 +63,3 @@ export function PostCard({ post }: PostCardProps) {
     </article>
   );
 }
-

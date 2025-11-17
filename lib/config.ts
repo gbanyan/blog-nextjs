@@ -18,7 +18,9 @@ export const siteConfig = {
     twitter: process.env.NEXT_PUBLIC_TWITTER_HANDLE || '',
     github: process.env.NEXT_PUBLIC_GITHUB_URL || '',
     linkedin: process.env.NEXT_PUBLIC_LINKEDIN_URL || '',
-    email: process.env.NEXT_PUBLIC_EMAIL_CONTACT || ''
+    email: process.env.NEXT_PUBLIC_EMAIL_CONTACT || '',
+    mastodon: process.env.NEXT_PUBLIC_MASTODON_URL || '',
+    gitea: process.env.NEXT_PUBLIC_GITEA_URL || ''
   },
   ogImage: process.env.NEXT_PUBLIC_OG_DEFAULT_IMAGE || '/assets/og-default.jpg',
   twitterCard:

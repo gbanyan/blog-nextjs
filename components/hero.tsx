@@ -14,10 +14,15 @@ export function Hero() {
           <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">
             {name}
           </h1>
-          <p className="mt-1 max-w-2xl text-sm text-slate-600 dark:text-slate-300">
+          <p className="mt-1 max-w-2xl text-sm text-slate-700 dark:text-slate-100">
             {tagline}
           </p>
-          {(social.github || social.twitter || social.linkedin || social.email) && (
+          {(social.github ||
+            social.twitter ||
+            social.linkedin ||
+            social.email ||
+            social.mastodon ||
+            social.gitea) && (
             <div className="mt-2 flex flex-wrap items-center gap-3 text-xs text-slate-500">
               {social.github && (
                 <a
@@ -37,6 +42,26 @@ export function Hero() {
                   className="rounded-full bg-white/70 px-3 py-1 shadow-sm ring-1 ring-slate-200 hover:bg-slate-50 dark:bg-slate-900/60 dark:ring-slate-700"
                 >
                   Twitter
+                </a>
+              )}
+              {social.mastodon && (
+                <a
+                  href={social.mastodon}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="rounded-full bg-white/70 px-3 py-1 shadow-sm ring-1 ring-slate-200 hover:bg-slate-50 dark:bg-slate-900/60 dark:ring-slate-700"
+                >
+                  Mastodon
+                </a>
+              )}
+              {social.gitea && (
+                <a
+                  href={social.gitea}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="rounded-full bg-white/70 px-3 py-1 shadow-sm ring-1 ring-slate-200 hover:bg-slate-50 dark:bg-slate-900/60 dark:ring-slate-700"
+                >
+                  Gitea
                 </a>
               )}
               {social.linkedin && (
@@ -64,4 +89,3 @@ export function Hero() {
     </section>
   );
 }
-
