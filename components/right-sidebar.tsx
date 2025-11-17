@@ -7,8 +7,9 @@ export function RightSidebar() {
   const tags = getAllTagsWithCount().slice(0, 30);
 
   return (
-    <aside className="hidden flex-col gap-4 lg:flex">
-      <section className="rounded-xl border bg-white px-4 py-3 text-sm shadow-sm dark:border-slate-800 dark:bg-slate-900 dark:text-slate-100">
+    <aside className="hidden lg:block">
+      <div className="sticky top-20 flex flex-col gap-4">
+        <section className="rounded-xl border bg-white px-4 py-3 text-sm shadow-sm dark:border-slate-800 dark:bg-slate-900 dark:text-slate-100">
         <h2 className="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">
           關於本站
         </h2>
@@ -69,6 +70,7 @@ export function RightSidebar() {
           </div>
         </section>
       )}
+      </div>
     </aside>
   );
 }
