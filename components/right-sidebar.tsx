@@ -92,26 +92,16 @@ export function RightSidebar() {
               熱門標籤
             </h2>
             <div className="mt-2 flex flex-wrap gap-2 text-xs">
-              {tags.map(({ tag, slug, count }, index) => {
+              {tags.map(({ tag, slug, count }) => {
                 let sizeClass = 'text-[11px]';
                 if (count >= 5) sizeClass = 'text-sm font-semibold';
                 else if (count >= 3) sizeClass = 'text-xs font-medium';
-
-                const colorClasses = [
-                  'bg-rose-100 text-rose-700 dark:bg-rose-900/60 dark:text-rose-200',
-                  'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/60 dark:text-emerald-200',
-                  'bg-sky-100 text-sky-700 dark:bg-sky-900/60 dark:text-sky-200',
-                  'bg-amber-100 text-amber-700 dark:bg-amber-900/60 dark:text-amber-200',
-                  'bg-violet-100 text-violet-700 dark:bg-violet-900/60 dark:text-violet-200'
-                ];
-                const color =
-                  colorClasses[index % colorClasses.length];
 
                 return (
                   <Link
                     key={tag}
                     href={`/tags/${slug}`}
-                    className={`${sizeClass} rounded-full px-2 py-0.5 transition ${color}`}
+                    className={`${sizeClass} rounded-full bg-accent-soft px-2 py-0.5 text-accent-textLight transition hover:bg-accent dark:text-accent-textDark`}
                   >
                     {tag}
                   </Link>
