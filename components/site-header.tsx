@@ -17,7 +17,7 @@ export function SiteHeader() {
         >
           {siteConfig.title}
         </Link>
-        <nav className="flex items-center gap-4 text-sm">
+        <nav className="flex items-center gap-4 text-[15px] sm:text-base">
           <Link
             href="/blog"
             className="transition hover:text-accent-textDark focus-visible:outline-none focus-visible:text-accent-textDark"
