@@ -1,31 +1,39 @@
 import Link from 'next/link';
 import { getAllPostsSorted } from '@/lib/posts';
 import { siteConfig } from '@/lib/config';
-import { Hero } from '@/components/hero';
-import { PostCard } from '@/components/post-card';
+import { PostListItem } from '@/components/post-list-item';
 
 export default function HomePage() {
   const posts = getAllPostsSorted().slice(0, siteConfig.postsPerPage);
 
   return (
     <section className="space-y-6">
-      <Hero />
+      <header className="space-y-1">
+        <h1 className="text-lg font-semibold text-slate-900 dark:text-slate-50">
+          {siteConfig.name} 的最新動態
+        </h1>
+        <p className="text-sm text-slate-600 dark:text-slate-300">
+          {siteConfig.tagline}
+        </p>
+      </header>
 
       <div>
         <div className="mb-3 flex items-baseline justify-between">
-          <h2 className="text-xl font-semibold">最新文章</h2>
+          <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">
+            最新文章
+          </h2>
           <Link
             href="/blog"
-            className="text-sm text-blue-600 hover:underline dark:text-blue-400"
+            className="text-xs text-blue-600 hover:underline dark:text-blue-400"
           >
             所有文章 →
           </Link>
         </div>
-        <div className="space-y-4">
+        <ul className="space-y-3">
           {posts.map((post) => (
-            <PostCard key={post._id} post={post} />
+            <PostListItem key={post._id} post={post} />
           ))}
-        </div>
+        </ul>
       </div>
     </section>
   );

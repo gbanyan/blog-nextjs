@@ -1,21 +1,23 @@
 import { getAllPostsSorted } from '@/lib/posts';
-import { PostCard } from '@/components/post-card';
+import { PostListItem } from '@/components/post-list-item';
 
 export const metadata = {
-  title: 'Blog'
+  title: '所有文章'
 };
 
 export default function BlogIndexPage() {
   const posts = getAllPostsSorted();
 
   return (
-    <section className="space-y-6">
-      <h1 className="text-2xl font-bold">Blog</h1>
-      <div className="space-y-4">
+    <section className="space-y-4">
+      <h1 className="text-lg font-semibold text-slate-900 dark:text-slate-50">
+        所有文章
+      </h1>
+      <ul className="space-y-3">
         {posts.map((post) => (
-          <PostCard key={post._id} post={post} />
+          <PostListItem key={post._id} post={post} />
         ))}
-      </div>
+      </ul>
     </section>
   );
 }
