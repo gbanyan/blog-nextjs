@@ -12,6 +12,9 @@ export function PostListItem({ post }: Props) {
       ? post.feature_image.replace('../assets', '/assets')
       : undefined;
 
+  const excerpt =
+    post.description || post.custom_excerpt || post.body?.raw?.slice(0, 120);
+
   return (
     <li>
       <Link href={post.url}>
@@ -49,9 +52,9 @@ export function PostListItem({ post }: Props) {
                 ))}
               </div>
             )}
-            {post.description && (
+            {excerpt && (
               <p className="line-clamp-2 text-sm text-slate-600 group-hover:text-slate-800 dark:text-slate-200 dark:group-hover:text-slate-100">
-                {post.description}
+                {excerpt}
               </p>
             )}
           </div>
