@@ -47,7 +47,7 @@ export function PostListItem({ post }: Props) {
                   href={`/tags/${encodeURIComponent(
                     t.toLowerCase().replace(/\s+/g, '-')
                   )}`}
-                  className="rounded-full bg-accent-soft px-2 py-0.5 text-[11px] text-accent-textLight transition hover:bg-accent dark:text-accent-textDark"
+                  className="rounded-full bg-accent-soft px-2 py-0.5 text-[11px] text-accent-textLight transition hover:bg-accent hover:text-white dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700"
                 >
                   #{t}
                 </Link>
