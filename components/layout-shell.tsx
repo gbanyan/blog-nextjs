@@ -12,7 +12,7 @@ export function LayoutShell({ children }: { children: React.ReactNode }) {
     pathname.startsWith('/blog/') || pathname.startsWith('/pages/');
 
   const gridColsClass = isDetailPage
-    ? 'lg:grid-cols-[minmax(0,3fr)_minmax(0,1.2fr)]'
+    ? 'lg:grid-cols-[minmax(0,3.6fr)_minmax(0,1.2fr)]'
     : 'lg:grid-cols-[minmax(0,2.6fr)_minmax(0,1.4fr)]';
 
   return (
