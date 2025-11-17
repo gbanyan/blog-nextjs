@@ -7,8 +7,8 @@ export function LayoutShell({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex min-h-screen flex-col">
       <SiteHeader />
-      <main className="container mx-auto flex-1 px-4 py-6">
-        <div className="grid gap-8 lg:grid-cols-[minmax(0,3fr)_minmax(0,1.4fr)]">
+      <main className="flex-1 px-4 py-6">
+        <div className="mx-auto grid max-w-5xl gap-6 lg:grid-cols-[minmax(0,2.6fr)_minmax(0,1.4fr)]">
           <div>{children}</div>
           <RightSidebar />
         </div>
@@ -18,4 +18,3 @@ export function LayoutShell({ children }: { children: React.ReactNode }) {
     </div>
   );
 }
-

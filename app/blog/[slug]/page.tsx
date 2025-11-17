@@ -80,7 +80,7 @@ export default function BlogPostPage({ params }: Props) {
               </div>
             )}
           </header>
-          <article className="prose prose-slate max-w-none dark:prose-dark">
+          <article className="prose prose-lg prose-slate max-w-none dark:prose-dark">
             {post.feature_image && (
               // feature_image is stored as "../assets/xyz", serve from "/assets/xyz"
               // eslint-disable-next-line @next/next/no-img-element
