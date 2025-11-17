@@ -29,6 +29,7 @@ pnpm-debug.log*
 # Misc tool caches
 /.turbo
 .next-tmp
+.contentlayer
 
 # Vercel
 .vercel
