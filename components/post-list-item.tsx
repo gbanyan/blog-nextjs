@@ -25,8 +25,8 @@ export function PostListItem({ post }: Props) {
 
   return (
     <li>
-      <Link href={post.url}>
-        <article className="group flex gap-4 rounded-lg border border-slate-200/70 bg-white/80 p-4 transition hover:bg-slate-50 dark:border-slate-800 dark:bg-slate-900/80 dark:hover:bg-slate-900">
+      <article className="group rounded-lg border border-slate-200/70 bg-white/80 transition hover:bg-slate-50 dark:border-slate-800 dark:bg-slate-900/80 dark:hover:bg-slate-900">
+        <Link href={post.url} className="flex gap-4 p-4">
           {cover && (
             <div className="hidden flex-none overflow-hidden rounded-md bg-slate-100 dark:bg-slate-800 sm:block sm:w-40">
               {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -73,8 +73,8 @@ export function PostListItem({ post }: Props) {
               </p>
             )}
           </div>
-        </article>
-      </Link>
+        </Link>
+      </article>
     </li>
   );
 }
