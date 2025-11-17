@@ -55,17 +55,28 @@ export default function BlogPostPage({ params }: Props) {
             </h1>
             {post.tags && (
               <div className="flex flex-wrap gap-2 pt-1">
-                {post.tags.map((t) => (
-                  <Link
-                    key={t}
-                    href={`/tags/${encodeURIComponent(
-                      t.toLowerCase().replace(/\s+/g, '-')
-                    )}`}
-                    className="rounded-full bg-slate-100 px-2 py-0.5 text-xs text-slate-700 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700"
-                  >
-                    #{t}
-                  </Link>
-                ))}
+                {post.tags.map((t, i) => {
+                  const tagColorClasses = [
+                    'bg-rose-100 text-rose-700 dark:bg-rose-900/60 dark:text-rose-200',
+                    'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/60 dark:text-emerald-200',
+                    'bg-sky-100 text-sky-700 dark:bg-sky-900/60 dark:text-sky-200',
+                    'bg-amber-100 text-amber-700 dark:bg-amber-900/60 dark:text-amber-200',
+                    'bg-violet-100 text-violet-700 dark:bg-violet-900/60 dark:text-violet-200'
+                  ];
+                  const color =
+                    tagColorClasses[i % tagColorClasses.length];
+                  return (
+                    <Link
+                      key={t}
+                      href={`/tags/${encodeURIComponent(
+                        t.toLowerCase().replace(/\s+/g, '-')
+                      )}`}
+                      className={`rounded-full px-2 py-0.5 text-xs transition ${color}`}
+                    >
+                      #{t}
+                    </Link>
+                  );
+                })}
               </div>
             )}
           </header>

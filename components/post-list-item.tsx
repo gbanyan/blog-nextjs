@@ -15,6 +15,14 @@ export function PostListItem({ post }: Props) {
   const excerpt =
     post.description || post.custom_excerpt || post.body?.raw?.slice(0, 120);
 
+  const tagColorClasses = [
+    'bg-rose-100 text-rose-700 dark:bg-rose-900/60 dark:text-rose-200',
+    'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/60 dark:text-emerald-200',
+    'bg-sky-100 text-sky-700 dark:bg-sky-900/60 dark:text-sky-200',
+    'bg-amber-100 text-amber-700 dark:bg-amber-900/60 dark:text-amber-200',
+    'bg-violet-100 text-violet-700 dark:bg-violet-900/60 dark:text-violet-200'
+  ];
+
   return (
     <li>
       <Link href={post.url}>
@@ -42,17 +50,21 @@ export function PostListItem({ post }: Props) {
             </h2>
             {post.tags && post.tags.length > 0 && (
               <div className="flex flex-wrap gap-2 pt-0.5">
-                {post.tags.slice(0, 4).map((t) => (
-                  <Link
-                    key={t}
-                    href={`/tags/${encodeURIComponent(
-                      t.toLowerCase().replace(/\s+/g, '-')
-                    )}`}
-                    className="rounded-full bg-slate-100 px-2 py-0.5 text-[11px] text-slate-600 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700"
-                  >
-                    #{t}
-                  </Link>
-                ))}
+                {post.tags.slice(0, 4).map((t, i) => {
+                  const color =
+                    tagColorClasses[i % tagColorClasses.length];
+                  return (
+                    <Link
+                      key={t}
+                      href={`/tags/${encodeURIComponent(
+                        t.toLowerCase().replace(/\s+/g, '-')
+                      )}`}
+                      className={`rounded-full px-2 py-0.5 text-[11px] transition ${color}`}
+                    >
+                      #{t}
+                    </Link>
+                  );
+                })}
               </div>
             )}
             {excerpt && (

@@ -58,7 +58,7 @@ export function Hero() {
   }[];
 
   return (
-    <section className="mb-8 rounded-xl border bg-gradient-to-r from-slate-50 to-slate-100 px-6 py-6 shadow-sm dark:border-slate-800 dark:from-slate-900 dark:to-slate-950">
+    <section className="mb-8 rounded-xl border bg-gradient-to-r from-sky-50 via-indigo-50 to-slate-50 px-6 py-6 shadow-sm dark:border-slate-800 dark:from-slate-900 dark:via-slate-950 dark:to-slate-900">
       <div className="flex items-center gap-4">
         <div className="flex h-16 w-16 items-center justify-center rounded-full bg-slate-900 text-2xl font-semibold text-slate-50 dark:bg-slate-100 dark:text-slate-900">
           {initial}
