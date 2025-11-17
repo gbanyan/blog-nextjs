@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { allPosts } from 'contentlayer/generated';
-import { PostListItem } from '@/components/post-list-item';
+import { PostListWithControls } from '@/components/post-list-with-controls';
 import { getTagSlug } from '@/lib/posts';
 
 export function generateStaticParams() {
@@ -47,11 +47,7 @@ export default function TagPage({ params }: Props) {
       <h1 className="text-lg font-semibold text-slate-900 dark:text-slate-50">
         標籤：{tagLabel}
       </h1>
-      <ul className="space-y-3">
-        {posts.map((post) => (
-          <PostListItem key={post._id} post={post} />
-        ))}
-      </ul>
+      <PostListWithControls posts={posts} />
     </section>
   );
 }
