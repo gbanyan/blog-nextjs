@@ -1,12 +1,13 @@
 import Link from 'next/link';
 import { ThemeToggle } from './theme-toggle';
+import { siteConfig } from '@/lib/config';
 
 export function SiteHeader() {
   return (
     <header className="border-b bg-white/80 dark:bg-gray-950/80 backdrop-blur">
       <div className="container mx-auto flex items-center justify-between px-4 py-3">
         <Link href="/" className="font-semibold">
-          個人首頁
+          {siteConfig.title}
         </Link>
         <nav className="flex items-center gap-4 text-sm">
           <Link href="/blog">Blog</Link>
@@ -17,4 +18,3 @@ export function SiteHeader() {
     </header>
   );
 }
-

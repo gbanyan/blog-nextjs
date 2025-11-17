@@ -1,7 +1,9 @@
 export const siteConfig = {
-  name: 'Your Name',
-  title: 'Your Personal Site',
-  description: 'Personal homepage and blog.',
-  url: 'http://localhost:3000'
+  name: process.env.NEXT_PUBLIC_SITE_NAME || 'Your Name',
+  title: process.env.NEXT_PUBLIC_SITE_TITLE || 'Your Personal Site',
+  description:
+    process.env.NEXT_PUBLIC_SITE_DESCRIPTION ||
+    'Personal homepage and blog.',
+  url: process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000',
+  author: process.env.NEXT_PUBLIC_SITE_AUTHOR || 'Your Name'
 };
-

@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { getAllPostsSorted } from '@/lib/posts';
+import { siteConfig } from '@/lib/config';
 
 export default function HomePage() {
   const posts = getAllPostsSorted().slice(0, 5);
@@ -7,7 +8,9 @@ export default function HomePage() {
   return (
     <section className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold">你好，我是 Your Name</h1>
+        <h1 className="text-3xl font-bold">
+          你好，我是 {siteConfig.name}
+        </h1>
         <p className="mt-2 text-gray-600 dark:text-gray-300">
           這裡是我的個人首頁與技術 Blog。
         </p>
@@ -39,4 +42,3 @@ export default function HomePage() {
     </section>
   );
 }
-
