@@ -50,10 +50,10 @@ export function RightSidebar() {
                 <img
                   src={avatarSrc}
                   alt={siteConfig.name}
-                  className="h-20 w-20 rounded-full border border-slate-200 object-cover dark:border-slate-700"
+                  className="h-24 w-24 rounded-full border border-slate-200 object-cover dark:border-slate-700"
                 />
               ) : (
-                <div className="flex h-20 w-20 items-center justify-center rounded-full bg-slate-900 text-lg font-semibold text-slate-50 dark:bg-slate-100 dark:text-slate-900">
+                <div className="flex h-24 w-24 items-center justify-center rounded-full bg-slate-900 text-lg font-semibold text-slate-50 dark:bg-slate-100 dark:text-slate-900">
                   {siteConfig.name.charAt(0).toUpperCase()}
                 </div>
               )}
