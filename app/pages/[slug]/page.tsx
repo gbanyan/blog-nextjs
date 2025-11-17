@@ -37,7 +37,7 @@ export default function StaticPage({ params }: Props) {
   return (
     <>
       <ReadingProgress />
-      <div className="mx-auto flex max-w-5xl gap-8 pt-4">
+      <div className="flex gap-8 pt-4">
         <aside className="hidden w-56 shrink-0 lg:block">
           <PostToc />
         </aside>
