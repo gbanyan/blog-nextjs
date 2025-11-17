@@ -40,7 +40,7 @@ export default function BlogPostPage({ params }: Props) {
         <aside className="hidden w-56 shrink-0 lg:block">
           <PostToc />
         </aside>
-        <article className="prose max-w-none flex-1">
+        <article className="prose prose-slate max-w-none flex-1 dark:prose-dark">
           <h1>{post.title}</h1>
           {post.feature_image && (
             // feature_image is stored as "../assets/xyz", serve from "/assets/xyz"

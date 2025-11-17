@@ -41,12 +41,18 @@ module.exports = {
         },
         dark: {
           css: {
-            color: theme('colors.slate.100'),
+            color: theme('colors.slate.50'),
             a: {
               color: theme('colors.blue.400'),
               '&:hover': {
                 color: theme('colors.blue.300')
               }
+            },
+            h1: {
+              color: theme('colors.slate.50')
+            },
+            h2: {
+              color: theme('colors.slate.50')
             },
             blockquote: {
               borderLeftColor: theme('colors.blue.500'),
