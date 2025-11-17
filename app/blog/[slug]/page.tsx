@@ -37,8 +37,8 @@ export default function BlogPostPage({ params }: Props) {
   return (
     <>
       <ReadingProgress />
-      <div className="flex gap-8 pt-4">
-        <aside className="hidden w-56 shrink-0 lg:block">
+      <div className="flex gap-6 pt-4">
+        <aside className="hidden shrink-0 lg:block lg:w-44">
           <PostToc />
         </aside>
         <div className="flex-1">
