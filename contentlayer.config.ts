@@ -74,8 +74,8 @@ export const Page = defineDocumentType(() => ({
 }));
 
 export default makeSource({
-  // Use the existing blog repo as content source
-  contentDirPath: '../Blog 文章原稿',
+  // Use git submodule `content` (personal-blog) as content source
+  contentDirPath: 'content',
   documentTypes: [Post, Page],
   contentDirExclude: ['Arc 瀏覽器使用心得.md'],
   fieldOptions: {

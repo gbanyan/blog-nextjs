@@ -1,0 +1,3 @@
+[submodule "content"]
+	path = content
+	url = https://gitea.gbanyan.net/gbanyan/personal-blog.git
