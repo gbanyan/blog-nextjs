@@ -20,10 +20,13 @@ export function ThemeToggle() {
   return (
     <button
       type="button"
-      className="rounded border px-2 py-1 text-xs"
+      className="inline-flex h-8 w-8 items-center justify-center rounded-full text-slate-500 transition hover:bg-slate-100 hover:text-slate-800 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-slate-100"
       onClick={() => setTheme(next)}
+      aria-label={theme === 'dark' ? '切換為淺色主題' : '切換為深色主題'}
     >
-      {theme === 'dark' ? '☀️' : '🌙'}
+      <span className="text-lg leading-none">
+        {theme === 'dark' ? '●' : '○'}
+      </span>
     </button>
   );
 }
