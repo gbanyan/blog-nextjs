@@ -25,7 +25,7 @@ export function ThemeToggle() {
       aria-label={theme === 'dark' ? '切換為淺色主題' : '切換為深色主題'}
     >
       <span className="text-lg leading-none">
-        {theme === 'dark' ? '●' : '○'}
+        {theme === 'dark' ? '☀' : '☾'}
       </span>
     </button>
   );
