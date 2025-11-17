@@ -23,6 +23,14 @@ export const siteConfig = {
     mastodon: process.env.NEXT_PUBLIC_MASTODON_URL || '',
     gitea: process.env.NEXT_PUBLIC_GITEA_URL || ''
   },
+  theme: {
+    accent: process.env.NEXT_PUBLIC_COLOR_ACCENT || '#2563eb',
+    accentSoft: process.env.NEXT_PUBLIC_COLOR_ACCENT_SOFT || '#dbeafe',
+    accentTextLight:
+      process.env.NEXT_PUBLIC_COLOR_ACCENT_TEXT_LIGHT || '#1d4ed8',
+    accentTextDark:
+      process.env.NEXT_PUBLIC_COLOR_ACCENT_TEXT_DARK || '#93c5fd'
+  },
   ogImage: process.env.NEXT_PUBLIC_OG_DEFAULT_IMAGE || '/assets/og-default.jpg',
   twitterCard:
     (process.env.NEXT_PUBLIC_TWITTER_CARD_TYPE as

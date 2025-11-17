@@ -15,14 +15,6 @@ export function PostListItem({ post }: Props) {
   const excerpt =
     post.description || post.custom_excerpt || post.body?.raw?.slice(0, 120);
 
-  const tagColorClasses = [
-    'bg-rose-100 text-rose-700 dark:bg-rose-900/60 dark:text-rose-200',
-    'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/60 dark:text-emerald-200',
-    'bg-sky-100 text-sky-700 dark:bg-sky-900/60 dark:text-sky-200',
-    'bg-amber-100 text-amber-700 dark:bg-amber-900/60 dark:text-amber-200',
-    'bg-violet-100 text-violet-700 dark:bg-violet-900/60 dark:text-violet-200'
-  ];
-
   return (
     <li>
       <article className="group flex gap-4 rounded-lg border border-slate-200/70 bg-white/80 p-4 transition hover:bg-slate-50 dark:border-slate-800 dark:bg-slate-900/80 dark:hover:bg-slate-900">
@@ -44,26 +36,22 @@ export function PostListItem({ post }: Props) {
               )}
             </p>
           )}
-          <h2 className="text-base font-semibold leading-snug text-slate-900 group-hover:text-blue-600 sm:text-lg dark:text-slate-50 dark:group-hover:text-blue-400">
+          <h2 className="text-base font-semibold leading-snug text-slate-900 hover:text-accent sm:text-lg dark:text-slate-50 dark:hover:text-accent">
             <Link href={post.url}>{post.title}</Link>
           </h2>
           {post.tags && post.tags.length > 0 && (
             <div className="flex flex-wrap gap-2 pt-0.5">
-              {post.tags.slice(0, 4).map((t, i) => {
-                const color =
-                  tagColorClasses[i % tagColorClasses.length];
-                return (
-                  <Link
-                    key={t}
-                    href={`/tags/${encodeURIComponent(
-                      t.toLowerCase().replace(/\s+/g, '-')
-                    )}`}
-                    className={`rounded-full px-2 py-0.5 text-[11px] transition ${color}`}
-                  >
-                    #{t}
-                  </Link>
-                );
-              })}
+              {post.tags.slice(0, 4).map((t) => (
+                <Link
+                  key={t}
+                  href={`/tags/${encodeURIComponent(
+                    t.toLowerCase().replace(/\s+/g, '-')
+                  )}`}
+                  className="rounded-full bg-accent-soft px-2 py-0.5 text-[11px] text-accent-textLight transition hover:bg-accent dark:text-accent-textDark"
+                >
+                  #{t}
+                </Link>
+              ))}
             </div>
           )}
           {excerpt && (

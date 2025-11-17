@@ -8,14 +8,22 @@ module.exports = {
   ],
   theme: {
     extend: {
+      colors: {
+        accent: {
+          DEFAULT: 'var(--color-accent)',
+          soft: 'var(--color-accent-soft)',
+          textLight: 'var(--color-accent-text-light)',
+          textDark: 'var(--color-accent-text-dark)'
+        }
+      },
       typography: (theme) => ({
         DEFAULT: {
           css: {
             color: theme('colors.slate.700'),
             a: {
-              color: theme('colors.blue.600'),
+              color: 'var(--color-accent-text-light)',
               '&:hover': {
-                color: theme('colors.blue.700')
+                color: 'var(--color-accent)'
               }
             },
             h1: {
@@ -28,7 +36,7 @@ module.exports = {
             },
             blockquote: {
               fontStyle: 'normal',
-              borderLeftColor: theme('colors.blue.200'),
+              borderLeftColor: 'var(--color-accent-soft)',
               color: theme('colors.slate.700'),
               backgroundColor: theme('colors.slate.50')
             },
@@ -44,9 +52,9 @@ module.exports = {
             // Slightly softer than pure white for body text
             color: theme('colors.slate.200'),
             a: {
-              color: theme('colors.blue.400'),
+              color: 'var(--color-accent-text-dark)',
               '&:hover': {
-                color: theme('colors.blue.300')
+                color: 'var(--color-accent)'
               }
             },
             strong: {
@@ -67,7 +75,7 @@ module.exports = {
               color: theme('colors.slate.50')
             },
             blockquote: {
-              borderLeftColor: theme('colors.blue.500'),
+              borderLeftColor: 'var(--color-accent)',
               backgroundColor: theme('colors.slate.800'),
               color: theme('colors.slate.200'),
               p: {

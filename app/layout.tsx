@@ -32,9 +32,24 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const theme = siteConfig.theme;
+
   return (
     <html lang={siteConfig.defaultLocale} suppressHydrationWarning>
       <body>
+        <style
+          // Set CSS variables for accent colors (light + dark variants)
+          dangerouslySetInnerHTML={{
+            __html: `
+              :root {
+                --color-accent: ${theme.accent};
+                --color-accent-soft: ${theme.accentSoft};
+                --color-accent-text-light: ${theme.accentTextLight};
+                --color-accent-text-dark: ${theme.accentTextDark};
+              }
+            `
+          }}
+        />
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <LayoutShell>{children}</LayoutShell>
         </ThemeProvider>

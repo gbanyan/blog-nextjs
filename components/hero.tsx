@@ -78,9 +78,9 @@ export function Hero() {
                   href={item.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-2 rounded-full bg-white/80 px-3 py-1 shadow-sm ring-1 ring-slate-200 hover:bg-slate-50 dark:bg-slate-900/80 dark:ring-slate-700"
+                  className="flex items-center gap-2 rounded-full bg-white/80 px-3 py-1 shadow-sm ring-1 ring-slate-200 hover:bg-accent-soft dark:bg-slate-900/80 dark:ring-slate-700"
                 >
-                  <FontAwesomeIcon icon={item.icon} className="h-3.5 w-3.5" />
+                  <FontAwesomeIcon icon={item.icon} className="h-3.5 w-3.5 text-accent" />
                   <span>{item.label}</span>
                 </a>
               ))}

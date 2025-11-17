@@ -59,7 +59,7 @@ export function RightSidebar() {
               )}
             </Link>
             {socialItems.length > 0 && (
-              <div className="flex items-center gap-3 text-base text-slate-500 dark:text-slate-400">
+              <div className="flex items-center gap-3 text-base text-accent-textLight dark:text-accent-textDark">
                 {socialItems.map((item) => (
                   <a
                     key={item.key}
@@ -67,7 +67,7 @@ export function RightSidebar() {
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label={item.label}
-                    className="transition hover:text-slate-800 dark:hover:text-slate-100"
+                    className="transition hover:text-accent"
                   >
                     <FontAwesomeIcon icon={item.icon} className="h-4 w-4" />
                   </a>
@@ -121,7 +121,7 @@ export function RightSidebar() {
             <div className="mt-2 text-right text-[11px]">
               <Link
                 href="/tags"
-                className="text-slate-500 hover:text-blue-600 dark:text-slate-400 dark:hover:text-blue-400"
+                className="text-slate-500 hover:text-accent dark:text-slate-400 dark:hover:text-accent"
               >
                 查看全部標籤 →
               </Link>

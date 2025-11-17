@@ -55,28 +55,17 @@ export default function StaticPage({ params }: Props) {
             </h1>
             {page.tags && (
               <div className="flex flex-wrap gap-2 pt-1">
-                {page.tags.map((t, i) => {
-                  const tagColorClasses = [
-                    'bg-rose-100 text-rose-700 dark:bg-rose-900/60 dark:text-rose-200',
-                    'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/60 dark:text-emerald-200',
-                    'bg-sky-100 text-sky-700 dark:bg-sky-900/60 dark:text-sky-200',
-                    'bg-amber-100 text-amber-700 dark:bg-amber-900/60 dark:text-amber-200',
-                    'bg-violet-100 text-violet-700 dark:bg-violet-900/60 dark:text-violet-200'
-                  ];
-                  const color =
-                    tagColorClasses[i % tagColorClasses.length];
-                  return (
-                    <Link
-                      key={t}
-                      href={`/tags/${encodeURIComponent(
-                        t.toLowerCase().replace(/\s+/g, '-')
-                      )}`}
-                      className={`rounded-full px-2 py-0.5 text-xs transition ${color}`}
-                    >
-                      #{t}
-                    </Link>
-                  );
-                })}
+                {page.tags.map((t) => (
+                  <Link
+                    key={t}
+                    href={`/tags/${encodeURIComponent(
+                      t.toLowerCase().replace(/\s+/g, '-')
+                    )}`}
+                    className="rounded-full bg-accent-soft px-2 py-0.5 text-xs text-accent-textLight transition hover:bg-accent dark:text-accent-textDark"
+                  >
+                    #{t}
+                  </Link>
+                ))}
               </div>
             )}
           </header>

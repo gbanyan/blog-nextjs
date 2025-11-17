@@ -20,7 +20,7 @@ export function ThemeToggle() {
   return (
     <button
       type="button"
-      className="inline-flex h-8 w-8 items-center justify-center rounded-full text-slate-500 transition hover:bg-slate-100 hover:text-slate-800 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-slate-100"
+      className="inline-flex h-8 w-8 items-center justify-center rounded-full text-accent-textLight transition hover:bg-accent-soft hover:text-accent dark:text-accent-textDark dark:hover:bg-slate-800 dark:hover:text-accent"
       onClick={() => setTheme(next)}
       aria-label={theme === 'dark' ? '切換為淺色主題' : '切換為深色主題'}
     >
