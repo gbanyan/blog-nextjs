@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { getAllPostsSorted } from '@/lib/posts';
+import { siteConfig } from '@/lib/config';
 
 export const metadata = {
   title: 'Blog'
@@ -22,7 +23,9 @@ export default function BlogIndexPage() {
             </Link>
             <div className="text-xs text-gray-500">
               {post.published_at &&
-                new Date(post.published_at).toLocaleDateString('zh-TW')}
+                new Date(post.published_at).toLocaleDateString(
+                  siteConfig.defaultLocale
+                )}
               {post.tags && post.tags.length > 0 && (
                 <span className="ml-2">
                   {post.tags.map((t) => (
@@ -47,4 +50,3 @@ export default function BlogIndexPage() {
     </section>
   );
 }
-

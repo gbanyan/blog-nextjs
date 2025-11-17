@@ -2,6 +2,7 @@ import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
 import { allPosts } from 'contentlayer/generated';
 import { getPostBySlug } from '@/lib/posts';
+import { siteConfig } from '@/lib/config';
 
 export function generateStaticParams() {
   return allPosts.map((post) => ({
@@ -44,7 +45,9 @@ export default function BlogPostPage({ params }: Props) {
       )}
       {post.published_at && (
         <p className="text-xs text-gray-500">
-          {new Date(post.published_at).toLocaleDateString('zh-TW')}
+          {new Date(post.published_at).toLocaleDateString(
+            siteConfig.defaultLocale
+          )}
         </p>
       )}
       {post.tags && (

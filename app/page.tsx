@@ -3,7 +3,7 @@ import { getAllPostsSorted } from '@/lib/posts';
 import { siteConfig } from '@/lib/config';
 
 export default function HomePage() {
-  const posts = getAllPostsSorted().slice(0, 5);
+  const posts = getAllPostsSorted().slice(0, siteConfig.postsPerPage);
 
   return (
     <section className="space-y-6">
@@ -12,7 +12,7 @@ export default function HomePage() {
           你好，我是 {siteConfig.name}
         </h1>
         <p className="mt-2 text-gray-600 dark:text-gray-300">
-          這裡是我的個人首頁與技術 Blog。
+          {siteConfig.tagline}
         </p>
       </div>
 
@@ -26,7 +26,9 @@ export default function HomePage() {
               </Link>
               {post.published_at && (
                 <span className="ml-2 text-xs text-gray-500">
-                  {new Date(post.published_at).toLocaleDateString('zh-TW')}
+                  {new Date(post.published_at).toLocaleDateString(
+                    siteConfig.defaultLocale
+                  )}
                 </span>
               )}
             </li>

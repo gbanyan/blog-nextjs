@@ -9,7 +9,22 @@ export const metadata: Metadata = {
     default: siteConfig.title,
     template: `%s | ${siteConfig.title}`
   },
-  description: siteConfig.description
+  description: siteConfig.description,
+  metadataBase: new URL(siteConfig.url),
+  openGraph: {
+    title: siteConfig.title,
+    description: siteConfig.description,
+    url: siteConfig.url,
+    siteName: siteConfig.title,
+    images: [siteConfig.ogImage]
+  },
+  twitter: {
+    card: siteConfig.twitterCard,
+    site: siteConfig.social.twitter || undefined,
+    title: siteConfig.title,
+    description: siteConfig.description,
+    images: [siteConfig.ogImage]
+  }
 };
 
 export default function RootLayout({
@@ -18,7 +33,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="zh-Hant" suppressHydrationWarning>
+    <html lang={siteConfig.defaultLocale} suppressHydrationWarning>
       <body>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <LayoutShell>{children}</LayoutShell>
@@ -27,4 +42,3 @@ export default function RootLayout({
     </html>
   );
 }
-
