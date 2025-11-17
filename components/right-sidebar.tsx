@@ -1,9 +1,10 @@
 import Link from 'next/link';
 import { siteConfig } from '@/lib/config';
-import { getAllPostsSorted } from '@/lib/posts';
+import { getAllPostsSorted, getAllTagsWithCount } from '@/lib/posts';
 
 export function RightSidebar() {
   const latest = getAllPostsSorted().slice(0, 5);
+  const tags = getAllTagsWithCount().slice(0, 30);
 
   return (
     <aside className="hidden flex-col gap-4 lg:flex">
@@ -33,7 +34,30 @@ export function RightSidebar() {
           ))}
         </ul>
       </section>
+
+      {tags.length > 0 && (
+        <section className="rounded-xl border bg-white px-4 py-3 text-sm shadow-sm dark:border-slate-800 dark:bg-slate-900 dark:text-slate-100">
+          <h2 className="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">
+            標籤雲
+          </h2>
+          <div className="mt-2 flex flex-wrap gap-2 text-xs">
+            {tags.map(({ tag, count }) => {
+              let sizeClass = 'text-[11px]';
+              if (count >= 5) sizeClass = 'text-sm font-semibold';
+              else if (count >= 3) sizeClass = 'text-xs font-medium';
+
+              return (
+                <span
+                  key={tag}
+                  className={`${sizeClass} rounded-full bg-slate-100 px-2 py-0.5 text-slate-700 dark:bg-slate-800 dark:text-slate-200`}
+                >
+                  {tag}
+                </span>
+              );
+            })}
+          </div>
+        </section>
+      )}
     </aside>
   );
 }
-

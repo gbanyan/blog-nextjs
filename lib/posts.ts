@@ -26,3 +26,20 @@ export function getPageBySlug(slug: string): Page | undefined {
   );
 }
 
+export function getAllTagsWithCount(): { tag: string; count: number }[] {
+  const map = new Map<string, number>();
+
+  for (const post of allPosts) {
+    if (!post.tags) continue;
+    for (const tag of post.tags) {
+      map.set(tag, (map.get(tag) ?? 0) + 1);
+    }
+  }
+
+  return Array.from(map.entries())
+    .map(([tag, count]) => ({ tag, count }))
+    .sort((a, b) => {
+      if (b.count === a.count) return a.tag.localeCompare(b.tag);
+      return b.count - a.count;
+    });
+}
