@@ -1,0 +1,35 @@
+{
+  "title": "Dark Mode 黑化指南",
+  "slug": "dark-mode-guide",
+  "tags": [
+    "Apps - 軟體",
+    "Medicine - 醫學"
+  ],
+  "published_at": "2022-09-29T16:57:00.000Z",
+  "type": "post",
+  "ghost_id": "67e4c4fcc5a22a00013545d0",
+  "status": "published",
+  "visibility": "public",
+  "featured": false,
+  "created_at": "2025-03-27T03:24:44.000Z",
+  "updated_at": "2025-03-27T03:30:45.000Z",
+  "authors": [
+    "Gbanyan"
+  ],
+  "feature_image": "../assets/photo-1607027340690-37e80b0f1b31.jpg",
+  "body": {
+    "raw": "\n## 前言\n\n* 眼疾因素，開始追求特殊的黑底白字顯示模式 (Dark mode or night mode)\n* 相信對眼睛的負擔較小，長久工作較不會累\n* 一些研究：Effects of Dark Mode on Visual Fatigue and Acuity in Optical See-Through Head-Mounted Displays\n  + improve Visual Acuity\n  + Reduces Visual Fatigue\n  + Improves Usability and Preference in Dark Environments\n* 也有人認為 Dark mode 讓內容更不易閱讀，反而讓眼睛負擔更重\n* 建議視考慮個人狀況，也有做法是依照日出日落時間自動切換\n\n## 方向\n\n### 可操作對象\n\n* 螢幕：\n  + 部分螢幕內建灰階化、電子紙模式，不是黑底白字，但也可以考慮\n  + 直接購買 E-ink 螢幕，但螢幕更新率、高成本\n* 作業系統\n  + 原生的黑底白字 UI 系統佈景，各家系統包括 iOS, Android 皆有提供，只是可能有過舊版本未能支援\n  + 無障礙輔助功能：Windows 的高對比佈景、蘋果生態系的 invert color (反相顏色)，直接強迫所有顯示黑白反相，但是有機率影響應用程式顯示，慎用。\n* 軟體\n  + 電腦上的軟體或手機的 App，有的內建Dark mode, 會偵測系統佈景自動切換或者須由使用者手動開啟\n  + 影響範圍僅限於介面，或文件內容\n  + 程式碼編輯器：普遍支援 Dark mode, 並有不同 theme 可切換。如果沒有提供，請棄用😛。\n  + Office Word 為例，初始提供 Dark mode ，僅有介面，文件本身仍舊白得發亮。後續較新版本開始提供黑底白字的文件檢視編輯。\n  + PDF 檢視軟體，如 PDF Expert 有提供 Sepia, Night theme, 可套用至 PDF 文件本身使閱讀體驗較舒服。\n  + 網頁\n    - CSS Media query 標準支援偵測系統佈景是否啟用 Dark mode\n    - 知名網站亦提供 Dark mode 切換，如 Facebook, Twitter, Google Search...\n    - 不是所有網站都有提供 Dark mode，擴充套件可直接覆蓋樣式強迫黑底白字\n      * 所有網站皆套用：如 Dark reader, night eye, noir......\n      * Stylish 自訂網站 CSS, 進階使用者微調個別網站顯示\n\n### 轉換流程\n\n+ 開啟作業系統本身的 Dark theme，通常有支援的軟體, App, 網頁就會配合修改\n+ 未配合修改的，可透過尋找軟體內設定或者 Google 關鍵字 軟體名稱 + Dark or night mode 進一步搜尋\n  - 如 Zotero 文獻管理員，透過 Google 搜尋找到有人撰寫套用 Dark mode 的擴充套件\n  - Windows 工作管理員，在 Windows 11 22H2 版後開始支援\n  - Kindle 部分電子書不支援 Dark mode, 只好啟用全系統的 invert color 反相顏色\n  - ~~透過指令介面完成所有工作，vim 是日常程式碼編輯器，GUI 滾一邊去~~\n",
+    "html": "<h2 id=\"前言\"><a href=\"#前言\">前言</a></h2>\n<ul>\n<li>眼疾因素，開始追求特殊的黑底白字顯示模式 (Dark mode or night mode)</li>\n<li>相信對眼睛的負擔較小，長久工作較不會累</li>\n<li>一些研究：Effects of Dark Mode on Visual Fatigue and Acuity in Optical See-Through Head-Mounted Displays\n<ul>\n<li>improve Visual Acuity</li>\n<li>Reduces Visual Fatigue</li>\n<li>Improves Usability and Preference in Dark Environments</li>\n</ul>\n</li>\n<li>也有人認為 Dark mode 讓內容更不易閱讀，反而讓眼睛負擔更重</li>\n<li>建議視考慮個人狀況，也有做法是依照日出日落時間自動切換</li>\n</ul>\n<h2 id=\"方向\"><a href=\"#方向\">方向</a></h2>\n<h3 id=\"可操作對象\"><a href=\"#可操作對象\">可操作對象</a></h3>\n<ul>\n<li>螢幕：\n<ul>\n<li>部分螢幕內建灰階化、電子紙模式，不是黑底白字，但也可以考慮</li>\n<li>直接購買 E-ink 螢幕，但螢幕更新率、高成本</li>\n</ul>\n</li>\n<li>作業系統\n<ul>\n<li>原生的黑底白字 UI 系統佈景，各家系統包括 iOS, Android 皆有提供，只是可能有過舊版本未能支援</li>\n<li>無障礙輔助功能：Windows 的高對比佈景、蘋果生態系的 invert color (反相顏色)，直接強迫所有顯示黑白反相，但是有機率影響應用程式顯示，慎用。</li>\n</ul>\n</li>\n<li>軟體\n<ul>\n<li>電腦上的軟體或手機的 App，有的內建Dark mode, 會偵測系統佈景自動切換或者須由使用者手動開啟</li>\n<li>影響範圍僅限於介面，或文件內容</li>\n<li>程式碼編輯器：普遍支援 Dark mode, 並有不同 theme 可切換。如果沒有提供，請棄用😛。</li>\n<li>Office Word 為例，初始提供 Dark mode ，僅有介面，文件本身仍舊白得發亮。後續較新版本開始提供黑底白字的文件檢視編輯。</li>\n<li>PDF 檢視軟體，如 PDF Expert 有提供 Sepia, Night theme, 可套用至 PDF 文件本身使閱讀體驗較舒服。</li>\n<li>網頁\n<ul>\n<li>CSS Media query 標準支援偵測系統佈景是否啟用 Dark mode</li>\n<li>知名網站亦提供 Dark mode 切換，如 Facebook, Twitter, Google Search...</li>\n<li>不是所有網站都有提供 Dark mode，擴充套件可直接覆蓋樣式強迫黑底白字\n<ul>\n<li>所有網站皆套用：如 Dark reader, night eye, noir......</li>\n<li>Stylish 自訂網站 CSS, 進階使用者微調個別網站顯示</li>\n</ul>\n</li>\n</ul>\n</li>\n</ul>\n</li>\n</ul>\n<h3 id=\"轉換流程\"><a href=\"#轉換流程\">轉換流程</a></h3>\n<ul>\n<li>開啟作業系統本身的 Dark theme，通常有支援的軟體, App, 網頁就會配合修改</li>\n<li>未配合修改的，可透過尋找軟體內設定或者 Google 關鍵字 軟體名稱 + Dark or night mode 進一步搜尋\n<ul>\n<li>如 Zotero 文獻管理員，透過 Google 搜尋找到有人撰寫套用 Dark mode 的擴充套件</li>\n<li>Windows 工作管理員，在 Windows 11 22H2 版後開始支援</li>\n<li>Kindle 部分電子書不支援 Dark mode, 只好啟用全系統的 invert color 反相顏色</li>\n<li><del>透過指令介面完成所有工作，vim 是日常程式碼編輯器，GUI 滾一邊去</del></li>\n</ul>\n</li>\n</ul>"
+  },
+  "_id": "posts/Dark Mode 黑化指南.md",
+  "_raw": {
+    "sourceFilePath": "posts/Dark Mode 黑化指南.md",
+    "sourceFileName": "Dark Mode 黑化指南.md",
+    "sourceFileDir": "posts",
+    "contentType": "markdown",
+    "flattenedPath": "posts/Dark Mode 黑化指南"
+  },
+  "__ignoredType": "Post",
+  "url": "/blog/dark-mode-guide",
+  "flattenedPath": "Dark Mode 黑化指南"
+}

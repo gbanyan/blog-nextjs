@@ -1,0 +1,34 @@
+{
+  "title": "詩 - 弦",
+  "slug": "chord-poem",
+  "tags": [
+    "Writings - 創作"
+  ],
+  "published_at": "2014-12-04T16:00:00.000Z",
+  "type": "post",
+  "ghost_id": "67e4b42ac5a22a0001354512",
+  "status": "published",
+  "visibility": "public",
+  "featured": false,
+  "created_at": "2025-03-27T02:12:58.000Z",
+  "updated_at": "2025-03-27T02:14:34.000Z",
+  "authors": [
+    "Gbanyan"
+  ],
+  "feature_image": "../assets/photo-1559944293-047ea83791ed.jpg",
+  "body": {
+    "raw": "\n誕生，死亡  \n或許只不過是  \n一條被緊緊束縛的，兩端  \n悸動，嗡鳴  \n既渴望著知音，又期冀脫掙\n\n要不要對彈一曲？你微微一顫  \n指尖的顫痛掃過琴弦，滑過耳畔  \n滑過，無數個言語交織的牽絆\n\n只是我輕輕地止歇了  \n讓餘音慢慢地飄散  \n或許，相和也是一種束縛  \n讓我們，選擇兩散\n",
+    "html": "<p>誕生，死亡<br>\n或許只不過是<br>\n一條被緊緊束縛的，兩端<br>\n悸動，嗡鳴<br>\n既渴望著知音，又期冀脫掙</p>\n<p>要不要對彈一曲？你微微一顫<br>\n指尖的顫痛掃過琴弦，滑過耳畔<br>\n滑過，無數個言語交織的牽絆</p>\n<p>只是我輕輕地止歇了<br>\n讓餘音慢慢地飄散<br>\n或許，相和也是一種束縛<br>\n讓我們，選擇兩散</p>"
+  },
+  "_id": "posts/詩 - 弦.md",
+  "_raw": {
+    "sourceFilePath": "posts/詩 - 弦.md",
+    "sourceFileName": "詩 - 弦.md",
+    "sourceFileDir": "posts",
+    "contentType": "markdown",
+    "flattenedPath": "posts/詩 - 弦"
+  },
+  "__ignoredType": "Post",
+  "url": "/blog/chord-poem",
+  "flattenedPath": "詩 - 弦"
+}

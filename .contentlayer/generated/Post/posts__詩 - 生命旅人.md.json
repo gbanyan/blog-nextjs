@@ -1,0 +1,34 @@
+{
+  "title": "詩 - 生命旅人",
+  "slug": "life-traveler",
+  "tags": [
+    "Writings - 創作"
+  ],
+  "published_at": "2016-12-27T00:52:00.000Z",
+  "type": "post",
+  "ghost_id": "67e39918e551140001120e9d",
+  "status": "published",
+  "visibility": "public",
+  "featured": false,
+  "created_at": "2025-03-26T06:05:12.000Z",
+  "updated_at": "2025-03-26T06:19:12.000Z",
+  "authors": [
+    "Gbanyan"
+  ],
+  "feature_image": "../assets/photo-1543393470-b2c833b98dce.jpg",
+  "body": {
+    "raw": "\n壁爐側，未眠的焰火\n\n旅人的斗篷，靜靜地等候\n\n曾拂過楓紅，席捲大地之秋\n\n醉酒耳酣，山嵐席捲，片片雪花灑落\n\n不若遊俠，也亦非吟唱詩人\n\n只想悄悄地，不帶走一片霜華\n\n時光流轉，仍舊。\n",
+    "html": "<p>壁爐側，未眠的焰火</p>\n<p>旅人的斗篷，靜靜地等候</p>\n<p>曾拂過楓紅，席捲大地之秋</p>\n<p>醉酒耳酣，山嵐席捲，片片雪花灑落</p>\n<p>不若遊俠，也亦非吟唱詩人</p>\n<p>只想悄悄地，不帶走一片霜華</p>\n<p>時光流轉，仍舊。</p>"
+  },
+  "_id": "posts/詩 - 生命旅人.md",
+  "_raw": {
+    "sourceFilePath": "posts/詩 - 生命旅人.md",
+    "sourceFileName": "詩 - 生命旅人.md",
+    "sourceFileDir": "posts",
+    "contentType": "markdown",
+    "flattenedPath": "posts/詩 - 生命旅人"
+  },
+  "__ignoredType": "Post",
+  "url": "/blog/life-traveler",
+  "flattenedPath": "詩 - 生命旅人"
+}

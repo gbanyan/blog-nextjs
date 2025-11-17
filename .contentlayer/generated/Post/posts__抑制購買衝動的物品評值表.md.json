@@ -1,0 +1,35 @@
+{
+  "title": "抑制購買衝動的物品評值表",
+  "slug": "assessment-importance-purchaing",
+  "tags": [
+    "Writings - 創作"
+  ],
+  "published_at": "2023-04-18T06:46:00.000Z",
+  "type": "post",
+  "ghost_id": "67e4d875c5a22a0001354660",
+  "status": "published",
+  "visibility": "public",
+  "featured": false,
+  "created_at": "2025-03-27T04:47:49.000Z",
+  "updated_at": "2025-03-27T04:49:52.000Z",
+  "custom_excerpt": "在自己的筆記發現自己寫的一篇阻止過度消費的 Guide，放上來分享一下",
+  "authors": [
+    "Gbanyan"
+  ],
+  "feature_image": "../assets/photo-1483985988355-763728e1935b.jpg",
+  "body": {
+    "raw": "\n在自己的筆記發現自己寫的一篇阻止過度消費的 Guide，放上來分享一下\n\n* 目的：阻止自己衝動購物，建立量化評估購買依據\n* 必要性評估：優先排序，或者同時符合越多項\n  1. 立即需要拿來做工作、研究、學習的事？\n  2. 健康相關\n  3. 與技能探索相關\n  4. 娛樂、人際相關\n  5. 生活擺設、美學相關\n  6. 只是想探索新用途、功能？\n* 已經擁有類似物品？\n  + 舊物品損耗程度是否即將損壞？\n  + 舊物品既有功能是否不能滿足？\n  + 替換新物品可以增加生活效率？\n* 躺在列表較久，經過審慎計畫為優先\n  + 未進入列表，一時興起\n* 價格區間：\n  + 一個月設定基本花費\n  + 單價超過一定數值的，不能多個集中在一個月\n  + 如果是有預期計畫性購買，單價一萬塊以上，善用分期付款分散\n",
+    "html": "<p>在自己的筆記發現自己寫的一篇阻止過度消費的 Guide，放上來分享一下</p>\n<ul>\n<li>目的：阻止自己衝動購物，建立量化評估購買依據</li>\n<li>必要性評估：優先排序，或者同時符合越多項\n<ol>\n<li>立即需要拿來做工作、研究、學習的事？</li>\n<li>健康相關</li>\n<li>與技能探索相關</li>\n<li>娛樂、人際相關</li>\n<li>生活擺設、美學相關</li>\n<li>只是想探索新用途、功能？</li>\n</ol>\n</li>\n<li>已經擁有類似物品？\n<ul>\n<li>舊物品損耗程度是否即將損壞？</li>\n<li>舊物品既有功能是否不能滿足？</li>\n<li>替換新物品可以增加生活效率？</li>\n</ul>\n</li>\n<li>躺在列表較久，經過審慎計畫為優先\n<ul>\n<li>未進入列表，一時興起</li>\n</ul>\n</li>\n<li>價格區間：\n<ul>\n<li>一個月設定基本花費</li>\n<li>單價超過一定數值的，不能多個集中在一個月</li>\n<li>如果是有預期計畫性購買，單價一萬塊以上，善用分期付款分散</li>\n</ul>\n</li>\n</ul>"
+  },
+  "_id": "posts/抑制購買衝動的物品評值表.md",
+  "_raw": {
+    "sourceFilePath": "posts/抑制購買衝動的物品評值表.md",
+    "sourceFileName": "抑制購買衝動的物品評值表.md",
+    "sourceFileDir": "posts",
+    "contentType": "markdown",
+    "flattenedPath": "posts/抑制購買衝動的物品評值表"
+  },
+  "__ignoredType": "Post",
+  "url": "/blog/assessment-importance-purchaing",
+  "flattenedPath": "抑制購買衝動的物品評值表"
+}
