@@ -13,14 +13,14 @@ export function SiteHeader() {
       <div className="container mx-auto flex items-center justify-between px-4 py-3 text-slate-900 dark:text-slate-100">
         <Link
           href="/"
-          className="font-semibold transition hover:text-accent focus-visible:outline-none focus-visible:text-accent"
+          className="font-semibold transition hover:text-accent-textDark focus-visible:outline-none focus-visible:text-accent-textDark"
         >
           {siteConfig.title}
         </Link>
         <nav className="flex items-center gap-4 text-sm">
           <Link
             href="/blog"
-            className="transition hover:text-accent focus-visible:outline-none focus-visible:text-accent"
+            className="transition hover:text-accent-textDark focus-visible:outline-none focus-visible:text-accent-textDark"
           >
             Blog
           </Link>
@@ -28,7 +28,7 @@ export function SiteHeader() {
             <Link
               key={page._id}
               href={page.url}
-              className="transition hover:text-accent focus-visible:outline-none focus-visible:text-accent"
+              className="transition hover:text-accent-textDark focus-visible:outline-none focus-visible:text-accent-textDark"
             >
               {page.title}
             </Link>
