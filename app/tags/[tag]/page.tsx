@@ -1,17 +1,18 @@
 import type { Metadata } from 'next';
 import { allPosts } from 'contentlayer/generated';
 import { PostListItem } from '@/components/post-list-item';
+import { getTagSlug } from '@/lib/posts';
 
 export function generateStaticParams() {
-  const tags = new Set<string>();
+  const slugs = new Set<string>();
   for (const post of allPosts) {
     if (!post.tags) continue;
     for (const tag of post.tags) {
-      tags.add(tag);
+      slugs.add(getTagSlug(tag));
     }
   }
-  return Array.from(tags).map((tag) => ({
-    tag
+  return Array.from(slugs).map((slug) => ({
+    tag: slug
   }));
 }
 
@@ -20,23 +21,31 @@ interface Props {
 }
 
 export function generateMetadata({ params }: Props): Metadata {
-  const tag = params.tag;
+  const slug = params.tag;
+  // Find original tag label by slug
+  const tag = allPosts
+    .flatMap((post) => post.tags ?? [])
+    .find((t) => getTagSlug(t) === slug);
+
   return {
-    title: `標籤：${tag}`
+    title: tag ? `標籤：${tag}` : '標籤'
   };
 }
 
 export default function TagPage({ params }: Props) {
-  const tag = params.tag;
+  const slug = params.tag;
 
   const posts = allPosts.filter(
-    (post) => post.tags && post.tags.includes(tag)
+    (post) => post.tags && post.tags.some((t) => getTagSlug(t) === slug)
   );
+
+  const tagLabel =
+    posts[0]?.tags?.find((t) => getTagSlug(t) === slug) ?? params.tag;
 
   return (
     <section className="space-y-4">
       <h1 className="text-lg font-semibold text-slate-900 dark:text-slate-50">
-        標籤：{tag}
+        標籤：{tagLabel}
       </h1>
       <ul className="space-y-3">
         {posts.map((post) => (
@@ -46,4 +55,3 @@ export default function TagPage({ params }: Props) {
     </section>
   );
 }
-

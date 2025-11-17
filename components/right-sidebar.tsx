@@ -41,7 +41,7 @@ export function RightSidebar() {
             標籤雲
           </h2>
           <div className="mt-2 flex flex-wrap gap-2 text-xs">
-            {tags.map(({ tag, count }) => {
+            {tags.map(({ tag, slug, count }) => {
               let sizeClass = 'text-[11px]';
               if (count >= 5) sizeClass = 'text-sm font-semibold';
               else if (count >= 3) sizeClass = 'text-xs font-medium';
@@ -49,7 +49,7 @@ export function RightSidebar() {
               return (
                 <Link
                   key={tag}
-                  href={`/tags/${encodeURIComponent(tag)}`}
+                  href={`/tags/${slug}`}
                   className={`${sizeClass} rounded-full bg-slate-100 px-2 py-0.5 text-slate-700 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700`}
                 >
                   {tag}

@@ -45,7 +45,9 @@ export function PostListItem({ post }: Props) {
                 {post.tags.slice(0, 4).map((t) => (
                   <Link
                     key={t}
-                    href={`/tags/${encodeURIComponent(t)}`}
+                    href={`/tags/${encodeURIComponent(
+                      t.toLowerCase().replace(/\s+/g, '-')
+                    )}`}
                     className="rounded-full bg-slate-100 px-2 py-0.5 text-[11px] text-slate-600 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700"
                   >
                     #{t}

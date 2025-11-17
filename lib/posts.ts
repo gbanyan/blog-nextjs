@@ -26,7 +26,11 @@ export function getPageBySlug(slug: string): Page | undefined {
   );
 }
 
-export function getAllTagsWithCount(): { tag: string; count: number }[] {
+export function getTagSlug(tag: string): string {
+  return encodeURIComponent(tag.toLowerCase().replace(/\s+/g, '-'));
+}
+
+export function getAllTagsWithCount(): { tag: string; slug: string; count: number }[] {
   const map = new Map<string, number>();
 
   for (const post of allPosts) {
@@ -37,7 +41,7 @@ export function getAllTagsWithCount(): { tag: string; count: number }[] {
   }
 
   return Array.from(map.entries())
-    .map(([tag, count]) => ({ tag, count }))
+    .map(([tag, count]) => ({ tag, slug: getTagSlug(tag), count }))
     .sort((a, b) => {
       if (b.count === a.count) return a.tag.localeCompare(b.tag);
       return b.count - a.count;

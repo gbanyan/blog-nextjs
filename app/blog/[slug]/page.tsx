@@ -58,7 +58,9 @@ export default function BlogPostPage({ params }: Props) {
                 {post.tags.map((t) => (
                   <Link
                     key={t}
-                    href={`/tags/${encodeURIComponent(t)}`}
+                    href={`/tags/${encodeURIComponent(
+                      t.toLowerCase().replace(/\s+/g, '-')
+                    )}`}
                     className="rounded-full bg-slate-100 px-2 py-0.5 text-xs text-slate-700 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700"
                   >
                     #{t}
