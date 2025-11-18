@@ -54,6 +54,7 @@ Markdown content (posts & pages) lives in a separate repository and is consumed 
 
 - **Blog index** (`/blog`)
   - Uses `PostListWithControls`:
+    - Keyword search filters posts by title, tags, and excerpt with instant feedback.
     - Sort order: new→old or old→new.
     - Pagination using `siteConfig.postsPerPage`.
 
@@ -62,6 +63,7 @@ Markdown content (posts & pages) lives in a separate repository and is consumed 
   - Top: published date, large title, colored tags.
   - Body: `prose` typography with tuned light/dark colors, images, blockquotes, code.
   - Top bar: reading progress indicator.
+  - Bottom: "相關文章" cards suggesting up to three related posts that share overlapping tags.
 
 - **Right sidebar** (on large screens)
   - Top hero:
@@ -76,6 +78,29 @@ Markdown content (posts & pages) lives in a separate repository and is consumed 
 
 - **Misc**
   - Floating "back to top" button on long pages.
+
+## Motion & Interaction Guidelines
+
+- Keep motion subtle and purposeful:
+  - Use small translations (±2–4px) and short durations (200–400ms, `ease-out`).
+  - Prefer fade/slide-in over large bounces or rotations.
+- Respect user preferences:
+  - Animations that run on their own are wrapped with `motion-safe:` so they are disabled when `prefers-reduced-motion` is enabled.
+- Reading experience first:
+  - Scroll-based reveals are used sparingly (e.g. post header and article body), not on every small element.
+  - TOC and reading progress bar emphasize orientation, not decoration.
+- Hover & focus:
+  - Use light elevation (shadow + tiny translateY) and accent color changes to indicate interactivity.
+  - Focus states remain visible and are not replaced by motion-only cues.
+
+### Implemented Visual Touches
+
+- Reading progress bar with a soft gradient glow at the top of post pages.
+- Scroll reveal for post header + article body (`ScrollReveal` component).
+- Hover elevation + gradient accents for post cards, list items, sidebar author card, and tag chips.
+- Smooth theme toggle with icon rotation and global `transition-colors` on the page background.
+- TOC smooth scrolling + short-lived highlight on the target heading.
+- Subtle hover elevation for `blockquote` and `pre` blocks inside `.prose` content.
 
 ## Prerequisites
 

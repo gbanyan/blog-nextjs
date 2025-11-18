@@ -47,3 +47,43 @@ export function getAllTagsWithCount(): { tag: string; slug: string; count: numbe
       return b.count - a.count;
     });
 }
+
+export function getRelatedPosts(target: Post, limit = 3): Post[] {
+  const targetTags = new Set(target.tags?.map((tag) => tag.toLowerCase()) ?? []);
+  const candidates = getAllPostsSorted().filter((post) => post._id !== target._id);
+
+  if (candidates.length === 0) return [];
+
+  const scored = candidates
+    .map((post) => {
+      const sharedTags = (post.tags ?? []).reduce((acc, tag) => {
+        return acc + (targetTags.has(tag.toLowerCase()) ? 1 : 0);
+      }, 0);
+      return { post, score: sharedTags };
+    })
+    .filter((entry) => entry.score > 0)
+    .sort((a, b) => {
+      if (b.score === a.score) {
+        const aDate = a.post.published_at
+          ? new Date(a.post.published_at).getTime()
+          : 0;
+        const bDate = b.post.published_at
+          ? new Date(b.post.published_at).getTime()
+          : 0;
+        return bDate - aDate;
+      }
+      return b.score - a.score;
+    })
+    .slice(0, limit)
+    .map((entry) => entry.post);
+
+  if (scored.length >= limit) {
+    return scored;
+  }
+
+  const fallback = candidates.filter(
+    (post) => !scored.some((existing) => existing._id === post._id)
+  );
+
+  return [...scored, ...fallback.slice(0, limit - scored.length)].slice(0, limit);
+}
