@@ -1,6 +1,8 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faListUl, faCircle } from '@fortawesome/free-solid-svg-icons';
 
 interface TocItem {
   id: string;
@@ -48,11 +50,36 @@ export function PostToc() {
     return () => observer.disconnect();
   }, []);
 
+  const handleClick = (id: string) => (event: React.MouseEvent<HTMLAnchorElement>) => {
+    event.preventDefault();
+    const el = document.getElementById(id);
+    if (!el) return;
+
+    el.scrollIntoView({
+      behavior: 'smooth',
+      block: 'start'
+    });
+
+    // Temporary highlight
+    el.classList.add('toc-target-highlight');
+    setTimeout(() => {
+      el.classList.remove('toc-target-highlight');
+    }, 700);
+
+    // Update hash without instant jump
+    if (history.replaceState) {
+      const url = new URL(window.location.href);
+      url.hash = id;
+      history.replaceState(null, '', url.toString());
+    }
+  };
+
   if (items.length === 0) return null;
 
   return (
     <nav className="sticky top-20 text-xs text-slate-500 dark:text-slate-400">
-      <div className="mb-2 font-semibold text-slate-700 dark:text-slate-200">
+      <div className="mb-2 inline-flex items-center gap-2 font-semibold text-slate-700 dark:text-slate-200">
+        <FontAwesomeIcon icon={faListUl} className="h-3 w-3 text-slate-400" />
         目錄
       </div>
       <ul className="space-y-1">
@@ -60,12 +87,14 @@ export function PostToc() {
           <li key={item.id} className={item.depth === 3 ? 'pl-3' : ''}>
             <a
               href={`#${item.id}`}
-              className={`line-clamp-2 hover:text-blue-600 dark:hover:text-blue-400 ${
+              onClick={handleClick(item.id)}
+              className={`line-clamp-2 inline-flex items-center gap-2 hover:text-blue-600 dark:hover:text-blue-400 ${
                 item.id === activeId
                   ? 'text-blue-600 dark:text-blue-400 font-semibold'
                   : ''
               }`}
             >
+              <FontAwesomeIcon icon={faCircle} className="h-1.5 w-1.5 text-slate-300" />
               {item.text}
             </a>
           </li>

@@ -1,5 +1,7 @@
 import Link from 'next/link';
 import type { Metadata } from 'next';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTags } from '@fortawesome/free-solid-svg-icons';
 import { getAllTagsWithCount } from '@/lib/posts';
 
 export const metadata: Metadata = {
@@ -19,7 +21,8 @@ export default function TagIndexPage() {
 
   return (
     <section className="space-y-4">
-      <h1 className="text-lg font-semibold text-slate-900 dark:text-slate-50">
+      <h1 className="flex items-center gap-2 text-lg font-semibold text-slate-900 dark:text-slate-50">
+        <FontAwesomeIcon icon={faTags} className="h-5 w-5 text-slate-400" />
         標籤索引
       </h1>
       <p className="text-xs text-slate-500 dark:text-slate-400">
@@ -32,7 +35,7 @@ export default function TagIndexPage() {
             <Link
               key={tag}
               href={`/tags/${slug}`}
-              className={`rounded-full px-3 py-1 transition ${color}`}
+              className={`rounded-full px-3 py-1 shadow-sm transition-transform transition-shadow duration-200 ease-out hover:-translate-y-0.5 hover:shadow-md ${color}`}
             >
               <span className="mr-1">{tag}</span>
               <span className="opacity-70">({count})</span>
@@ -43,4 +46,3 @@ export default function TagIndexPage() {
     </section>
   );
 }
-

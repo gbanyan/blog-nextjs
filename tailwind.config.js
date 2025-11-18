@@ -16,6 +16,32 @@ module.exports = {
           textDark: 'var(--color-accent-text-dark)'
         }
       },
+      transitionTimingFunction: {
+        snappy: 'cubic-bezier(0.32, 0.72, 0, 1)'
+      },
+      transitionDuration: {
+        180: '180ms',
+        260: '260ms'
+      },
+      boxShadow: {
+        lifted: '0 12px 30px -14px rgba(15, 23, 42, 0.25)',
+        outline: '0 0 0 1px rgba(59, 130, 246, 0.25)'
+      },
+      keyframes: {
+        'fade-in-up': {
+          '0%': { opacity: '0', transform: 'translateY(8px) scale(0.98)' },
+          '100%': { opacity: '1', transform: 'translateY(0) scale(1)' }
+        },
+        'float-soft': {
+          '0%': { transform: 'translate3d(0,0,0) scale(1)' },
+          '50%': { transform: 'translate3d(4px,-6px,0) scale(1.03)' },
+          '100%': { transform: 'translate3d(0,0,0) scale(1)' }
+        }
+      },
+      animation: {
+        'fade-in-up': 'fade-in-up 0.6s ease-out both',
+        'float-soft': 'float-soft 12s ease-in-out infinite'
+      },
       typography: (theme) => ({
         DEFAULT: {
           css: {

@@ -10,9 +10,14 @@ export default function BlogIndexPage() {
 
   return (
     <section className="space-y-4">
-      <h1 className="text-lg font-semibold text-slate-900 dark:text-slate-50">
-        所有文章
-      </h1>
+      <header className="space-y-1">
+        <h1 className="text-lg font-semibold text-slate-900 dark:text-slate-50">
+          所有文章
+        </h1>
+        <p className="text-xs text-slate-500 dark:text-slate-400">
+          繼續往下滑，慢慢逛逛。
+        </p>
+      </header>
       <PostListWithControls posts={posts} />
     </section>
   );

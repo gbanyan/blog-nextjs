@@ -1,5 +1,7 @@
 import Link from 'next/link';
 import type { Post } from 'contentlayer/generated';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faArrowLeftLong, faArrowRightLong } from '@fortawesome/free-solid-svg-icons';
 
 interface Props {
   current: Post;
@@ -79,6 +81,10 @@ function Station({ station }: { station: StationConfig }) {
       className={`group flex flex-col gap-1 text-center transition duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 dark:focus-visible:ring-blue-300 ${alignClass}`}
     >
       <p className="text-[11px] uppercase tracking-[0.4em] text-slate-400 transition group-hover:text-blue-500 dark:text-slate-500">
+        <FontAwesomeIcon
+          icon={align === 'end' ? faArrowLeftLong : faArrowRightLong}
+          className="mr-1 h-3 w-3"
+        />
         {label}
       </p>
       <p className="text-lg font-semibold leading-snug tracking-tight text-slate-900 transition group-hover:text-blue-600 dark:text-slate-50 dark:group-hover:text-blue-300">

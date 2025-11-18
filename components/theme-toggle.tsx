@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from 'react';
 import { useTheme } from 'next-themes';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faMoon, faSun } from '@fortawesome/free-solid-svg-icons';
 
 export function ThemeToggle() {
   const { theme, setTheme } = useTheme();
@@ -16,17 +18,21 @@ export function ThemeToggle() {
   }
 
   const next = theme === 'dark' ? 'light' : 'dark';
+  const isDark = theme === 'dark';
 
   return (
     <button
       type="button"
-      className="inline-flex h-8 w-8 items-center justify-center rounded-full text-accent-textLight transition hover:bg-accent-soft hover:text-accent dark:text-accent-textDark dark:hover:bg-slate-800 dark:hover:text-accent"
+      className="inline-flex h-9 w-9 items-center justify-center rounded-full text-accent-textLight transition duration-180 ease-snappy hover:-translate-y-0.5 hover:bg-accent-soft hover:text-accent active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40 dark:text-accent-textDark dark:hover:bg-slate-800 dark:hover:text-accent"
       onClick={() => setTheme(next)}
       aria-label={theme === 'dark' ? '切換為淺色主題' : '切換為深色主題'}
     >
-      <span className="text-lg leading-none">
-        {theme === 'dark' ? '☀' : '☾'}
-      </span>
+      <FontAwesomeIcon
+        icon={isDark ? faSun : faMoon}
+        className={`h-4 w-4 transition-transform duration-260 ease-snappy ${
+          isDark ? 'rotate-0 text-amber-400' : 'rotate-180 text-blue-500'
+        }`}
+      />
     </button>
   );
 }

@@ -2,6 +2,62 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --motion-duration-short: 180ms;
+  --motion-duration-medium: 260ms;
+  --motion-ease-snappy: cubic-bezier(0.32, 0.72, 0, 1);
+  --card-translate-y: -6px;
+}
+
 body {
-  @apply bg-white text-gray-900 dark:bg-gray-950 dark:text-gray-100 text-[15px] sm:text-base;
+  @apply bg-white text-gray-900 transition-colors duration-200 ease-snappy dark:bg-gray-950 dark:text-gray-100 text-[15px] sm:text-base;
+}
+
+.toc-target-highlight {
+  @apply bg-yellow-50/60 dark:bg-yellow-900/40 transition-colors duration-500;
+}
+
+/* Subtle hover for article elements */
+.prose blockquote {
+  @apply transition-transform transition-shadow duration-180 ease-snappy;
+}
+
+.prose blockquote:hover {
+  @apply -translate-y-0.5 shadow-sm;
+}
+
+.prose pre {
+  @apply transition-transform transition-shadow duration-180 ease-snappy;
+}
+
+.prose pre:hover {
+  @apply -translate-y-0.5 shadow-md;
+}
+
+.prose h1 > a,
+.prose h2 > a,
+.prose h3 > a,
+.prose h4 > a,
+.prose h5 > a,
+.prose h6 > a {
+  text-decoration: none !important;
+  color: inherit !important;
+}
+
+@layer components {
+  .motion-card {
+    transition: transform var(--motion-duration-medium) var(--motion-ease-snappy),
+      box-shadow var(--motion-duration-medium) var(--motion-ease-snappy),
+      background-color var(--motion-duration-medium) var(--motion-ease-snappy),
+      border-color var(--motion-duration-medium) var(--motion-ease-snappy);
+  }
+
+  .motion-card:hover {
+    transform: translateY(var(--card-translate-y));
+  }
+
+  .motion-link {
+    transition: color var(--motion-duration-short) var(--motion-ease-snappy),
+      transform var(--motion-duration-short) var(--motion-ease-snappy);
+  }
 }
