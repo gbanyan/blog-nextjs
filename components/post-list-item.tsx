@@ -19,9 +19,7 @@ export function PostListItem({ post }: Props) {
 
   return (
     <div className="timeline-entry group relative pl-6" role="listitem">
-      <span className="pointer-events-none absolute left-2 top-6 z-10 flex h-4 w-4 -translate-x-1/2 items-center justify-center rounded-full bg-white shadow ring-2 ring-white dark:bg-slate-900 dark:shadow-slate-900/50 dark:ring-slate-900" aria-hidden="true">
-        <span className="block h-2 w-2 rounded-full bg-gradient-to-br from-blue-500 via-sky-400 to-indigo-400 transition-transform duration-300 ease-out group-hover:scale-125" />
-      </span>
+      <span className="pointer-events-none absolute left-3 top-6 z-10 flex h-3 w-3 -translate-x-1/2 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 via-sky-400 to-indigo-400 shadow-[0_0_10px_rgba(59,130,246,0.6)] transition-transform duration-300 ease-out group-hover:scale-125" aria-hidden="true" />
       <article className="motion-card group relative flex gap-4 rounded-lg border border-slate-200/70 bg-white/90 p-4 shadow-sm dark:border-slate-800 dark:bg-slate-900/80">
         <div className="pointer-events-none absolute inset-x-0 top-0 h-0.5 origin-left scale-x-0 bg-gradient-to-r from-blue-500 via-sky-400 to-indigo-500 opacity-80 transition-transform duration-300 ease-out group-hover:scale-x-100 dark:from-blue-400 dark:via-sky-300 dark:to-indigo-400" />
         {cover && (
