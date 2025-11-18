@@ -18,8 +18,8 @@ export function PostListItem({ post }: Props) {
     post.description || post.custom_excerpt || post.body?.raw?.slice(0, 120);
 
   return (
-    <div className="timeline-entry group relative pl-4" role="listitem">
-      <span className="pointer-events-none absolute left-1.5 top-6 z-10 flex h-3.5 w-3.5 -translate-x-1/2 items-center justify-center rounded-full bg-white shadow-[0_0_6px_rgba(148,163,184,0.5)] ring-1 ring-slate-200 transition-transform duration-300 ease-out group-hover:scale-125 dark:bg-slate-900 dark:ring-slate-700" aria-hidden="true">
+    <div className="timeline-entry group relative pl-5" role="listitem">
+      <span className="pointer-events-none absolute left-3 top-6 z-10 flex h-3.5 w-3.5 -translate-x-1/2 items-center justify-center rounded-full bg-white shadow-[0_0_6px_rgba(148,163,184,0.5)] ring-1 ring-slate-200 transition-transform duration-300 ease-out group-hover:scale-125 dark:bg-slate-900 dark:ring-slate-700" aria-hidden="true">
         <span className="block h-1.5 w-1.5 rounded-full bg-gradient-to-br from-blue-500 to-indigo-500" />
       </span>
       <article className="motion-card group relative flex gap-4 rounded-lg border border-slate-200/70 bg-white/90 p-4 shadow-sm dark:border-slate-800 dark:bg-slate-900/80">
