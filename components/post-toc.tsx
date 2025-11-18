@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faListUl, faCircle } from '@fortawesome/free-solid-svg-icons';
 
@@ -13,6 +13,9 @@ interface TocItem {
 export function PostToc() {
   const [items, setItems] = useState<TocItem[]>([]);
   const [activeId, setActiveId] = useState<string | null>(null);
+  const listRef = useRef<HTMLUListElement | null>(null);
+  const itemRefs = useRef<Record<string, HTMLLIElement | null>>({});
+  const [indicator, setIndicator] = useState({ top: 0, opacity: 0 });
 
   useEffect(() => {
     const headings = Array.from(
@@ -50,6 +53,18 @@ export function PostToc() {
     return () => observer.disconnect();
   }, []);
 
+  useEffect(() => {
+    if (!activeId || !listRef.current) {
+      setIndicator({ top: 0, opacity: 0 });
+      return;
+    }
+    const activeEl = itemRefs.current[activeId];
+    if (!activeEl) return;
+    const listTop = listRef.current.getBoundingClientRect().top;
+    const { top, height } = activeEl.getBoundingClientRect();
+    setIndicator({ top: top - listTop + height / 2, opacity: 1 });
+  }, [activeId, items.length]);
+
   const handleClick = (id: string) => (event: React.MouseEvent<HTMLAnchorElement>) => {
     event.preventDefault();
     const el = document.getElementById(id);
@@ -82,24 +97,38 @@ export function PostToc() {
         <FontAwesomeIcon icon={faListUl} className="h-3 w-3 text-slate-400" />
         目錄
       </div>
-      <ul className="space-y-1">
-        {items.map((item) => (
-          <li key={item.id} className={item.depth === 3 ? 'pl-3' : ''}>
-            <a
-              href={`#${item.id}`}
-              onClick={handleClick(item.id)}
-              className={`line-clamp-2 inline-flex items-center gap-2 hover:text-blue-600 dark:hover:text-blue-400 ${
-                item.id === activeId
-                  ? 'text-blue-600 dark:text-blue-400 font-semibold'
-                  : ''
-              }`}
+      <div className="relative pl-4">
+        <span className="absolute left-1 top-0 h-full w-px bg-slate-200 dark:bg-slate-800" aria-hidden="true" />
+        <span
+          className="absolute left-0 h-3 w-3 -translate-y-1/2 rounded-full bg-accent transition-all duration-200 ease-snappy"
+          style={{ top: `${indicator.top}px`, opacity: indicator.opacity }}
+          aria-hidden="true"
+        />
+        <ul ref={listRef} className="space-y-1">
+          {items.map((item) => (
+            <li
+              key={item.id}
+              ref={(el) => {
+                itemRefs.current[item.id] = el;
+              }}
+              className={item.depth === 3 ? 'pl-3' : ''}
             >
-              <FontAwesomeIcon icon={faCircle} className="h-1.5 w-1.5 text-slate-300" />
-              {item.text}
-            </a>
-          </li>
-        ))}
-      </ul>
+              <a
+                href={`#${item.id}`}
+                onClick={handleClick(item.id)}
+                className={`line-clamp-2 inline-flex items-center gap-2 hover:text-blue-600 dark:hover:text-blue-400 ${
+                  item.id === activeId
+                    ? 'text-blue-600 dark:text-blue-400 font-semibold'
+                    : ''
+                }`}
+              >
+                <FontAwesomeIcon icon={faCircle} className="h-1.5 w-1.5 text-slate-300" />
+                {item.text}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
     </nav>
   );
 }
