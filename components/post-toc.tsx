@@ -13,8 +13,8 @@ interface TocItem {
 export function PostToc() {
   const [items, setItems] = useState<TocItem[]>([]);
   const [activeId, setActiveId] = useState<string | null>(null);
-  const listRef = useRef<HTMLUListElement | null>(null);
-  const itemRefs = useRef<Record<string, HTMLLIElement | null>>({});
+  const listRef = useRef<HTMLDivElement | null>(null);
+  const itemRefs = useRef<Record<string, HTMLDivElement | null>>({});
   const [indicator, setIndicator] = useState({ top: 0, opacity: 0 });
 
   useEffect(() => {
@@ -104,19 +104,19 @@ export function PostToc() {
           style={{ top: `${indicator.top}px`, opacity: indicator.opacity }}
           aria-hidden="true"
         />
-        <ul
+        <div
           ref={listRef}
           className="space-y-1"
-          style={{ listStyleType: 'none', paddingLeft: 0, margin: 0 }}
+          role="list"
         >
           {items.map((item) => (
-            <li
+            <div
               key={item.id}
               ref={(el) => {
                 itemRefs.current[item.id] = el;
               }}
+              role="listitem"
               className={`relative ${item.depth === 3 ? 'pl-3' : 'pl-0'}`}
-              style={{ listStyleType: 'none' }}
             >
               <a
                 href={`#${item.id}`}
@@ -130,9 +130,9 @@ export function PostToc() {
                 <FontAwesomeIcon icon={faCircle} className="h-1.5 w-1.5 text-slate-300" aria-hidden="true" />
                 {item.text}
               </a>
-            </li>
+            </div>
           ))}
-        </ul>
+        </div>
       </div>
     </nav>
   );
