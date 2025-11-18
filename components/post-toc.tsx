@@ -92,7 +92,7 @@ export function PostToc() {
   if (items.length === 0) return null;
 
   return (
-    <nav className="sticky top-20 text-xs text-slate-500 dark:text-slate-400">
+    <nav className="not-prose sticky top-20 text-xs text-slate-500 dark:text-slate-400">
       <div className="mb-2 inline-flex items-center gap-2 font-semibold text-slate-700 dark:text-slate-200">
         <FontAwesomeIcon icon={faListUl} className="h-3 w-3 text-slate-400" />
         目錄
