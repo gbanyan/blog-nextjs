@@ -46,10 +46,6 @@ body {
   }
 }
 
-.timeline-scroll-dot {
-  animation: timeline-scroll 6s linear infinite;
-  will-change: transform, opacity;
-}
 
 .toc-target-highlight {
   @apply bg-yellow-50/60 dark:bg-yellow-900/40 transition-colors duration-500;

@@ -18,7 +18,7 @@ export function TimelineWrapper({ children, className }: TimelineWrapperProps) {
         className="pointer-events-none absolute left-3 top-0 h-full w-[8px] rounded-full bg-blue-500/15 blur-[14px]"
         aria-hidden="true"
       />
-      <span className="timeline-scroll-dot pointer-events-none absolute left-3 top-0 h-2 w-2 -translate-x-1/2 rounded-full bg-white shadow-[0_0_8px_rgba(96,165,250,0.7)]" aria-hidden="true" />
+      {/* Animated scroll cue removed */}*** End Patch
 
       <div className="space-y-4">
         {items.map((child, index) => (
