@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faGithub, faMastodon, faLinkedin } from '@fortawesome/free-brands-svg-icons';
 import { faFire, faArrowRight } from '@fortawesome/free-solid-svg-icons';
@@ -50,10 +51,12 @@ export function RightSidebar() {
               className="mb-2 inline-block transition-transform duration-300 ease-out group-hover:-translate-y-0.5"
             >
               {avatarSrc ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
+                <Image
                   src={avatarSrc}
                   alt={siteConfig.name}
+                  width={96}
+                  height={96}
+                  unoptimized
                   className="h-24 w-24 rounded-full border border-slate-200 object-cover shadow-sm transition-transform duration-300 ease-out group-hover:scale-105 dark:border-slate-700"
                 />
               ) : (

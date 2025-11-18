@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
 import { allPages } from 'contentlayer/generated';
@@ -70,15 +71,15 @@ export default function StaticPage({ params }: Props) {
             )}
           </header>
           <article className="prose prose-lg prose-slate max-w-none dark:prose-dark">
-            {page.feature_image && (
-              // feature_image is stored as "../assets/xyz", serve from "/assets/xyz"
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
-                src={page.feature_image.replace('../assets', '/assets')}
-                alt={page.title}
-                className="my-4 rounded"
-              />
-            )}
+              {page.feature_image && (
+                <Image
+                  src={page.feature_image.replace('../assets', '/assets')}
+                  alt={page.title}
+                  width={1200}
+                  height={600}
+                  className="my-4 rounded"
+                />
+              )}
             <div dangerouslySetInnerHTML={{ __html: page.body.html }} />
           </article>
         </div>

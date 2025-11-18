@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
 import { allPosts } from 'contentlayer/generated';
@@ -85,15 +86,15 @@ export default function BlogPostPage({ params }: Props) {
           <SectionDivider>
             <ScrollReveal>
               <article className="prose prose-lg prose-slate max-w-none dark:prose-dark">
-                {post.feature_image && (
-                  // feature_image is stored as "../assets/xyz", serve from "/assets/xyz"
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img
-                    src={post.feature_image.replace('../assets', '/assets')}
-                    alt={post.title}
-                    className="my-4 rounded"
-                  />
-                )}
+              {post.feature_image && (
+                <Image
+                  src={post.feature_image.replace('../assets', '/assets')}
+                  alt={post.title}
+                  width={1200}
+                  height={600}
+                  className="my-4 rounded"
+                />
+              )}
                 <div dangerouslySetInnerHTML={{ __html: post.body.html }} />
               </article>
             </ScrollReveal>
