@@ -65,6 +65,10 @@ body {
   margin: 0;
 }
 
+.toc-list li {
+  list-style: none;
+}
+
 @keyframes hero-sweep {
   0% {
     transform: translateX(-120%);
