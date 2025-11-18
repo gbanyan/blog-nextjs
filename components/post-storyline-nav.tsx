@@ -84,9 +84,6 @@ function Station({ station }: { station: StationConfig }) {
       <p className="text-lg font-semibold leading-snug tracking-tight text-slate-900 transition group-hover:text-blue-600 dark:text-slate-50 dark:group-hover:text-blue-300">
         {post.title}
       </p>
-      <span className="text-xs text-slate-500 transition group-hover:text-blue-500 dark:text-slate-400">
-        {subtitle}
-      </span>
       <span
         className={`mt-2 h-0.5 w-16 rounded-full bg-slate-200 transition group-hover:w-24 group-hover:bg-blue-400 dark:bg-slate-700 ${
           align === 'end' ? 'self-end' : 'self-start'
