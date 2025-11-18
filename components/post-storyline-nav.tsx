@@ -28,7 +28,7 @@ export function PostStorylineNav({ current, newer, older }: Props) {
       key: 'current',
       label: '你在這裡',
       post: current,
-      subtitle: '正在閱讀'
+      subtitle: ''
     },
     {
       key: 'newer',
@@ -86,10 +86,12 @@ function Station({ station }: { station: StationConfig }) {
       <p className="text-lg font-semibold leading-snug tracking-tight">
         {post.title}
       </p>
-      <span className="text-xs text-slate-500 transition group-hover:text-blue-500 dark:text-slate-400">
-        {subtitle}
-      </span>
-      <span className="mt-2 h-0.5 w-16 rounded-full bg-slate-200 transition group-hover:w-24 group-hover:bg-blue-400 dark:bg-slate-700" />
+      {subtitle && (
+        <span className="text-xs text-slate-500 transition group-hover:text-blue-500 dark:text-slate-400">
+          {subtitle}
+        </span>
+      )}
+      <span className={`mt-2 h-0.5 w-16 rounded-full transition group-hover:w-24 ${isCurrent ? 'bg-blue-500 dark:bg-blue-400' : 'bg-slate-200 group-hover:bg-blue-400 dark:bg-slate-700'}`} />
     </Link>
   );
 }
