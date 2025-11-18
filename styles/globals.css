@@ -29,6 +29,28 @@ body {
   font-family: var(--font-system-sans);
 }
 
+@keyframes timeline-scroll {
+  0% {
+    transform: translate(-50%, -10%);
+    opacity: 0;
+  }
+  15% {
+    opacity: 1;
+  }
+  85% {
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-50%, 110%);
+    opacity: 0;
+  }
+}
+
+.timeline-scroll-dot {
+  animation: timeline-scroll 6s linear infinite;
+  will-change: transform, opacity;
+}
+
 .toc-target-highlight {
   @apply bg-yellow-50/60 dark:bg-yellow-900/40 transition-colors duration-500;
 }
