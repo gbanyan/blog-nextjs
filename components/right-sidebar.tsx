@@ -37,7 +37,7 @@ export function RightSidebar() {
   ].filter(Boolean) as { key: string; href: string; icon: any; label: string }[];
 
   return (
-    <aside className="hidden text-sm lg:block">
+    <aside className="hidden lg:block">
       <div className="sticky top-20 flex flex-col gap-4">
         <section className="motion-card group relative overflow-hidden rounded-xl border bg-white px-4 py-4 shadow-sm hover:bg-slate-50 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-100">
           <div className="pointer-events-none absolute -left-10 -top-10 h-24 w-24 rounded-full bg-sky-300/35 blur-3xl mix-blend-soft-light motion-safe:animate-float-soft dark:bg-sky-500/25" />
@@ -63,7 +63,7 @@ export function RightSidebar() {
               )}
             </Link>
             {socialItems.length > 0 && (
-              <div className="mt-2 flex items-center gap-3 text-base text-accent-textLight dark:text-accent-textDark">
+              <div className="mt-2 flex items-center gap-3 text-lg text-accent-textLight dark:text-accent-textDark">
                 {socialItems.map((item) => (
                   <a
                     key={item.key}
@@ -79,7 +79,7 @@ export function RightSidebar() {
               </div>
             )}
             {siteConfig.aboutShort && (
-              <p className="mt-3 flex items-center gap-2 text-[13px] text-slate-600 dark:text-slate-200">
+              <p className="type-body mt-3 flex items-center gap-2 text-slate-600 dark:text-slate-200">
                 <FontAwesomeIcon icon={faIdCard} className="h-3 w-3 text-slate-400" />
                 <span>{siteConfig.aboutShort}</span>
               </p>
@@ -89,11 +89,11 @@ export function RightSidebar() {
 
         {tags.length > 0 && (
           <section className="motion-card rounded-xl border bg-white px-4 py-3 shadow-sm dark:border-slate-800 dark:bg-slate-900 dark:text-slate-100">
-            <h2 className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">
+            <h2 className="type-small flex items-center gap-2 font-semibold uppercase tracking-[0.35em] text-slate-500 dark:text-slate-400">
               <FontAwesomeIcon icon={faFire} className="h-3 w-3 text-orange-400" />
               熱門標籤
             </h2>
-            <div className="mt-2 flex flex-wrap gap-2 text-[13px]">
+            <div className="mt-2 flex flex-wrap gap-2 text-base">
               {tags.map(({ tag, slug, count }) => {
                 let sizeClass = '';
                 if (count >= 5) sizeClass = 'font-semibold';
@@ -110,7 +110,7 @@ export function RightSidebar() {
                 );
               })}
             </div>
-            <div className="mt-3 flex items-center justify-between text-[11px] text-slate-500 dark:text-slate-400">
+            <div className="mt-3 flex items-center justify-between type-small text-slate-500 dark:text-slate-400">
               <span className="inline-flex items-center gap-1">
                 <FontAwesomeIcon icon={faArrowRight} className="h-3 w-3" />
                 一覽所有標籤
