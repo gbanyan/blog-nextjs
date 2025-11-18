@@ -1,8 +1,6 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBookOpen } from '@fortawesome/free-solid-svg-icons';
 
 export function ReadingProgress() {
   const [mounted, setMounted] = useState(false);
@@ -34,14 +32,15 @@ export function ReadingProgress() {
   if (!mounted) return null;
 
   return (
-    <div className="pointer-events-none fixed inset-x-0 top-0 z-40 h-1.5 bg-slate-200/40 backdrop-blur-sm dark:bg-slate-900/70">
-      <div
-        className="relative h-full origin-left bg-gradient-to-r from-blue-500 via-sky-400 to-indigo-500 shadow-[0_0_12px_rgba(56,189,248,0.7)] transition-[transform,box-shadow] duration-200 ease-out dark:from-blue-400 dark:via-sky-300 dark:to-indigo-400"
-        style={{ transform: `scaleX(${progress / 100})` }}
-      >
-        <span className="absolute -right-3 -top-2.5 h-5 w-5 rounded-full bg-white/80 text-[10px] text-blue-600 shadow-md backdrop-blur dark:bg-slate-900/80" aria-hidden="true">
-          <FontAwesomeIcon icon={faBookOpen} className="h-full w-full p-1" />
-        </span>
+    <div className="pointer-events-none fixed inset-x-0 top-0 z-40 h-px bg-transparent">
+      <div className="relative h-1 w-full overflow-visible">
+        <div
+          className="absolute inset-y-0 left-0 origin-left rounded-full bg-gradient-to-r from-blue-500/70 via-sky-400/70 to-indigo-500/70 shadow-[0_0_8px_rgba(59,130,246,0.45)] transition-[transform,opacity] duration-300 ease-out dark:from-blue-400/70 dark:via-sky-300/70 dark:to-indigo-400/70"
+          style={{ transform: `scaleX(${progress / 100})`, opacity: progress > 0 ? 1 : 0 }}
+        >
+          <span className="absolute -right-2 top-1/2 h-3 w-3 -translate-y-1/2 rounded-full bg-white/70 blur-[1px] dark:bg-slate-900/70" aria-hidden="true" />
+        </div>
+        <span className="absolute inset-x-0 top-2 h-px bg-gradient-to-r from-transparent via-blue-200/40 to-transparent blur-sm dark:via-blue-900/30" aria-hidden="true" />
       </div>
     </div>
   );
