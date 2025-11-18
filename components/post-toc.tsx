@@ -104,7 +104,11 @@ export function PostToc() {
           style={{ top: `${indicator.top}px`, opacity: indicator.opacity }}
           aria-hidden="true"
         />
-        <ul ref={listRef} className="toc-list space-y-1">
+        <ul
+          ref={listRef}
+          className="space-y-1"
+          style={{ listStyleType: 'none', paddingLeft: 0, margin: 0 }}
+        >
           {items.map((item) => (
             <li
               key={item.id}
@@ -112,6 +116,7 @@ export function PostToc() {
                 itemRefs.current[item.id] = el;
               }}
               className={`relative ${item.depth === 3 ? 'pl-3' : 'pl-0'}`}
+              style={{ listStyleType: 'none' }}
             >
               <a
                 href={`#${item.id}`}

@@ -59,20 +59,6 @@ body {
   pointer-events: none;
 }
 
-.toc-list {
-  list-style: none !important;
-  padding-left: 0 !important;
-  margin: 0 !important;
-}
-
-.toc-list li {
-  list-style: none !important;
-  padding-left: 0 !important;
-}
-
-.toc-list li::marker {
-  content: '' !important;
-}
 
 @keyframes hero-sweep {
   0% {
