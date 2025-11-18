@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faListUl, faCircle } from '@fortawesome/free-solid-svg-icons';
+import { faListUl } from '@fortawesome/free-solid-svg-icons';
 
 interface TocItem {
   id: string;
@@ -121,13 +121,12 @@ export function PostToc() {
               <a
                 href={`#${item.id}`}
                 onClick={handleClick(item.id)}
-                className={`line-clamp-2 inline-flex items-center gap-2 pl-2 hover:text-blue-600 dark:hover:text-blue-400 ${
+                className={`line-clamp-2 inline-flex items-center pl-2 hover:text-blue-600 dark:hover:text-blue-400 ${
                   item.id === activeId
                     ? 'text-blue-600 dark:text-blue-400 font-semibold'
                     : ''
                 }`}
               >
-                <FontAwesomeIcon icon={faCircle} className="h-1.5 w-1.5 text-slate-300" aria-hidden="true" />
                 {item.text}
               </a>
             </div>
