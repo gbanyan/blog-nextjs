@@ -11,6 +11,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { siteConfig } from '@/lib/config';
 import { PostListItem } from './post-list-item';
+import { TimelineWrapper } from './timeline-wrapper';
 
 interface Props {
   posts: Post[];
@@ -151,11 +152,11 @@ export function PostListWithControls({ posts, pageSize }: Props) {
           找不到符合關鍵字的文章，換個詞再試試？
         </div>
       ) : (
-        <div className="space-y-3">
+        <TimelineWrapper className="space-y-3">
           {currentPosts.map((post) => (
             <PostListItem key={post._id} post={post} />
           ))}
-        </div>
+        </TimelineWrapper>
       )}
 
       {totalPages > 1 && currentPosts.length > 0 && (
