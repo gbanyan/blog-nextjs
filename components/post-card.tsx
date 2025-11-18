@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import type { Post } from 'contentlayer/generated';
 import { siteConfig } from '@/lib/config';
 import { faCalendarDays, faTags } from '@fortawesome/free-solid-svg-icons';
@@ -19,11 +20,12 @@ export function PostCard({ post, showTags = true }: PostCardProps) {
     <article className="motion-card group relative overflow-hidden rounded-xl border bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900">
       <div className="pointer-events-none absolute inset-x-0 top-0 h-1 origin-left scale-x-0 bg-gradient-to-r from-blue-500 via-sky-400 to-indigo-500 opacity-80 transition-transform duration-300 ease-out group-hover:scale-x-100 dark:from-blue-400 dark:via-sky-300 dark:to-indigo-400" />
       {cover && (
-        <div className="w-full bg-slate-100 dark:bg-slate-800">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
+        <div className="relative w-full bg-slate-100 dark:bg-slate-800">
+          <Image
             src={cover}
             alt={post.title}
+            width={640}
+            height={360}
             className="mx-auto max-h-60 w-full object-contain transition-transform duration-300 ease-out group-hover:scale-105"
           />
         </div>

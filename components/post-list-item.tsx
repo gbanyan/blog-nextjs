@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import type { Post } from 'contentlayer/generated';
 import { siteConfig } from '@/lib/config';
 import { faCalendarDays, faTags } from '@fortawesome/free-solid-svg-icons';
@@ -21,11 +22,12 @@ export function PostListItem({ post }: Props) {
     <article className="motion-card group relative flex gap-4 rounded-lg border border-slate-200/70 bg-white/90 p-4 shadow-sm dark:border-slate-800 dark:bg-slate-900/80">
       <div className="pointer-events-none absolute inset-x-0 top-0 h-0.5 origin-left scale-x-0 bg-gradient-to-r from-blue-500 via-sky-400 to-indigo-500 opacity-80 transition-transform duration-300 ease-out group-hover:scale-x-100 dark:from-blue-400 dark:via-sky-300 dark:to-indigo-400" />
       {cover && (
-        <div className="flex h-24 w-24 flex-none overflow-hidden rounded-md bg-slate-100 dark:bg-slate-800 sm:h-auto sm:w-40">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
+        <div className="relative flex h-24 w-24 flex-none overflow-hidden rounded-md bg-slate-100 dark:bg-slate-800 sm:h-auto sm:w-40">
+          <Image
             src={cover}
             alt={post.title}
+            width={320}
+            height={240}
             className="h-full w-full object-cover transition-transform duration-300 ease-out group-hover:scale-105"
           />
         </div>
