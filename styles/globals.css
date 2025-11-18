@@ -8,6 +8,9 @@
   --motion-ease-snappy: cubic-bezier(0.32, 0.72, 0, 1);
   --card-translate-y: -6px;
   --line-height-body: clamp(1.5, 0.15vw + 1.45, 1.65);
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
   --font-system-sans: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'SF Pro Display', 'PingFang TC', 'PingFang SC', 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Segoe UI Variable Text', 'Segoe UI', 'Microsoft JhengHei', 'Microsoft YaHei', 'Noto Sans TC', 'Noto Sans SC', 'Noto Sans CJK TC', 'Noto Sans CJK SC', 'Source Han Sans TC', 'Source Han Sans SC', 'Roboto', 'Ubuntu', 'Cantarell', 'Inter', 'Helvetica Neue', Arial, sans-serif;
 
   font-size: clamp(15px, 0.65vw + 11px, 19px);
@@ -147,29 +150,40 @@ body {
 }
 
 @layer components {
-  .type-display {
-    font-size: clamp(2.2rem, 1.6rem + 2.4vw, 3.5rem);
-    line-height: 1.2;
-  }
+.type-display {
+  font-size: clamp(2.2rem, 1.6rem + 2.4vw, 3.5rem);
+  line-height: 1.2;
+  font-weight: var(--font-weight-semibold);
+}
 
-  .type-title {
-    font-size: clamp(1.6rem, 1.1rem + 1.4vw, 2.6rem);
-    line-height: 1.3;
-  }
+.type-title {
+  font-size: clamp(1.6rem, 1.1rem + 1.4vw, 2.6rem);
+  line-height: 1.3;
+  font-weight: var(--font-weight-semibold);
+}
 
-  .type-subtitle {
-    font-size: clamp(1.25rem, 0.9rem + 1vw, 1.9rem);
-    line-height: 1.35;
-  }
+.type-subtitle {
+  font-size: clamp(1.25rem, 0.9rem + 1vw, 1.9rem);
+  line-height: 1.35;
+  font-weight: var(--font-weight-medium);
+}
 
-  .type-body {
-    font-size: clamp(1rem, 0.2vw + 0.9rem, 1.15rem);
-    line-height: var(--line-height-body);
-  }
+.type-body {
+  font-size: clamp(1rem, 0.2vw + 0.9rem, 1.15rem);
+  line-height: var(--line-height-body);
+  font-weight: var(--font-weight-regular);
+}
 
-  .type-small {
-    font-size: clamp(0.85rem, 0.2vw + 0.8rem, 0.95rem);
-    line-height: 1.4;
+.type-small {
+  font-size: clamp(0.85rem, 0.2vw + 0.8rem, 0.95rem);
+  line-height: 1.4;
+  font-weight: var(--font-weight-regular);
+}
+
+  .type-nav {
+    font-size: clamp(0.95rem, 0.2vw + 0.85rem, 1.05rem);
+    font-weight: var(--font-weight-medium);
+    letter-spacing: 0.04em;
   }
 
   .motion-card {

@@ -25,7 +25,7 @@ export function SiteHeader() {
       <div className="container mx-auto flex items-center justify-between px-4 py-3 text-slate-900 dark:text-slate-100">
         <Link
           href="/"
-          className="motion-link group relative font-semibold tracking-tight text-lg text-slate-900 hover:text-accent focus-visible:outline-none focus-visible:text-accent dark:text-slate-100"
+          className="motion-link group relative type-title text-slate-900 hover:text-accent focus-visible:outline-none focus-visible:text-accent dark:text-slate-100"
         >
           <span className="absolute -bottom-0.5 left-0 h-[2px] w-0 bg-accent transition-all duration-180 ease-snappy group-hover:w-full" aria-hidden="true" />
           {siteConfig.title}

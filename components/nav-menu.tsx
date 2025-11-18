@@ -75,13 +75,13 @@ export function NavMenu({ items }: NavMenuProps) {
         <FontAwesomeIcon icon={open ? faXmark : faBars} className="h-4 w-4" />
       </button>
       <nav
-        className={`${open ? 'flex' : 'hidden'} flex-col gap-2 text-base sm:flex sm:flex-row sm:items-center sm:gap-3 sm:text-sm`}
+        className={`${open ? 'flex' : 'hidden'} flex-col gap-2 sm:flex sm:flex-row sm:items-center sm:gap-3`}
       >
         {items.map((item) => (
           <Link
             key={item.key}
             href={item.href}
-            className="motion-link group relative inline-flex items-center gap-1.5 rounded-full px-3 py-1 font-medium text-slate-600 hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40 dark:text-slate-200"
+            className="motion-link type-nav group relative inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-slate-600 hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40 dark:text-slate-200"
             onClick={close}
           >
             <FontAwesomeIcon
