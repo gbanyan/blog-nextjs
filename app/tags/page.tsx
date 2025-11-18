@@ -21,11 +21,11 @@ export default function TagIndexPage() {
 
   return (
     <section className="space-y-4">
-      <h1 className="flex items-center gap-2 text-lg font-semibold text-slate-900 dark:text-slate-50">
+      <h1 className="type-title flex items-center gap-2 font-semibold text-slate-900 dark:text-slate-50">
         <FontAwesomeIcon icon={faTags} className="h-5 w-5 text-slate-400" />
         標籤索引
       </h1>
-      <p className="text-xs text-slate-500 dark:text-slate-400">
+      <p className="type-small text-slate-500 dark:text-slate-400">
         目前共有 {tags.length} 個標籤。
       </p>
       <div className="flex flex-wrap gap-3 text-xs">
@@ -35,7 +35,7 @@ export default function TagIndexPage() {
             <Link
               key={tag}
               href={`/tags/${slug}`}
-              className={`rounded-full px-3 py-1 shadow-sm transition-transform transition-shadow duration-200 ease-out hover:-translate-y-0.5 hover:shadow-md ${color}`}
+              className={`tag-chip rounded-full px-3 py-1 shadow-sm transition-transform transition-shadow duration-200 ease-out hover:-translate-y-0.5 hover:shadow-md ${color}`}
             >
               <span className="mr-1">{tag}</span>
               <span className="opacity-70">({count})</span>

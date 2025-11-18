@@ -64,11 +64,12 @@ export function Hero() {
       <div className="pointer-events-none absolute -bottom-20 right-[-3rem] h-44 w-44 rounded-full bg-indigo-300/35 blur-3xl mix-blend-soft-light motion-safe:animate-float-soft dark:bg-indigo-500/25" />
 
       <div className="relative flex items-center gap-4 motion-safe:animate-fade-in-up">
-        <div className="flex h-16 w-16 items-center justify-center rounded-full bg-slate-900 text-2xl font-semibold text-slate-50 shadow-md transition-transform duration-300 ease-out group-hover:scale-105 dark:bg-slate-100 dark:text-slate-900">
+        <div className="flex h-16 w-16 items-center justify-center rounded-full bg-slate-900 text-xl font-semibold text-slate-50 shadow-md transition-transform duration-300 ease-out group-hover:scale-105 dark:bg-slate-100 dark:text-slate-900">
           {initial}
         </div>
         <div>
-          <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">
+          <h1 className="hero-title type-display font-bold tracking-tight">
+            <span className="hero-title__sweep" aria-hidden="true" />
             {name}
           </h1>
           <div className="mt-1">

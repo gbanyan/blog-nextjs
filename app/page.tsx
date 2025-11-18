@@ -9,17 +9,17 @@ export default function HomePage() {
   return (
     <section className="space-y-6">
       <header className="space-y-1 text-center">
-        <h1 className="text-2xl font-bold text-slate-900 sm:text-3xl dark:text-slate-50">
+        <h1 className="type-title font-bold text-slate-900 dark:text-slate-50">
           {siteConfig.name} 的最新動態
         </h1>
-        <p className="text-sm text-slate-600 dark:text-slate-300">
+        <p className="type-small text-slate-600 dark:text-slate-300">
           {siteConfig.tagline}
         </p>
       </header>
 
       <div>
         <div className="mb-3 flex items-baseline justify-between">
-          <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">
+          <h2 className="type-small font-semibold uppercase tracking-[0.4em] text-slate-500 dark:text-slate-400">
             最新文章
           </h2>
           <Link
