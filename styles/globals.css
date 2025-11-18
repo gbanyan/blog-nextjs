@@ -44,6 +44,69 @@ body {
   color: inherit !important;
 }
 
+.hero-title {
+  position: relative;
+  display: inline-flex;
+  overflow: hidden;
+}
+
+.hero-title__sweep {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(120deg, transparent 10%, rgba(59, 130, 246, 0.35) 45%, transparent 90%);
+  transform: translateX(-120%);
+  animation: hero-sweep 4s var(--motion-ease-snappy) infinite;
+  pointer-events: none;
+}
+
+.toc-list {
+  list-style: none;
+  padding-left: 0;
+  margin: 0;
+}
+
+@keyframes hero-sweep {
+  0% {
+    transform: translateX(-120%);
+    opacity: 0;
+  }
+  30% {
+    opacity: 0.4;
+  }
+  60% {
+    transform: translateX(120%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(120%);
+    opacity: 0;
+  }
+}
+
+.tag-chip {
+  position: relative;
+  overflow: hidden;
+  transition: color var(--motion-duration-short) var(--motion-ease-snappy), background-color var(--motion-duration-short) var(--motion-ease-snappy);
+}
+
+.tag-chip::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: 4px;
+  width: 0;
+  height: 2px;
+  background: currentColor;
+  opacity: 0.5;
+  transition: width var(--motion-duration-short) var(--motion-ease-snappy), left var(--motion-duration-short) var(--motion-ease-snappy);
+}
+
+.tag-chip:hover::after,
+.tag-chip:focus-visible::after {
+  width: 100%;
+  left: 0;
+}
+
 @layer components {
   .motion-card {
     transition: transform var(--motion-duration-medium) var(--motion-ease-snappy),

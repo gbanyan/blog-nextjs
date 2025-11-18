@@ -104,7 +104,7 @@ export function PostToc() {
           style={{ top: `${indicator.top}px`, opacity: indicator.opacity }}
           aria-hidden="true"
         />
-        <ul ref={listRef} className="list-none space-y-1">
+        <ul ref={listRef} className="toc-list space-y-1">
           {items.map((item) => (
             <li
               key={item.id}
