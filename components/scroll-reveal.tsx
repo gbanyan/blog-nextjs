@@ -21,24 +21,40 @@ export function ScrollReveal({
     const el = ref.current;
     if (!el) return;
 
+    if (!('IntersectionObserver' in window)) {
+      setVisible(true);
+      return;
+    }
+
+    let cancelled = false;
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            setVisible(true);
+            if (!cancelled) setVisible(true);
             if (once) observer.unobserve(entry.target);
           } else if (!once) {
-            setVisible(false);
+            if (!cancelled) setVisible(false);
           }
         });
       },
       {
-        threshold: 0.15
+        threshold: 0.05,
+        rootMargin: '0px 0px -20% 0px'
       }
     );
 
     observer.observe(el);
-    return () => observer.disconnect();
+
+    const fallback = window.setTimeout(() => {
+      if (!cancelled) setVisible(true);
+    }, 500);
+
+    return () => {
+      cancelled = true;
+      observer.disconnect();
+      window.clearTimeout(fallback);
+    };
   }, [once]);
 
   return (
@@ -56,4 +72,3 @@ export function ScrollReveal({
     </div>
   );
 }
-
