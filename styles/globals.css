@@ -8,6 +8,7 @@
   --motion-ease-snappy: cubic-bezier(0.32, 0.72, 0, 1);
   --card-translate-y: -6px;
   --line-height-body: clamp(1.5, 0.15vw + 1.45, 1.65);
+  --font-system-sans: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'SF Pro Display', 'PingFang TC', 'PingFang SC', 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Segoe UI Variable Text', 'Segoe UI', 'Microsoft JhengHei', 'Microsoft YaHei', 'Noto Sans TC', 'Noto Sans SC', 'Noto Sans CJK TC', 'Noto Sans CJK SC', 'Source Han Sans TC', 'Source Han Sans SC', 'Roboto', 'Ubuntu', 'Cantarell', 'Inter', 'Helvetica Neue', Arial, sans-serif;
 
   font-size: clamp(15px, 0.65vw + 11px, 19px);
 }
@@ -22,7 +23,7 @@ body {
   @apply bg-white text-gray-900 transition-colors duration-200 ease-snappy dark:bg-gray-950 dark:text-gray-100;
   font-size: 1rem;
   line-height: var(--line-height-body);
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang TC', 'Noto Sans TC', 'Microsoft JhengHei', 'Noto Sans', sans-serif;
+  font-family: var(--font-system-sans);
 }
 
 .toc-target-highlight {
