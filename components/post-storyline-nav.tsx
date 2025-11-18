@@ -8,11 +8,12 @@ interface Props {
 }
 
 interface StationConfig {
-  key: 'older' | 'current' | 'newer';
+  key: 'older' | 'newer';
   label: string;
   post?: Post;
   rel?: 'prev' | 'next';
   subtitle: string;
+  align: 'start' | 'end';
 }
 
 export function PostStorylineNav({ current, newer, older }: Props) {
@@ -22,20 +23,16 @@ export function PostStorylineNav({ current, newer, older }: Props) {
       label: '上一站',
       post: older,
       subtitle: older ? '回顧這篇' : '到達起點',
-      rel: 'prev'
-    },
-    {
-      key: 'current',
-      label: '你在這裡',
-      post: current,
-      subtitle: ''
+      rel: 'prev',
+      align: 'end'
     },
     {
       key: 'newer',
       label: '下一站',
       post: newer,
       subtitle: newer ? '繼續前往' : '尚無新章',
-      rel: 'next'
+      rel: 'next',
+      align: 'start'
     }
   ];
 
@@ -49,10 +46,13 @@ export function PostStorylineNav({ current, newer, older }: Props) {
             <span className="h-0 w-0 translate-x-3 rotate-180 border-y-[7px] border-y-transparent border-r-[14px] border-r-current" />
           </div>
         </div>
-        <div className="relative grid gap-6 md:grid-cols-3">
-          {stations.map((station) => (
-            <Station key={station.key} station={station} />
-          ))}
+        <div className="relative grid gap-6 md:grid-cols-[1fr_auto_1fr] md:items-center">
+          <Station station={stations[0]} />
+          <div className="hidden flex-col items-center gap-2 text-center text-xs uppercase tracking-[0.4em] text-slate-400 md:flex">
+            <span className="h-2 w-2 rounded-full bg-blue-500" aria-hidden="true" />
+            <span>你在這裡</span>
+          </div>
+          <Station station={stations[1]} />
         </div>
       </div>
     </nav>
@@ -60,14 +60,14 @@ export function PostStorylineNav({ current, newer, older }: Props) {
 }
 
 function Station({ station }: { station: StationConfig }) {
-  const { post, label, subtitle, rel, key } = station;
-  const isCurrent = key === 'current';
+  const { post, label, subtitle, rel, align } = station;
+  const alignClass = align === 'end' ? 'items-end text-right' : 'items-start text-left';
 
   if (!post) {
     return (
-      <div className="flex flex-col items-center gap-2 text-center text-slate-400">
+      <div className={`flex flex-col gap-1 text-slate-400 ${alignClass}`}>
         <p className="text-[11px] uppercase tracking-[0.4em]">{label}</p>
-        <p className="text-lg font-semibold">{subtitle}</p>
+        <p className="text-base font-semibold">{subtitle}</p>
       </div>
     );
   }
@@ -76,22 +76,22 @@ function Station({ station }: { station: StationConfig }) {
     <Link
       href={post.url}
       rel={rel}
-      className={`group flex flex-col items-center gap-2 text-center transition duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 ${
-        isCurrent ? 'text-blue-600 dark:text-blue-400' : 'text-slate-900 dark:text-slate-50'
-      }`}
+      className={`group flex flex-col gap-1 text-center transition duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 dark:focus-visible:ring-blue-300 ${alignClass}`}
     >
       <p className="text-[11px] uppercase tracking-[0.4em] text-slate-400 transition group-hover:text-blue-500 dark:text-slate-500">
         {label}
       </p>
-      <p className="text-lg font-semibold leading-snug tracking-tight">
+      <p className="text-lg font-semibold leading-snug tracking-tight text-slate-900 transition group-hover:text-blue-600 dark:text-slate-50 dark:group-hover:text-blue-300">
         {post.title}
       </p>
-      {subtitle && (
-        <span className="text-xs text-slate-500 transition group-hover:text-blue-500 dark:text-slate-400">
-          {subtitle}
-        </span>
-      )}
-      <span className={`mt-2 h-0.5 w-16 rounded-full transition group-hover:w-24 ${isCurrent ? 'bg-blue-500 dark:bg-blue-400' : 'bg-slate-200 group-hover:bg-blue-400 dark:bg-slate-700'}`} />
+      <span className="text-xs text-slate-500 transition group-hover:text-blue-500 dark:text-slate-400">
+        {subtitle}
+      </span>
+      <span
+        className={`mt-2 h-0.5 w-16 rounded-full bg-slate-200 transition group-hover:w-24 group-hover:bg-blue-400 dark:bg-slate-700 ${
+          align === 'end' ? 'self-end' : 'self-start'
+        }`}
+      />
     </Link>
   );
 }
