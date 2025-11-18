@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faGithub, faMastodon, faLinkedin } from '@fortawesome/free-brands-svg-icons';
-import { faFire, faIdCard, faArrowRight } from '@fortawesome/free-solid-svg-icons';
+import { faFire, faArrowRight } from '@fortawesome/free-solid-svg-icons';
 import { siteConfig } from '@/lib/config';
 import { getAllTagsWithCount } from '@/lib/posts';
 import { allPages } from 'contentlayer/generated';
@@ -79,10 +79,11 @@ export function RightSidebar() {
               </div>
             )}
             {siteConfig.aboutShort && (
-              <p className="type-body mt-3 flex items-center gap-2 text-slate-600 dark:text-slate-200">
-                <FontAwesomeIcon icon={faIdCard} className="h-3 w-3 text-slate-400" />
-                <span>{siteConfig.aboutShort}</span>
-              </p>
+              <div className="type-body mt-3 space-y-1 text-center text-slate-600 dark:text-slate-200">
+                {siteConfig.aboutShort.split(/\n+/).map((line, index) => (
+                  <p key={`${line}-${index}`}>{line}</p>
+                ))}
+              </div>
             )}
           </div>
         </section>
