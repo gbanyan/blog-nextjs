@@ -63,6 +63,7 @@ Markdown content (posts & pages) lives in a separate repository and is consumed 
   - Top: published date, large title, colored tags.
   - Body: `prose` typography with tuned light/dark colors, images, blockquotes, code.
   - Top bar: reading progress indicator.
+  - Metro-inspired "storyline" rail that shows上一站 / 你在這裡 / 下一站，with glowing capsules linking to adjacent posts.
   - Bottom: "相關文章" cards suggesting up to three related posts that share overlapping tags.
 
 - **Right sidebar** (on large screens)

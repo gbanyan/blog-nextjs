@@ -87,3 +87,18 @@ export function getRelatedPosts(target: Post, limit = 3): Post[] {
 
   return [...scored, ...fallback.slice(0, limit - scored.length)].slice(0, limit);
 }
+
+export function getPostNeighbors(target: Post): {
+  newer?: Post;
+  older?: Post;
+} {
+  const sorted = getAllPostsSorted();
+  const index = sorted.findIndex((post) => post._id === target._id);
+
+  if (index === -1) return {};
+
+  return {
+    newer: index > 0 ? sorted[index - 1] : undefined,
+    older: index < sorted.length - 1 ? sorted[index + 1] : undefined
+  };
+}

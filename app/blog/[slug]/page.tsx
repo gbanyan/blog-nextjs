@@ -2,12 +2,13 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
 import { allPosts } from 'contentlayer/generated';
-import { getPostBySlug, getRelatedPosts } from '@/lib/posts';
+import { getPostBySlug, getRelatedPosts, getPostNeighbors } from '@/lib/posts';
 import { siteConfig } from '@/lib/config';
 import { ReadingProgress } from '@/components/reading-progress';
 import { PostToc } from '@/components/post-toc';
 import { ScrollReveal } from '@/components/scroll-reveal';
 import { PostCard } from '@/components/post-card';
+import { PostStorylineNav } from '@/components/post-storyline-nav';
 
 export function generateStaticParams() {
   return allPosts.map((post) => ({
@@ -37,6 +38,7 @@ export default function BlogPostPage({ params }: Props) {
   if (!post) return notFound();
 
   const relatedPosts = getRelatedPosts(post, 3);
+  const neighbors = getPostNeighbors(post);
 
   return (
     <>
@@ -89,6 +91,14 @@ export default function BlogPostPage({ params }: Props) {
               )}
               <div dangerouslySetInnerHTML={{ __html: post.body.html }} />
             </article>
+          </ScrollReveal>
+
+          <ScrollReveal>
+            <PostStorylineNav
+              current={post}
+              newer={neighbors.newer}
+              older={neighbors.older}
+            />
           </ScrollReveal>
 
           {relatedPosts.length > 0 && (
