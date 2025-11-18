@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { getAllPostsSorted } from '@/lib/posts';
 import { siteConfig } from '@/lib/config';
 import { PostListItem } from '@/components/post-list-item';
+import { TimelineWrapper } from '@/components/timeline-wrapper';
 
 export default function HomePage() {
   const posts = getAllPostsSorted().slice(0, siteConfig.postsPerPage);
@@ -29,11 +30,11 @@ export default function HomePage() {
             所有文章 →
           </Link>
         </div>
-        <ul className="space-y-3">
+        <TimelineWrapper>
           {posts.map((post) => (
             <PostListItem key={post._id} post={post} />
           ))}
-        </ul>
+        </TimelineWrapper>
       </div>
     </section>
   );

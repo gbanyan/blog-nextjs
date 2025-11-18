@@ -151,11 +151,11 @@ export function PostListWithControls({ posts, pageSize }: Props) {
           找不到符合關鍵字的文章，換個詞再試試？
         </div>
       ) : (
-        <ul className="space-y-3">
+        <div className="space-y-3">
           {currentPosts.map((post) => (
             <PostListItem key={post._id} post={post} />
           ))}
-        </ul>
+        </div>
       )}
 
       {totalPages > 1 && currentPosts.length > 0 && (

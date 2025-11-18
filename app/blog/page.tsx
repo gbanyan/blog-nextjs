@@ -1,5 +1,6 @@
 import { getAllPostsSorted } from '@/lib/posts';
 import { PostListWithControls } from '@/components/post-list-with-controls';
+import { TimelineWrapper } from '@/components/timeline-wrapper';
 
 export const metadata = {
   title: '所有文章'
