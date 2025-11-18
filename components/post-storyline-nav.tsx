@@ -66,6 +66,9 @@ function Station({ station }: { station: StationConfig }) {
   const alignClass = align === 'end' ? 'items-end text-right' : 'items-start text-left';
 
   if (!post) {
+    if (align === 'start') {
+      return <div className="hidden" aria-hidden="true" />;
+    }
     return (
       <div className={`flex flex-col gap-1 text-slate-400 ${alignClass}`}>
         <p className="text-[11px] uppercase tracking-[0.4em]">{label}</p>
