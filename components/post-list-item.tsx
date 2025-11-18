@@ -18,8 +18,8 @@ export function PostListItem({ post }: Props) {
     post.description || post.custom_excerpt || post.body?.raw?.slice(0, 120);
 
   return (
-    <div className="timeline-entry group relative pl-5" role="listitem">
-      <span className="pointer-events-none absolute left-3 top-6 z-10 h-4 w-4 -translate-x-1/2 rounded-full border-2 border-blue-400/80 bg-transparent shadow-[0_0_8px_rgba(59,130,246,0.35)] transition-transform duration-300 ease-out group-hover:scale-125 dark:border-cyan-300/80" aria-hidden="true" />
+    <div className="timeline-entry group relative pl-4" role="listitem">
+      <span className="pointer-events-none absolute left-2 top-6 z-10 h-4 w-4 rounded-full border-2 border-blue-400/80 bg-transparent shadow-[0_0_8px_rgba(59,130,246,0.35)] transition-transform duration-300 ease-out group-hover:scale-110 dark:border-cyan-300/80" aria-hidden="true" />
       <article className="motion-card group relative flex gap-4 rounded-lg border border-slate-200/70 bg-white/90 p-4 shadow-sm dark:border-slate-800 dark:bg-slate-900/80">
         <div className="pointer-events-none absolute inset-x-0 top-0 h-0.5 origin-left scale-x-0 bg-gradient-to-r from-blue-500 via-sky-400 to-indigo-500 opacity-80 transition-transform duration-300 ease-out group-hover:scale-x-100 dark:from-blue-400 dark:via-sky-300 dark:to-indigo-400" />
         {cover && (
