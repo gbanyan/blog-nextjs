@@ -27,7 +27,14 @@ export function getPageBySlug(slug: string): Page | undefined {
 }
 
 export function getTagSlug(tag: string): string {
-  return tag.toLowerCase().replace(/\s+/g, '-');
+  // Normalize spaces and convert to lowercase first
+  // Replace multiple spaces/dashes with single dash
+  const normalized = tag
+    .toLowerCase()
+    .replace(/\s+/g, '-')
+    .replace(/-+/g, '-');
+  // Encode URI components to handle non-ASCII characters properly
+  return encodeURIComponent(normalized);
 }
 
 export function getAllTagsWithCount(): { tag: string; slug: string; count: number }[] {
