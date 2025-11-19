@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { ThemeToggle } from './theme-toggle';
 import { NavMenu, NavLinkItem, IconKey } from './nav-menu';
 import { siteConfig } from '@/lib/config';
-import { allPages } from 'contentlayer/generated';
+import { allPages } from 'contentlayer2/generated';
 
 export function SiteHeader() {
   const pages = allPages

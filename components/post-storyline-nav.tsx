@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import type { Post } from 'contentlayer/generated';
+import { Post } from 'contentlayer2/generated';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeftLong, faArrowRightLong } from '@fortawesome/free-solid-svg-icons';
 
@@ -94,9 +94,8 @@ function Station({ station }: { station: StationConfig }) {
         {post.title}
       </p>
       <span
-        className={`mt-2 h-0.5 w-16 rounded-full bg-slate-200 transition group-hover:w-24 group-hover:bg-blue-400 dark:bg-slate-700 ${
-          align === 'end' ? 'self-end' : 'self-start'
-        }`}
+        className={`mt-2 h-0.5 w-16 rounded-full bg-slate-200 transition group-hover:w-24 group-hover:bg-blue-400 dark:bg-slate-700 ${align === 'end' ? 'self-end' : 'self-start'
+          }`}
       />
     </Link>
   );

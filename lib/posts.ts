@@ -1,4 +1,4 @@
-import { allPosts, allPages, Post, Page } from 'contentlayer/generated';
+import { allPosts, allPages, Post, Page } from 'contentlayer2/generated';
 
 export function getAllPostsSorted(): Post[] {
   return [...allPosts].sort((a, b) => {
@@ -27,7 +27,7 @@ export function getPageBySlug(slug: string): Page | undefined {
 }
 
 export function getTagSlug(tag: string): string {
-  return encodeURIComponent(tag.toLowerCase().replace(/\s+/g, '-'));
+  return tag.toLowerCase().replace(/\s+/g, '-');
 }
 
 export function getAllTagsWithCount(): { tag: string; slug: string; count: number }[] {

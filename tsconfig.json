@@ -25,7 +25,7 @@
       "@/*": [
         "./*"
       ],
-      "contentlayer/generated": [
+      "contentlayer2/generated": [
         "./.contentlayer/generated"
       ]
     },

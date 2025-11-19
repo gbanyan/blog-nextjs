@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import type { Post } from 'contentlayer/generated';
+import type { Post } from 'contentlayer2/generated';
 import { siteConfig } from '@/lib/config';
 import { faCalendarDays, faTags } from '@fortawesome/free-solid-svg-icons';
 import { MetaItem } from './meta-item';

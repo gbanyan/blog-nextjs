@@ -5,7 +5,7 @@ import { faGithub, faMastodon, faLinkedin } from '@fortawesome/free-brands-svg-i
 import { faFire, faArrowRight } from '@fortawesome/free-solid-svg-icons';
 import { siteConfig } from '@/lib/config';
 import { getAllTagsWithCount } from '@/lib/posts';
-import { allPages } from 'contentlayer/generated';
+import { allPages } from 'contentlayer2/generated';
 
 export function RightSidebar() {
   const tags = getAllTagsWithCount().slice(0, 5);

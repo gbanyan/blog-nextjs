@@ -10,7 +10,7 @@ interface TocItem {
   depth: number;
 }
 
-export function PostToc() {
+export function PostToc({ onLinkClick }: { onLinkClick?: () => void }) {
   const [items, setItems] = useState<TocItem[]>([]);
   const [activeId, setActiveId] = useState<string | null>(null);
   const listRef = useRef<HTMLDivElement | null>(null);
@@ -86,6 +86,11 @@ export function PostToc() {
       const url = new URL(window.location.href);
       url.hash = id;
       history.replaceState(null, '', url.toString());
+    }
+
+    // Trigger callback if provided (e.g. to close mobile menu)
+    if (onLinkClick) {
+      onLinkClick();
     }
   };
 

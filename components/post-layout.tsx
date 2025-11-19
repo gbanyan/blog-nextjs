@@ -31,7 +31,7 @@ export function PostLayout({ children, hasToc = true }: { children: React.ReactN
                     </motion.div>
                 </div>
 
-                {/* Sidebar (TOC) */}
+                {/* Desktop Sidebar (TOC) */}
                 <aside className="hidden lg:block">
                     <div className="sticky top-24 h-[calc(100vh-6rem)] overflow-hidden">
                         <AnimatePresence mode="wait">
@@ -51,14 +51,32 @@ export function PostLayout({ children, hasToc = true }: { children: React.ReactN
                 </aside>
             </div>
 
+            {/* Mobile TOC Overlay */}
+            <AnimatePresence>
+                {isTocOpen && hasToc && (
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: 20 }}
+                        transition={{ duration: 0.2 }}
+                        className="fixed bottom-24 right-4 z-40 w-72 rounded-2xl border border-white/20 bg-white/90 p-6 shadow-2xl backdrop-blur-xl dark:border-white/10 dark:bg-slate-900/90 lg:hidden"
+                    >
+                        <div className="max-h-[60vh] overflow-y-auto">
+                            <PostToc onLinkClick={() => setIsTocOpen(false)} />
+                        </div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+
             {/* Toggle Button (Glassmorphism Pill) */}
             {hasToc && (
                 <motion.button
                     layout
                     onClick={() => setIsTocOpen(!isTocOpen)}
                     className={cn(
-                        "fixed bottom-8 right-20 z-50 flex items-center gap-2 rounded-full border border-white/20 bg-white/80 px-4 py-2.5 shadow-lg backdrop-blur-md transition-all hover:bg-white hover:scale-105 dark:border-white/10 dark:bg-slate-900/80 dark:hover:bg-slate-900",
-                        "text-sm font-medium text-slate-600 dark:text-slate-300"
+                        "fixed bottom-8 right-8 z-50 flex items-center gap-2 rounded-full border border-white/20 bg-white/80 px-4 py-2.5 shadow-lg backdrop-blur-md transition-all hover:bg-white hover:scale-105 dark:border-white/10 dark:bg-slate-900/80 dark:hover:bg-slate-900",
+                        "text-sm font-medium text-slate-600 dark:text-slate-300",
+                        "lg:right-20" // Adjust position for desktop
                     )}
                     whileTap={{ scale: 0.95 }}
                     aria-label="Toggle Table of Contents"

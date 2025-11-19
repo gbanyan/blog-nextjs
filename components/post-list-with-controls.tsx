@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
-import type { Post } from 'contentlayer/generated';
+import { Post, Page } from 'contentlayer2/generated';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faArrowDownWideShort,
@@ -88,11 +88,10 @@ export function PostListWithControls({ posts, pageSize }: Props) {
           <button
             type="button"
             onClick={() => handleChangeSort('new')}
-            className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 transition duration-180 ease-snappy ${
-              sortOrder === 'new'
-                ? 'bg-blue-600 text-white dark:bg-blue-500'
-                : 'bg-white text-slate-600 hover:bg-slate-200 dark:bg-slate-900 dark:text-slate-300 dark:hover:bg-slate-700'
-            }`}
+            className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 transition duration-180 ease-snappy ${sortOrder === 'new'
+              ? 'bg-blue-600 text-white dark:bg-blue-500'
+              : 'bg-white text-slate-600 hover:bg-slate-200 dark:bg-slate-900 dark:text-slate-300 dark:hover:bg-slate-700'
+              }`}
           >
             <FontAwesomeIcon icon={faArrowDownWideShort} className="h-3 w-3" />
             新到舊
@@ -100,11 +99,10 @@ export function PostListWithControls({ posts, pageSize }: Props) {
           <button
             type="button"
             onClick={() => handleChangeSort('old')}
-            className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 transition duration-180 ease-snappy ${
-              sortOrder === 'old'
-                ? 'bg-blue-600 text-white dark:bg-blue-500'
-                : 'bg-white text-slate-600 hover:bg-slate-200 dark:bg-slate-900 dark:text-slate-300 dark:hover:bg-slate-700'
-            }`}
+            className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 transition duration-180 ease-snappy ${sortOrder === 'old'
+              ? 'bg-blue-600 text-white dark:bg-blue-500'
+              : 'bg-white text-slate-600 hover:bg-slate-200 dark:bg-slate-900 dark:text-slate-300 dark:hover:bg-slate-700'
+              }`}
           >
             <FontAwesomeIcon icon={faArrowUpWideShort} className="h-3 w-3" />
             舊到新
@@ -178,11 +176,10 @@ export function PostListWithControls({ posts, pageSize }: Props) {
                   key={p}
                   type="button"
                   onClick={() => goToPage(p)}
-                  className={`h-7 w-7 rounded text-xs ${
-                    isActive
-                      ? 'bg-blue-600 text-white dark:bg-blue-500'
-                      : 'hover:bg-slate-100 dark:hover:bg-slate-800'
-                  }`}
+                  className={`h-7 w-7 rounded text-xs ${isActive
+                    ? 'bg-blue-600 text-white dark:bg-blue-500'
+                    : 'hover:bg-slate-100 dark:hover:bg-slate-800'
+                    }`}
                 >
                   {p}
                 </button>

@@ -2,7 +2,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
-import { allPosts } from 'contentlayer/generated';
+import { allPosts } from 'contentlayer2/generated';
 import { getPostBySlug, getRelatedPosts, getPostNeighbors } from '@/lib/posts';
 import { siteConfig } from '@/lib/config';
 import { ReadingProgress } from '@/components/reading-progress';
