@@ -22,11 +22,11 @@ export function generateStaticParams() {
 }
 
 interface Props {
-  params: { tag: string };
+  params: Promise<{ tag: string }>;
 }
 
-export function generateMetadata({ params }: Props): Metadata {
-  const slug = params.tag;
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { tag: slug } = await params;
   // Find original tag label by slug
   const tag = allPosts
     .flatMap((post) => post.tags ?? [])
@@ -37,15 +37,15 @@ export function generateMetadata({ params }: Props): Metadata {
   };
 }
 
-export default function TagPage({ params }: Props) {
-  const slug = params.tag;
+export default async function TagPage({ params }: Props) {
+  const { tag: slug } = await params;
 
   const posts = allPosts.filter(
     (post) => post.tags && post.tags.some((t) => getTagSlug(t) === slug)
   );
 
   const tagLabel =
-    posts[0]?.tags?.find((t) => getTagSlug(t) === slug) ?? params.tag;
+    posts[0]?.tags?.find((t) => getTagSlug(t) === slug) ?? slug;
 
   return (
     <SidebarLayout>

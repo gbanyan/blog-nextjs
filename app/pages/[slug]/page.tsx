@@ -17,11 +17,11 @@ export function generateStaticParams() {
 }
 
 interface Props {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }
 
-export function generateMetadata({ params }: Props): Metadata {
-  const slug = params.slug;
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { slug } = await params;
   const page = getPageBySlug(slug);
   if (!page) return {};
 
@@ -31,8 +31,8 @@ export function generateMetadata({ params }: Props): Metadata {
   };
 }
 
-export default function StaticPage({ params }: Props) {
-  const slug = params.slug;
+export default async function StaticPage({ params }: Props) {
+  const { slug } = await params;
   const page = getPageBySlug(slug);
 
   if (!page) return notFound();

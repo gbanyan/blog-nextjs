@@ -1,15 +1,16 @@
 # Personal Blog (Next.js + Contentlayer)
 
-This is a personal blog built with **Next.js 13 (App Router)**, **Contentlayer**, and **Tailwind CSS**.
+This is a personal blog built with **Next.js 16 (App Router)**, **Contentlayer2**, and **Tailwind CSS**.
 Markdown content (posts & pages) lives in a separate repository and is consumed via a git submodule.
-Recent iterations focused on migrating every image to `next/image`, refreshing the typography scale for mixed Chinese/English copy, and layering an elegant scrolling timeline aesthetic onto the home + blog index.
+Recent updates include upgrading to Next.js 16 with Turbopack, migrating to Contentlayer2, and implementing React 19 features.
 
 ## Tech Stack
 
-- **Framework**: Next.js 13 (App Router)
+- **Framework**: Next.js 16 (App Router) with Turbopack
 - **Language**: TypeScript
+- **Runtime**: React 19
 - **Styling**: Tailwind CSS + Typography plugin
-- **Content**: Markdown via Contentlayer (`contentlayer/source-files`)
+- **Content**: Markdown via Contentlayer2 (`contentlayer2/source-files`)
 - **Theming**: `next-themes` (light/dark), env‑driven accent color system
 - **Content source**: Git submodule `content` → [`personal-blog`](https://gitea.gbanyan.net/gbanyan/personal-blog.git)
 
@@ -294,15 +295,70 @@ This ensures your `content` folder matches the commit referenced in `blog-nextjs
 
 ## Available npm Scripts
 
-- `npm run dev` – Start Next.js dev server (Contentlayer is integrated via `next-contentlayer`).
-- `npm run build` – Run `next build` for production.
+- `npm run dev` – Start Contentlayer and Next.js dev server concurrently (with Turbopack).
+- `npm run build` – Build content and production bundle (`contentlayer2 build && next build`).
 - `npm run start` – Start the production server (after `npm run build`).
 - `npm run lint` – Run Next.js / ESLint linting.
-- `npm run contentlayer` – Manually run `contentlayer build` (optional).
+- `npm run sync-assets` – Copy `content/assets` to `public/assets`.
+
+## Adding New Content
+
+### Creating a New Blog Post
+
+1. Navigate to the `content/posts` directory (inside the submodule):
+
+   ```bash
+   cd content/posts
+   ```
+
+2. Create a new markdown file (e.g., `my-new-post.md`):
+
+   ```markdown
+   ---
+   title: "My New Post Title"
+   published_at: "2025-01-15"
+   tags:
+     - "Technology"
+     - "Tutorial"
+   description: "A brief description of the post"
+   feature_image: "../assets/my-image.jpg"
+   ---
+
+   Your post content goes here...
+   ```
+
+3. If using images, place them in `content/assets/` and reference them with relative paths:
+
+   ```markdown
+   ![Image description](../assets/my-image.jpg)
+   ```
+
+4. Commit and push changes in the submodule:
+
+   ```bash
+   git add .
+   git commit -m "Add new post: My New Post Title"
+   git push
+   ```
+
+5. Update the parent repository to reference the new submodule commit:
+
+   ```bash
+   cd ../..
+   git add content
+   git commit -m "Update content submodule"
+   git push
+   ```
+
+6. The new post will appear automatically after rebuilding or restarting the dev server.
+
+### Creating a New Static Page
+
+Follow the same process as above, but create the file in `content/pages/` instead.
 
 ## Deployment Notes
 
-- This is a standard Next.js 13 App Router project and can be deployed to:
+- This is a Next.js 16 App Router project with Turbopack and can be deployed to:
   - Vercel
   - Any Node.js host running `npm run build && npm run start`
 - Make sure to:

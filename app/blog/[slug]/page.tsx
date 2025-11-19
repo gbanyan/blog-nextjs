@@ -20,11 +20,11 @@ export function generateStaticParams() {
 }
 
 interface Props {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }
 
-export function generateMetadata({ params }: Props): Metadata {
-  const slug = params.slug;
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { slug } = await params;
   const post = getPostBySlug(slug);
   if (!post) return {};
 
@@ -34,8 +34,8 @@ export function generateMetadata({ params }: Props): Metadata {
   };
 }
 
-export default function BlogPostPage({ params }: Props) {
-  const slug = params.slug;
+export default async function BlogPostPage({ params }: Props) {
+  const { slug } = await params;
   const post = getPostBySlug(slug);
 
   if (!post) return notFound();
