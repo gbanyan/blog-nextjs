@@ -27,10 +27,12 @@ interface Props {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { tag: slug } = await params;
+  // Decode the slug since Next.js encodes non-ASCII characters in URLs
+  const decodedSlug = decodeURIComponent(slug);
   // Find original tag label by slug
   const tag = allPosts
     .flatMap((post) => post.tags ?? [])
-    .find((t) => getTagSlug(t) === slug);
+    .find((t) => getTagSlug(t) === decodedSlug);
 
   return {
     title: tag ? `標籤：${tag}` : '標籤'
@@ -39,13 +41,15 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function TagPage({ params }: Props) {
   const { tag: slug } = await params;
+  // Decode the slug since Next.js encodes non-ASCII characters in URLs
+  const decodedSlug = decodeURIComponent(slug);
 
   const posts = allPosts.filter(
-    (post) => post.tags && post.tags.some((t) => getTagSlug(t) === slug)
+    (post) => post.tags && post.tags.some((t) => getTagSlug(t) === decodedSlug)
   );
 
   const tagLabel =
-    posts[0]?.tags?.find((t) => getTagSlug(t) === slug) ?? slug;
+    posts[0]?.tags?.find((t) => getTagSlug(t) === decodedSlug) ?? decodedSlug;
 
   return (
     <SidebarLayout>

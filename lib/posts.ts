@@ -27,14 +27,14 @@ export function getPageBySlug(slug: string): Page | undefined {
 }
 
 export function getTagSlug(tag: string): string {
-  // Normalize spaces and convert to lowercase first
+  // Normalize spaces and convert to lowercase
   // Replace multiple spaces/dashes with single dash
-  const normalized = tag
+  // Next.js will handle URL encoding automatically, so we don't encode here
+  return tag
     .toLowerCase()
     .replace(/\s+/g, '-')
-    .replace(/-+/g, '-');
-  // Encode URI components to handle non-ASCII characters properly
-  return encodeURIComponent(normalized);
+    .replace(/-+/g, '-')
+    .trim();
 }
 
 export function getAllTagsWithCount(): { tag: string; slug: string; count: number }[] {
