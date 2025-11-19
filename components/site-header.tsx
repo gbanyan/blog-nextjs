@@ -1,10 +1,15 @@
+'use client';
+
 import Link from 'next/link';
+import { useState } from 'react';
 import { ThemeToggle } from './theme-toggle';
 import { NavMenu, NavLinkItem, IconKey } from './nav-menu';
+import { SearchButton, SearchModal } from './search-modal';
 import { siteConfig } from '@/lib/config';
 import { allPages } from 'contentlayer2/generated';
 
 export function SiteHeader() {
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
   const pages = allPages
     .slice()
     .sort((a, b) => (a.title || '').localeCompare(b.title || ''));
@@ -32,8 +37,13 @@ export function SiteHeader() {
         </Link>
         <div className="flex items-center gap-3">
           <NavMenu items={navItems} />
+          <SearchButton onClick={() => setIsSearchOpen(true)} />
           <ThemeToggle />
         </div>
+        <SearchModal
+          isOpen={isSearchOpen}
+          onClose={() => setIsSearchOpen(false)}
+        />
       </div>
     </header>
   );
