@@ -16,6 +16,10 @@ module.exports = {
           textDark: 'var(--color-accent-text-dark)'
         }
       },
+      fontFamily: {
+        'serif-eng': ['var(--font-serif-eng)', 'serif'],
+        'serif-cn': ['"Songti SC"', '"Noto Serif TC"', '"SimSun"', 'serif'],
+      },
       transitionTimingFunction: {
         snappy: 'cubic-bezier(0.32, 0.72, 0, 1)'
       },
@@ -54,11 +58,13 @@ module.exports = {
             },
             h1: {
               fontWeight: '700',
-              letterSpacing: '-0.03em'
+              letterSpacing: '-0.03em',
+              fontFamily: 'var(--font-serif-eng), "Songti SC", serif',
             },
             h2: {
               fontWeight: '600',
-              letterSpacing: '-0.02em'
+              letterSpacing: '-0.02em',
+              fontFamily: 'var(--font-serif-eng), "Songti SC", serif',
             },
             blockquote: {
               fontStyle: 'normal',

@@ -3,6 +3,13 @@ import type { Metadata } from 'next';
 import { siteConfig } from '@/lib/config';
 import { LayoutShell } from '@/components/layout-shell';
 import { ThemeProvider } from 'next-themes';
+import { Playfair_Display } from 'next/font/google';
+
+const playfair = Playfair_Display({
+  subsets: ['latin'],
+  variable: '--font-serif-eng',
+  display: 'swap',
+});
 
 export const metadata: Metadata = {
   title: {
@@ -38,7 +45,7 @@ export default function RootLayout({
   const theme = siteConfig.theme;
 
   return (
-    <html lang={siteConfig.defaultLocale} suppressHydrationWarning>
+    <html lang={siteConfig.defaultLocale} suppressHydrationWarning className={playfair.variable}>
       <body>
         <style
           // Set CSS variables for accent colors (light + dark variants)

@@ -6,8 +6,8 @@ import { allPosts } from 'contentlayer/generated';
 import { getPostBySlug, getRelatedPosts, getPostNeighbors } from '@/lib/posts';
 import { siteConfig } from '@/lib/config';
 import { ReadingProgress } from '@/components/reading-progress';
-import { PostToc } from '@/components/post-toc';
 import { ScrollReveal } from '@/components/scroll-reveal';
+import { PostLayout } from '@/components/post-layout';
 import { PostCard } from '@/components/post-card';
 import { PostStorylineNav } from '@/components/post-storyline-nav';
 import { SectionDivider } from '@/components/section-divider';
@@ -43,17 +43,16 @@ export default function BlogPostPage({ params }: Props) {
   const relatedPosts = getRelatedPosts(post, 3);
   const neighbors = getPostNeighbors(post);
 
+  const hasToc = /<h[23]/.test(post.body.html);
+
   return (
     <>
       <ReadingProgress />
-      <div className="flex gap-6 pt-4">
-        <aside className="hidden shrink-0 lg:block lg:w-44">
-          <PostToc />
-        </aside>
-        <div className="flex-1 space-y-6">
+      <PostLayout hasToc={hasToc}>
+        <div className="space-y-8">
           <SectionDivider>
             <ScrollReveal>
-              <header className="mb-2 space-y-2">
+              <header className="mb-6 space-y-4 text-center">
                 {post.published_at && (
                   <p className="type-small text-slate-500 dark:text-slate-500">
                     {new Date(post.published_at).toLocaleDateString(
@@ -65,14 +64,14 @@ export default function BlogPostPage({ params }: Props) {
                   {post.title}
                 </h1>
                 {post.tags && (
-                  <div className="flex flex-wrap gap-2 pt-1">
+                  <div className="flex flex-wrap justify-center gap-2 pt-2">
                     {post.tags.map((t) => (
                       <Link
                         key={t}
                         href={`/tags/${encodeURIComponent(
                           t.toLowerCase().replace(/\s+/g, '-')
                         )}`}
-                        className="tag-chip rounded-full bg-accent-soft px-2 py-0.5 text-xs text-accent-textLight dark:bg-slate-800 dark:text-slate-100"
+                        className="tag-chip rounded-full bg-accent-soft px-3 py-1 text-sm text-accent-textLight dark:bg-slate-800 dark:text-slate-100"
                       >
                         #{t}
                       </Link>
@@ -85,16 +84,18 @@ export default function BlogPostPage({ params }: Props) {
 
           <SectionDivider>
             <ScrollReveal>
-              <article className="prose prose-lg prose-slate max-w-none dark:prose-dark">
-              {post.feature_image && (
-                <Image
-                  src={post.feature_image.replace('../assets', '/assets')}
-                  alt={post.title}
-                  width={1200}
-                  height={600}
-                  className="my-4 rounded"
-                />
-              )}
+              <article className="prose prose-lg prose-slate mx-auto max-w-none dark:prose-dark">
+                {post.feature_image && (
+                  <div className="-mx-4 mb-8 transition-all duration-500 sm:-mx-12 lg:-mx-20 group-[.toc-open]:lg:-mx-4">
+                    <Image
+                      src={post.feature_image.replace('../assets', '/assets')}
+                      alt={post.title}
+                      width={1200}
+                      height={600}
+                      className="w-full rounded-xl shadow-lg"
+                    />
+                  </div>
+                )}
                 <div dangerouslySetInnerHTML={{ __html: post.body.html }} />
               </article>
             </ScrollReveal>
@@ -115,7 +116,7 @@ export default function BlogPostPage({ params }: Props) {
           {relatedPosts.length > 0 && (
             <SectionDivider>
               <ScrollReveal>
-                <section className="space-y-4 rounded-xl border border-slate-200 bg-white/80 p-4 shadow-sm dark:border-slate-800 dark:bg-slate-900/50">
+                <section className="space-y-6 rounded-2xl border border-slate-200/60 bg-slate-50/50 p-8 dark:border-slate-800 dark:bg-slate-900/30">
                   <div className="flex items-center justify-between gap-2">
                     <h2 className="type-subtitle font-semibold text-slate-900 dark:text-slate-50">
                       相關文章
@@ -124,7 +125,7 @@ export default function BlogPostPage({ params }: Props) {
                       為你挑選相似主題
                     </p>
                   </div>
-                  <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                  <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
                     {relatedPosts.map((related) => (
                       <PostCard key={related._id} post={related} showTags={false} />
                     ))}
@@ -134,7 +135,7 @@ export default function BlogPostPage({ params }: Props) {
             </SectionDivider>
           )}
         </div>
-      </div>
+      </PostLayout>
     </>
   );
 }

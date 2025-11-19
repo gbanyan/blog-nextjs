@@ -6,7 +6,9 @@ import { allPages } from 'contentlayer/generated';
 import { getPageBySlug } from '@/lib/posts';
 import { siteConfig } from '@/lib/config';
 import { ReadingProgress } from '@/components/reading-progress';
-import { PostToc } from '@/components/post-toc';
+import { PostLayout } from '@/components/post-layout';
+import { ScrollReveal } from '@/components/scroll-reveal';
+import { SectionDivider } from '@/components/section-divider';
 
 export function generateStaticParams() {
   return allPages.map((page) => ({
@@ -35,55 +37,65 @@ export default function StaticPage({ params }: Props) {
 
   if (!page) return notFound();
 
+  const hasToc = /<h[23]/.test(page.body.html);
+
   return (
     <>
       <ReadingProgress />
-      <div className="flex gap-6 pt-4">
-        <aside className="hidden shrink-0 lg:block lg:w-44">
-          <PostToc />
-        </aside>
-        <div className="flex-1">
-          <header className="mb-6 space-y-2">
-            {page.published_at && (
-              <p className="text-xs text-slate-500 dark:text-slate-500">
-                {new Date(page.published_at).toLocaleDateString(
-                  siteConfig.defaultLocale
+      <PostLayout hasToc={hasToc}>
+        <div className="space-y-8">
+          <SectionDivider>
+            <ScrollReveal>
+              <header className="mb-6 space-y-4 text-center">
+                {page.published_at && (
+                  <p className="type-small text-slate-500 dark:text-slate-500">
+                    {new Date(page.published_at).toLocaleDateString(
+                      siteConfig.defaultLocale
+                    )}
+                  </p>
                 )}
-              </p>
-            )}
-            <h1 className="text-2xl font-bold leading-tight text-slate-900 sm:text-3xl dark:text-slate-50">
-              {page.title}
-            </h1>
-            {page.tags && (
-              <div className="flex flex-wrap gap-2 pt-1">
-                {page.tags.map((t) => (
-                  <Link
-                    key={t}
-                    href={`/tags/${encodeURIComponent(
-                      t.toLowerCase().replace(/\s+/g, '-')
-                    )}`}
-                    className="rounded-full bg-accent-soft px-2 py-0.5 text-xs text-accent-textLight transition hover:bg-accent hover:text-white dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700"
-                  >
-                    #{t}
-                  </Link>
-                ))}
-              </div>
-            )}
-          </header>
-          <article className="prose prose-lg prose-slate max-w-none dark:prose-dark">
-              {page.feature_image && (
-                <Image
-                  src={page.feature_image.replace('../assets', '/assets')}
-                  alt={page.title}
-                  width={1200}
-                  height={600}
-                  className="my-4 rounded"
-                />
-              )}
-            <div dangerouslySetInnerHTML={{ __html: page.body.html }} />
-          </article>
+                <h1 className="type-display font-bold leading-tight text-slate-900 dark:text-slate-50">
+                  {page.title}
+                </h1>
+                {page.tags && (
+                  <div className="flex flex-wrap justify-center gap-2 pt-2">
+                    {page.tags.map((t) => (
+                      <Link
+                        key={t}
+                        href={`/tags/${encodeURIComponent(
+                          t.toLowerCase().replace(/\s+/g, '-')
+                        )}`}
+                        className="tag-chip rounded-full bg-accent-soft px-3 py-1 text-sm text-accent-textLight dark:bg-slate-800 dark:text-slate-100"
+                      >
+                        #{t}
+                      </Link>
+                    ))}
+                  </div>
+                )}
+              </header>
+            </ScrollReveal>
+          </SectionDivider>
+
+          <SectionDivider>
+            <ScrollReveal>
+              <article className="prose prose-lg prose-slate mx-auto max-w-none dark:prose-dark">
+                {page.feature_image && (
+                  <div className="-mx-4 mb-8 transition-all duration-500 sm:-mx-12 lg:-mx-20 group-[.toc-open]:lg:-mx-4">
+                    <Image
+                      src={page.feature_image.replace('../assets', '/assets')}
+                      alt={page.title}
+                      width={1200}
+                      height={600}
+                      className="w-full rounded-xl shadow-lg"
+                    />
+                  </div>
+                )}
+                <div dangerouslySetInnerHTML={{ __html: page.body.html }} />
+              </article>
+            </ScrollReveal>
+          </SectionDivider>
         </div>
-      </div>
+      </PostLayout>
     </>
   );
 }
