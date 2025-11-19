@@ -42,6 +42,7 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
               showImages: false,
               excerptLength: 15,
               resetStyles: false,
+              autofocus: true,
               translations: {
                 placeholder: '搜尋文章...',
                 clear_search: '清除',
@@ -57,6 +58,14 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
               }
             });
             setIsLoaded(true);
+
+            // Auto-focus the search input after a short delay
+            setTimeout(() => {
+              const input = searchContainerRef.current?.querySelector('input[type="search"]') as HTMLInputElement;
+              if (input) {
+                input.focus();
+              }
+            }, 100);
           }
         };
         document.head.appendChild(script);
