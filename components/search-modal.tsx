@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMagnifyingGlass, faXmark } from '@fortawesome/free-solid-svg-icons';
 
@@ -17,6 +18,9 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
   useEffect(() => {
     if (!isOpen) return;
 
+    let link: HTMLLinkElement | null = null;
+    let script: HTMLScriptElement | null = null;
+
     // Load Pagefind UI dynamically when modal opens
     const loadPagefind = async () => {
       if (pagefindUIRef.current) {
@@ -26,18 +30,19 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
 
       try {
         // Load Pagefind UI CSS
-        const link = document.createElement('link');
+        link = document.createElement('link');
         link.rel = 'stylesheet';
         link.href = '/pagefind/pagefind-ui.css';
         document.head.appendChild(link);
 
         // Load Pagefind UI JS
-        const script = document.createElement('script');
+        script = document.createElement('script');
         script.src = '/pagefind/pagefind-ui.js';
         script.onload = () => {
           if (searchContainerRef.current && (window as any).PagefindUI) {
             pagefindUIRef.current = new (window as any).PagefindUI({
               element: searchContainerRef.current,
+              bundlePath: '/pagefind/',
               showSubResults: true,
               showImages: false,
               excerptLength: 15,
@@ -75,6 +80,20 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
     };
 
     loadPagefind();
+
+    // Cleanup function to prevent duplicate initializations
+    return () => {
+      if (link && link.parentNode) {
+        link.parentNode.removeChild(link);
+      }
+      if (script && script.parentNode) {
+        script.parentNode.removeChild(script);
+      }
+      if (pagefindUIRef.current && pagefindUIRef.current.destroy) {
+        pagefindUIRef.current.destroy();
+        pagefindUIRef.current = null;
+      }
+    };
   }, [isOpen]);
 
   useEffect(() => {
@@ -102,9 +121,12 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
 
   if (!isOpen) return null;
 
-  return (
+  // Use portal to render modal at document body level to avoid z-index stacking context issues
+  if (typeof window === 'undefined') return null;
+
+  return createPortal(
     <div
-      className="fixed inset-0 z-50 flex items-start justify-center bg-black/50 backdrop-blur-sm pt-20 px-4"
+      className="fixed inset-0 z-[9999] flex items-start justify-center bg-black/50 backdrop-blur-sm pt-20 px-4"
       onClick={onClose}
     >
       <div
@@ -153,7 +175,8 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
           </div>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }
 

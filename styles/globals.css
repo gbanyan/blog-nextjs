@@ -267,47 +267,59 @@ body {
   }
 }
 
-/* Pagefind Search Styles */
-.pagefind-ui__search-input {
-  @apply w-full rounded-lg border border-slate-200 bg-white px-4 py-3 text-slate-900 placeholder:text-slate-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:placeholder:text-slate-500 dark:focus:ring-blue-500;
+/* Pagefind Search Styles - Use CSS variables to override defaults */
+:root {
+  --pagefind-ui-scale: 1;
+  --pagefind-ui-primary: #2563eb;
+  --pagefind-ui-text: #0f172a;
+  --pagefind-ui-background: #ffffff;
+  --pagefind-ui-border: #e2e8f0;
+  --pagefind-ui-tag: #f1f5f9;
+  --pagefind-ui-border-width: 1px;
+  --pagefind-ui-border-radius: 0.5rem;
+  --pagefind-ui-font: var(--font-system-sans);
 }
 
-.pagefind-ui__search-clear {
-  @apply rounded-md px-2 py-1 text-sm text-slate-500 hover:bg-slate-100 hover:text-slate-700 dark:text-slate-400 dark:hover:bg-slate-700 dark:hover:text-slate-200;
+.dark {
+  --pagefind-ui-primary: #60a5fa;
+  --pagefind-ui-text: #f1f5f9;
+  --pagefind-ui-background: #0f172a;
+  --pagefind-ui-border: #475569;
+  --pagefind-ui-tag: #334155;
 }
 
-.pagefind-ui__results {
-  @apply space-y-4;
-}
-
-.pagefind-ui__result {
-  @apply rounded-lg border border-slate-200 bg-white p-4 transition-all hover:border-blue-300 hover:shadow-md dark:border-slate-700 dark:bg-slate-800 dark:hover:border-blue-600;
-}
-
-.pagefind-ui__result-link {
-  @apply text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300;
-  text-decoration: none;
-}
-
+/* Enhanced text colors for better readability */
 .pagefind-ui__result-title {
-  @apply mb-2 text-lg font-semibold text-slate-900 dark:text-slate-100;
+  color: var(--pagefind-ui-text) !important;
+}
+
+.dark .pagefind-ui__result-title {
+  color: #f8fafc !important;
 }
 
 .pagefind-ui__result-excerpt {
-  @apply text-sm text-slate-600 dark:text-slate-300;
+  color: #475569 !important;
 }
 
+.dark .pagefind-ui__result-excerpt {
+  color: #cbd5e1 !important;
+}
+
+.pagefind-ui__result-link {
+  color: var(--pagefind-ui-primary) !important;
+}
+
+.dark .pagefind-ui__result-link {
+  color: #93c5fd !important;
+}
+
+/* Additional custom styling for highlights */
 .pagefind-ui__result-excerpt mark {
   @apply bg-yellow-200 font-semibold text-slate-900 dark:bg-yellow-600 dark:text-slate-100;
   padding: 0.125rem 0.25rem;
   border-radius: 0.25rem;
 }
 
-.pagefind-ui__message {
-  @apply text-center text-sm text-slate-500 dark:text-slate-400;
-  padding: 2rem 0;
-}
-
-.pagefind-ui__button {
-  @apply rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-blue-500 dark:hover:bg-blue-600;
+.pagefind-ui__search-input:focus {
+  @apply ring-2 ring-blue-500 dark:ring-blue-400;
 }
