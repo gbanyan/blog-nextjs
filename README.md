@@ -61,12 +61,11 @@ Recent iterations focused on migrating every image to `next/image`, refreshing t
     - Pagination using `siteConfig.postsPerPage`.
 
 - **Single post / page** (`/blog/[slug]`, `/pages/[slug]`)
-  - Left: sticky TOC inherits the responsive typography scale, removes list bullets entirely, and features an improved scroll marker.
-  - Top matter balances date, title, and tags with refined tracking/weights; headings lose decorative underlines for a cleaner academic feel.
-  - Body: tuned `prose` typography, improved Chinese-friendly line height, and blockquotes styled like academic pull quotes.
-  - Top bar: slimmer, softer reading progress indicator.
-  - Adjacent nav: only two inline bars for 上一章 / 下一章—no middle "正在閱讀" card, no thumbnails/tags/dates.
-  - Related section: simplified cards with only titles (no tags/thumbnails) to highlight pure reading flow.
+  - Wrapped in `PostLayout`, which pairs `ReadingProgress` with a motion-aware grid; `hasToc` only enables the sidebar when `h2`/`h3` headings exist and the floating glass pill toggle lets readers hide/show the TOC on large screens.
+  - The sticky TOC (`components/post-toc.tsx`) layers a dot indicator beside the active heading, smooth-scrolls anchors, temporarily highlights the target section via `toc-target-highlight`, and drops list bullets for an academic rhythm.
+  - Header keeps the date, title, and centered tag chips with refined spacing while feature images now flow edge-to-edge inside a rounded `next/image` card.
+  - Body text leans on the tuned `prose` palette, Chinese-friendly leading, and accent blockquotes, with the slim progress bar staying above.
+  - Navigation stays focused on 上一章 / 下一章 bars, and the related section uses airy `PostCard` grids with minimal chrome to preserve the reading flow.
 
 - **Right sidebar** (on large screens)
   - Top hero:
@@ -86,12 +85,13 @@ Recent iterations focused on migrating every image to `next/image`, refreshing t
 
 ### Typography scale & font weights
 
-- **Base scale**: body text uses `clamp(0.94rem, 0.8rem + 0.3vw, 1.125rem)` so Chinese + English copy remains legible from mobile to 4K.
-- **Heading ladder**: modular ratio ≈1.25; weights step down (h1/h2:600, h3:550, h4:500) to avoid overly heavy CJK glyphs.
-- **Navigation/right sidebar**: lock to 500 weight with slight tracking to balance condensed rendering on Windows/Linux; never smaller than 15px.
-- **TOC & util text**: 0.85× body size at 500 weight, ensuring hierarchy without feeling secondary.
-- **Blockquotes**: body text inherits base weight but adds a serif-leaning italic plus accent caption (12–14px) for academic tone.
-- **Font stack**: `Inter var`, `Noto Sans TC`, `PingFang TC`, `Microsoft JhengHei`, `Helvetica Neue`, `system-ui`, `sans-serif` to cover macOS, Windows, Linux, Android, iOS.
+- **Base scale**: global root font-size uses `clamp(15px, 0.65vw + 11px, 19px)` and `--line-height-body: clamp(1.5, 0.15vw + 1.45, 1.65)` so Chinese + English copy stays legible from phones through 4K displays.
+- **Prose headings**: `h1`/`h2`/`h3` are sized via clamps (≈2.2‑3.4, 1.8‑2.8, 1.4‑2.0rem) with tighter line heights (1.25‑1.35) and subtle letter-spacing tweaks that pair with the serif accent.
+- **Paragraphs & lists**: `prose p`, `li`, and `figcaption` settle between 1rem and 1.15rem while `small` descends to 0.8‑0.95rem so captions stay subordinate without losing legibility.
+- **Navigation/TOC**: tag chips, TOC anchors, and the floating toggle sit around 0.9‑1rem at 500 weight; `toc-target-highlight` plus the accent marker keep the active heading visible without bullet clutter.
+- **Blockquotes & code**: blockquotes lean into accent-gradient sides, oversized quotes, and hover elevation, while `pre`/`code` blocks gain padded, light backgrounds for clearer inline emphasis.
+- **Serif accent for English headings**: `app/layout.tsx` now loads `Playfair_Display` into `--font-serif-eng`, and `styles/globals.css` applies that serif stack to `.type-display`, `.type-title`, `.type-subtitle`, and the global `h1`/`h2` selectors (with slight letter-spacing) so Latin headings stay elegant without disrupting the CJK fallback.
+- **Font stack**: `Inter var`, `Noto Sans TC`, `PingFang TC`, `Microsoft JhengHei`, `Helvetica Neue`, `system-ui`, `sans-serif`.
 
 ### Motion & interaction
 
@@ -112,10 +112,11 @@ Recent iterations focused on migrating every image to `next/image`, refreshing t
 - Site-wide `next/image` usage (cards, feature media, sidebar avatar, related posts) to boost LCP without layout shifts.
 - Reading progress bar slimmed down with a softer gradient glow.
 - Scroll reveal for post header + article body (`ScrollReveal` component).
+- Single post layout now wraps the article and optional TOC in `PostLayout`, animating column widths and exposing the floating glass pill toggle.
 - Elegant vertical timeline rail on home/blog pages with aligned milestone ticks.
 - Hover elevation + gradient accents for post cards, sidebar tiles, and tag chips.
 - Smooth theme toggle with icon rotation and global `transition-colors`.
-- TOC smooth scrolling with custom marker + bullet-less list styling.
+- TOC smooth scrolling with a dot indicator, temporary `toc-target-highlight`, and bullet-less list styling.
 - Academic blockquotes featuring accent-side rules and caption text.
 
 ## Prerequisites
