@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "sync-assets": "node scripts/sync-assets.mjs",
+    "build": "npm run sync-assets && next build",
     "start": "next start",
     "lint": "next lint",
     "contentlayer": "contentlayer build"
@@ -20,6 +21,7 @@
     "@fortawesome/react-fontawesome": "^3.1.0",
     "clsx": "^2.1.1",
     "contentlayer": "^0.3.4",
+    "framer-motion": "^12.23.24",
     "gray-matter": "^4.0.3",
     "markdown-wasm": "^1.2.0",
     "next": "^13.5.11",
@@ -30,6 +32,7 @@
     "rehype-autolink-headings": "^7.1.0",
     "rehype-slug": "^6.0.0",
     "remark-gfm": "^4.0.1",
+    "tailwind-merge": "^3.4.0",
     "unist-util-visit": "^5.0.0"
   },
   "devDependencies": {

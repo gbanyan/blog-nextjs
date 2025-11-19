@@ -39,7 +39,7 @@ Recent iterations focused on migrating every image to `next/image`, refreshing t
   - `posts/` – Blog posts (`.md`)
   - `pages/` – Static pages (`.md`)
   - `assets/` – Images referenced from markdown
-- `public/assets` – Symlink to `content/assets` for serving images at `/assets/...`
+- `public/assets` – Copy of `content/assets` that is refreshed via `npm run sync-assets` (and automatically before `npm run build`) so Next.js can serve `/assets/...` without relying on symlinks.
 - `contentlayer.config.ts` – Contentlayer document types and markdown pipeline
 
 ## UI Overview
@@ -199,9 +199,17 @@ Recent iterations focused on migrating every image to `next/image`, refreshing t
      echo -n 'your-email@example.com' | md5    # macOS
      # or
      echo -n 'your-email@example.com' | md5sum | cut -d' ' -f1    # Linux
-     ```
+```
 
-5. **Run the development server**
+5. **Mirror markdown assets**
+
+   ```bash
+   npm run sync-assets
+   ```
+
+   This copies `content/assets` into `public/assets` so `/assets/...` continues to work; the build script already runs it before `next build`, but running it locally keeps your previews in sync.
+
+6. **Run the development server**
 
    ```bash
    npm run dev
@@ -242,7 +250,7 @@ Contentlayer is configured in `contentlayer.config.ts` to read from the `content
   ```
 
 - At build time, a rehype plugin rewrites these to `/assets/my-image.jpg`.
-- `public/assets` is a symlink to `content/assets`, so Next.js serves them as static files.
+- `public/assets` is populated from `content/assets` before each build (and via `npm run sync-assets`) so `/assets/...` stays available without symlinks.
 - `feature_image` fields are also mapped from `../assets/...` → `/assets/...` and rendered above the article content via `next/image`.
 - All component-level imagery (list thumbnails, related posts, sidebar avatar, about page hero, etc.) now uses `next/image` for responsive sizing, blur placeholders, and better LCP.
 

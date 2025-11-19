@@ -34,5 +34,8 @@ pnpm-debug.log*
 # Vercel
 .vercel
 
+# Generated assets mirror
+/public/assets
+
 # TypeScript
 *.tsbuildinfo
