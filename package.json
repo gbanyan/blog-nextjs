@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "concurrently \"contentlayer2 dev\" \"next dev\"",
     "sync-assets": "node scripts/sync-assets.mjs",
-    "build": "npm run sync-assets && contentlayer2 build && next build && npx pagefind --site .next",
+    "build": "npm run sync-assets && contentlayer2 build && next build && npx pagefind --site .next && rm -rf public/_pagefind && cp -r .next/pagefind public/_pagefind",
     "start": "next start",
     "lint": "next lint",
     "contentlayer": "contentlayer build"
