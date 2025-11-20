@@ -86,7 +86,7 @@ export function NavMenu({ items }: NavMenuProps) {
   };
 
   return (
-    <div className="flex items-center gap-3">
+    <div className="relative z-50 flex items-center gap-3">
       <button
         type="button"
         className="sm:hidden inline-flex h-9 w-9 items-center justify-center rounded-full text-slate-600 transition duration-180 ease-snappy hover:bg-slate-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40 dark:text-slate-200 dark:hover:bg-slate-800"
@@ -125,7 +125,7 @@ export function NavMenu({ items }: NavMenuProps) {
 
                 {/* Desktop dropdown */}
                 <div
-                  className={`absolute left-0 top-full hidden min-w-[12rem] rounded-2xl border border-slate-200 bg-white p-2 shadow-lg transition duration-200 ease-snappy dark:border-slate-800 dark:bg-slate-900 sm:block ${
+                  className={`absolute left-0 top-full hidden min-w-[12rem] rounded-2xl border border-slate-200 bg-white p-2 shadow-lg transition duration-200 ease-snappy dark:border-slate-800 dark:bg-slate-900 sm:block z-50 ${
                     isOpen ? 'pointer-events-auto translate-y-2 opacity-100' : 'pointer-events-none translate-y-1 opacity-0'
                   }`}
                   role="menu"

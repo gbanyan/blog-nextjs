@@ -74,7 +74,7 @@ export function SiteHeader() {
   ];
 
   return (
-    <header className="bg-white/80 backdrop-blur transition-colors duration-200 ease-snappy dark:bg-gray-950/80">
+    <header className="relative z-40 bg-white/80 backdrop-blur transition-colors duration-200 ease-snappy dark:bg-gray-950/80">
       <div className="container mx-auto flex items-center justify-between px-4 py-3 text-slate-900 dark:text-slate-100">
         <Link
           href="/"
