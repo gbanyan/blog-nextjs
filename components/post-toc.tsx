@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import { usePathname } from 'next/navigation';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faListUl } from '@fortawesome/free-solid-svg-icons';
 
@@ -16,6 +17,7 @@ export function PostToc({ onLinkClick }: { onLinkClick?: () => void }) {
   const listRef = useRef<HTMLDivElement | null>(null);
   const itemRefs = useRef<Record<string, HTMLDivElement | null>>({});
   const [indicator, setIndicator] = useState({ top: 0, opacity: 0 });
+  const pathname = usePathname();
 
   useEffect(() => {
     const headings = Array.from(
@@ -51,7 +53,7 @@ export function PostToc({ onLinkClick }: { onLinkClick?: () => void }) {
     headings.forEach((el) => observer.observe(el));
 
     return () => observer.disconnect();
-  }, []);
+  }, [pathname]);
 
   useEffect(() => {
     if (!activeId || !listRef.current) {
