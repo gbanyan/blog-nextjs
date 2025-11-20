@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "concurrently \"contentlayer2 dev\" \"next dev\"",
+    "dev": "concurrently \"contentlayer2 dev\" \"next dev --turbo\"",
     "sync-assets": "node scripts/sync-assets.mjs",
     "build": "npm run sync-assets && contentlayer2 build && next build && npx pagefind --site .next && rm -rf public/_pagefind && cp -r .next/pagefind public/_pagefind",
     "start": "next start",
@@ -41,6 +41,7 @@
     "@tailwindcss/typography": "^0.5.19",
     "@types/node": "^24.10.1",
     "@types/react": "^19.2.5",
+    "@types/react-dom": "^19.2.3",
     "autoprefixer": "^10.4.22",
     "concurrently": "^9.2.1",
     "eslint": "^9.39.1",

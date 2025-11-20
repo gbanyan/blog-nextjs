@@ -86,6 +86,8 @@ export default async function StaticPage({ params }: Props) {
                       alt={page.title}
                       width={1200}
                       height={600}
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 90vw, 1200px"
+                      priority
                       className="w-full rounded-xl shadow-lg"
                     />
                   </div>

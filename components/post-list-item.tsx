@@ -28,6 +28,8 @@ export function PostListItem({ post }: Props) {
             alt={post.title}
             width={320}
             height={240}
+            sizes="(max-width: 640px) 96px, 160px"
+            loading="lazy"
             className="h-full w-full object-cover transition-transform duration-300 ease-out group-hover:scale-105"
           />
         </div>

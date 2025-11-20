@@ -2,11 +2,18 @@
 
 import Link from 'next/link';
 import { useState } from 'react';
+import dynamic from 'next/dynamic';
 import { ThemeToggle } from './theme-toggle';
 import { NavMenu, NavLinkItem, IconKey } from './nav-menu';
-import { SearchButton, SearchModal } from './search-modal';
+import { SearchButton } from './search-modal';
 import { siteConfig } from '@/lib/config';
 import { allPages } from 'contentlayer2/generated';
+
+// Dynamically import SearchModal to reduce initial bundle size
+const SearchModal = dynamic(
+  () => import('./search-modal').then((mod) => ({ default: mod.SearchModal })),
+  { ssr: false }
+);
 
 export function SiteHeader() {
   const [isSearchOpen, setIsSearchOpen] = useState(false);

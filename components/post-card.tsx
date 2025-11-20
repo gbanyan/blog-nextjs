@@ -26,6 +26,8 @@ export function PostCard({ post, showTags = true }: PostCardProps) {
             alt={post.title}
             width={640}
             height={360}
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            loading="lazy"
             className="mx-auto max-h-60 w-full object-contain transition-transform duration-300 ease-out group-hover:scale-105"
           />
         </div>

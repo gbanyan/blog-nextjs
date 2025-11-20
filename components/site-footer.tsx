@@ -9,6 +9,9 @@ import {
 } from '@fortawesome/free-brands-svg-icons';
 import { faEnvelope } from '@fortawesome/free-solid-svg-icons';
 
+// Calculate year at build time for PPR compatibility
+const currentYear = new Date().getFullYear();
+
 export function SiteFooter() {
   const { social } = siteConfig;
 
@@ -59,7 +62,7 @@ export function SiteFooter() {
   return (
     <footer className="py-4 text-center text-sm text-gray-500 dark:text-slate-400">
       <div>
-        © {new Date().getFullYear()} {siteConfig.author}
+        © {currentYear} {siteConfig.author}
       </div>
       {items.length > 0 && (
         <div className="mt-2 flex justify-center gap-4 text-base">

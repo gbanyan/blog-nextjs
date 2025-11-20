@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import clsx from 'clsx';
 
 interface ScrollRevealProps {
@@ -15,26 +15,25 @@ export function ScrollReveal({
   once = true
 }: ScrollRevealProps) {
   const ref = useRef<HTMLDivElement | null>(null);
-  const [visible, setVisible] = useState(false);
 
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
 
+    // Fallback for browsers without IntersectionObserver
     if (!('IntersectionObserver' in window)) {
-      setVisible(true);
+      el.classList.add('is-visible');
       return;
     }
 
-    let cancelled = false;
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            if (!cancelled) setVisible(true);
+            entry.target.classList.add('is-visible');
             if (once) observer.unobserve(entry.target);
           } else if (!once) {
-            if (!cancelled) setVisible(false);
+            entry.target.classList.remove('is-visible');
           }
         });
       },
@@ -46,12 +45,12 @@ export function ScrollReveal({
 
     observer.observe(el);
 
+    // Fallback timeout for slow connections
     const fallback = window.setTimeout(() => {
-      if (!cancelled) setVisible(true);
+      el.classList.add('is-visible');
     }, 500);
 
     return () => {
-      cancelled = true;
       observer.disconnect();
       window.clearTimeout(fallback);
     };
@@ -60,13 +59,7 @@ export function ScrollReveal({
   return (
     <div
       ref={ref}
-      className={clsx(
-        'motion-safe:transition-all motion-safe:duration-500 motion-safe:ease-out',
-        'motion-safe:opacity-0 motion-safe:translate-y-3',
-        visible &&
-          'motion-safe:opacity-100 motion-safe:translate-y-0 motion-safe:animate-none',
-        className
-      )}
+      className={clsx('scroll-reveal', className)}
     >
       {children}
     </div>
