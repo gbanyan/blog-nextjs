@@ -28,9 +28,40 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const post = getPostBySlug(slug);
   if (!post) return {};
 
+  const ogImageUrl = new URL('/api/og', process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000');
+  ogImageUrl.searchParams.set('title', post.title);
+  if (post.description) {
+    ogImageUrl.searchParams.set('description', post.description);
+  }
+  if (post.tags && post.tags.length > 0) {
+    ogImageUrl.searchParams.set('tags', post.tags.slice(0, 3).join(','));
+  }
+
   return {
     title: post.title,
-    description: post.description || post.title
+    description: post.description || post.title,
+    openGraph: {
+      title: post.title,
+      description: post.description || post.title,
+      type: 'article',
+      publishedTime: post.published_at,
+      authors: post.authors,
+      tags: post.tags,
+      images: [
+        {
+          url: ogImageUrl.toString(),
+          width: 1200,
+          height: 630,
+          alt: post.title,
+        },
+      ],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: post.title,
+      description: post.description || post.title,
+      images: [ogImageUrl.toString()],
+    },
   };
 }
 
