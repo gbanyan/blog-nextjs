@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, FocusEvent } from 'react';
+import { useState, useRef, FocusEvent } from 'react';
 import {
   FiMenu,
   FiX,
@@ -61,6 +61,7 @@ interface NavMenuProps {
 export function NavMenu({ items }: NavMenuProps) {
   const [open, setOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
+  const closeTimer = useRef<number | null>(null);
 
   const toggle = () => setOpen((val) => !val);
   const close = () => setOpen(false);
@@ -68,6 +69,23 @@ export function NavMenu({ items }: NavMenuProps) {
     if (!event.currentTarget.contains(event.relatedTarget as Node)) {
       setActiveDropdown(null);
     }
+  };
+
+  const clearCloseTimer = () => {
+    if (closeTimer.current) {
+      clearTimeout(closeTimer.current);
+      closeTimer.current = null;
+    }
+  };
+
+  const openDropdown = (key: string) => {
+    clearCloseTimer();
+    setActiveDropdown(key);
+  };
+
+  const scheduleCloseDropdown = () => {
+    clearCloseTimer();
+    closeTimer.current = window.setTimeout(() => setActiveDropdown(null), 180);
   };
 
   const renderChild = (item: NavLinkItem) => {
@@ -107,9 +125,9 @@ export function NavMenu({ items }: NavMenuProps) {
               <div
                 key={item.key}
                 className="group relative"
-                onMouseEnter={() => setActiveDropdown(item.key)}
-                onMouseLeave={() => setActiveDropdown(null)}
-                onFocus={() => setActiveDropdown(item.key)}
+                onMouseEnter={() => openDropdown(item.key)}
+                onMouseLeave={scheduleCloseDropdown}
+                onFocus={() => openDropdown(item.key)}
                 onBlur={handleBlur}
               >
                 <button
