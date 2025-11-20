@@ -34,8 +34,8 @@ export function ReadingProgress() {
   if (!mounted) return null;
 
   return createPortal(
-    <div className="pointer-events-none fixed inset-x-0 top-0 z-[1200] h-2 bg-transparent">
-      <div className="relative h-2 w-full overflow-visible">
+    <div className="pointer-events-none fixed inset-x-0 top-0 z-[1200] h-1.5 bg-transparent">
+      <div className="relative h-1.5 w-full overflow-visible">
         <div
           className="absolute inset-y-0 left-0 w-full origin-left rounded-full bg-gradient-to-r from-[rgba(124,58,237,0.9)] via-[rgba(167,139,250,0.9)] to-[rgba(14,165,233,0.8)] shadow-[0_0_12px_rgba(124,58,237,0.5)] transition-[transform,opacity] duration-300 ease-out"
           style={{ transform: `scaleX(${progress / 100})`, opacity: progress > 0 ? 1 : 0 }}
