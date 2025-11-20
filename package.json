@@ -7,7 +7,6 @@
     "dev": "concurrently \"contentlayer2 dev\" \"next dev --turbo\"",
     "sync-assets": "node scripts/sync-assets.mjs",
     "build": "npm run sync-assets && contentlayer2 build && next build && npx pagefind --site .next && rm -rf public/_pagefind && cp -r .next/pagefind public/_pagefind",
-    "build:analyze": "npm run sync-assets && contentlayer2 build && ANALYZE=true next build --webpack",
     "start": "next start",
     "lint": "next lint",
     "contentlayer": "contentlayer build"
@@ -39,7 +38,6 @@
     "unist-util-visit": "^5.0.0"
   },
   "devDependencies": {
-    "@next/bundle-analyzer": "^16.0.3",
     "@tailwindcss/typography": "^0.5.19",
     "@types/node": "^24.10.1",
     "@types/react": "^19.2.5",
