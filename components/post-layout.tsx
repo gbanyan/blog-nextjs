@@ -23,9 +23,9 @@ export function PostLayout({ children, hasToc = true, contentKey }: { children: 
         <button
             onClick={() => setIsTocOpen(!isTocOpen)}
             className={cn(
-                "toc-button fixed bottom-8 right-8 z-50 flex items-center gap-2 rounded-full border border-white/20 bg-white/80 px-4 py-2.5 shadow-lg backdrop-blur-md hover:bg-white dark:border-white/10 dark:bg-slate-900/80 dark:hover:bg-slate-900",
+                "toc-button fixed bottom-20 right-4 z-50 flex items-center gap-2 rounded-full border border-white/20 bg-white/80 px-4 py-2.5 shadow-lg backdrop-blur-md hover:bg-white dark:border-white/10 dark:bg-slate-900/80 dark:hover:bg-slate-900",
                 "text-sm font-medium text-slate-600 dark:text-slate-300",
-                "lg:right-20" // Adjust position for desktop
+                "lg:bottom-8 lg:right-20" // Adjust position for desktop
             )}
             aria-label="Toggle Table of Contents"
         >
