@@ -1,6 +1,7 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { FiList, FiChevronRight } from 'react-icons/fi';
 import { PostToc } from './post-toc';
 import { clsx, type ClassValue } from 'clsx';
@@ -12,6 +13,30 @@ function cn(...inputs: ClassValue[]) {
 
 export function PostLayout({ children, hasToc = true, contentKey }: { children: React.ReactNode; hasToc?: boolean; contentKey?: string }) {
     const [isTocOpen, setIsTocOpen] = useState(hasToc);
+    const [mounted, setMounted] = useState(false);
+
+    useEffect(() => {
+        setMounted(true);
+    }, []);
+
+    const tocButton = hasToc && mounted ? (
+        <button
+            onClick={() => setIsTocOpen(!isTocOpen)}
+            className={cn(
+                "toc-button fixed bottom-8 right-8 z-50 flex items-center gap-2 rounded-full border border-white/20 bg-white/80 px-4 py-2.5 shadow-lg backdrop-blur-md hover:bg-white dark:border-white/10 dark:bg-slate-900/80 dark:hover:bg-slate-900",
+                "text-sm font-medium text-slate-600 dark:text-slate-300",
+                "lg:right-20" // Adjust position for desktop
+            )}
+            aria-label="Toggle Table of Contents"
+        >
+            {isTocOpen ? (
+                <FiChevronRight className="h-3.5 w-3.5" />
+            ) : (
+                <FiList className="h-3.5 w-3.5" />
+            )}
+            <span>{isTocOpen ? 'Hide' : 'Menu'}</span>
+        </button>
+    ) : null;
 
     return (
         <div className="relative">
@@ -47,25 +72,8 @@ export function PostLayout({ children, hasToc = true, contentKey }: { children: 
                 </div>
             )}
 
-            {/* Toggle Button (Glassmorphism Pill) */}
-            {hasToc && (
-                <button
-                    onClick={() => setIsTocOpen(!isTocOpen)}
-                    className={cn(
-                        "toc-button fixed bottom-8 right-8 z-50 flex items-center gap-2 rounded-full border border-white/20 bg-white/80 px-4 py-2.5 shadow-lg backdrop-blur-md hover:bg-white dark:border-white/10 dark:bg-slate-900/80 dark:hover:bg-slate-900",
-                        "text-sm font-medium text-slate-600 dark:text-slate-300",
-                        "lg:right-20" // Adjust position for desktop
-                    )}
-                    aria-label="Toggle Table of Contents"
-                >
-                    {isTocOpen ? (
-                        <FiChevronRight className="h-3.5 w-3.5" />
-                    ) : (
-                        <FiList className="h-3.5 w-3.5" />
-                    )}
-                    <span>{isTocOpen ? 'Hide' : 'Menu'}</span>
-                </button>
-            )}
+            {/* Toggle Button - Rendered via Portal */}
+            {tocButton && createPortal(tocButton, document.body)}
         </div>
     );
 }
