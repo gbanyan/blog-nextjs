@@ -32,17 +32,17 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
         // Load Pagefind UI CSS
         link = document.createElement('link');
         link.rel = 'stylesheet';
-        link.href = '/pagefind/pagefind-ui.css';
+        link.href = '/_pagefind/pagefind-ui.css';
         document.head.appendChild(link);
 
         // Load Pagefind UI JS
         script = document.createElement('script');
-        script.src = '/pagefind/pagefind-ui.js';
+        script.src = '/_pagefind/pagefind-ui.js';
         script.onload = () => {
           if (searchContainerRef.current && (window as any).PagefindUI) {
             pagefindUIRef.current = new (window as any).PagefindUI({
               element: searchContainerRef.current,
-              bundlePath: '/pagefind/',
+              bundlePath: '/_pagefind/',
               showSubResults: true,
               showImages: false,
               excerptLength: 15,
