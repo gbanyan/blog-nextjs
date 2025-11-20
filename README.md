@@ -11,8 +11,60 @@ Recent updates include upgrading to Next.js 16 with Turbopack, migrating to Cont
 - **Runtime**: React 19
 - **Styling**: Tailwind CSS + Typography plugin
 - **Content**: Markdown via Contentlayer2 (`contentlayer2/source-files`)
+- **Search**: Pagefind for full-text search
 - **Theming**: `next-themes` (light/dark), env‑driven accent color system
 - **Content source**: Git submodule `content` → [`personal-blog`](https://gitea.gbanyan.net/gbanyan/personal-blog.git)
+
+## Performance Optimizations
+
+This blog is optimized for performance using Next.js 16 features and best practices:
+
+### Next.js 16 Features
+
+- **Partial Prerendering (PPR)** enabled via `cacheComponents: true` for faster page loads
+- **Turbopack** enabled in development for 4-5x faster builds
+- **Static site generation** for all blog posts and pages
+- **Loading states** and error boundaries for better UX
+
+### Bundle Size Reduction
+
+- **CSS-only animations** replacing Framer Motion (~50KB reduction)
+- **Dynamic imports** for SearchModal component (lazy loaded when needed)
+- **Optimized scroll reveals** using IntersectionObserver instead of React state
+- **Tree-shaking** with Next.js compiler removing unused code
+
+### Image & Video Optimization
+
+- **Responsive images** with proper `sizes` attributes for all Next.js Image components
+- **Lazy loading** for below-fold images, priority loading for hero images
+- **AVIF/WebP formats** for better compression
+- **GIF to video conversion**: Large animated GIFs converted to MP4/WebM for 80-95% file size reduction
+  - `AddNewThings3.gif` (2.4MB) → WebM (116KB) = 95% reduction
+  - `Things3.gif` (1.5MB) → WebM (170KB) = 89% reduction
+
+### SEO & Social Media
+
+- **Dynamic OG image generation** using `@vercel/og`
+- **Enhanced metadata** with OpenGraph and Twitter Cards for all posts
+- **1200x630 social images** with post title, description, and tags
+
+### Search Optimization
+
+Pagefind is configured to index only essential content:
+- **Indexed**: Post titles, tags, and article body content
+- **Excluded**: Navigation, related posts, footer, and UI elements
+- This improves search relevance and reduces index size
+
+Configuration in `app/blog/[slug]/page.tsx`:
+- `data-pagefind-body` wraps main content area
+- `data-pagefind-meta="tags"` marks tags as metadata
+- `data-pagefind-ignore` excludes navigation and related posts
+
+### Caching Strategy
+
+- **Static assets** cached for 1 year (`max-age=31536000, immutable`)
+- **PPR** caches static shells while streaming dynamic content
+- **Font optimization** with Next.js font loading
 
 ## Project Structure
 

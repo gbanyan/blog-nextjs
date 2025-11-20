@@ -81,9 +81,11 @@ export default async function BlogPostPage({ params }: Props) {
       <ReadingProgress />
       <PostLayout hasToc={hasToc}>
         <div className="space-y-8">
-          <SectionDivider>
-            <ScrollReveal>
-              <header className="mb-6 space-y-4 text-center">
+          {/* Main content area for Pagefind indexing */}
+          <div data-pagefind-body>
+            <SectionDivider>
+              <ScrollReveal>
+                <header className="mb-6 space-y-4 text-center">
                 {post.published_at && (
                   <p className="type-small text-slate-500 dark:text-slate-500">
                     {new Date(post.published_at).toLocaleDateString(
@@ -95,7 +97,7 @@ export default async function BlogPostPage({ params }: Props) {
                   {post.title}
                 </h1>
                 {post.tags && (
-                  <div className="flex flex-wrap justify-center gap-2 pt-2">
+                  <div className="flex flex-wrap justify-center gap-2 pt-2" data-pagefind-meta="tags">
                     {post.tags.map((t) => (
                       <Link
                         key={t}
@@ -133,23 +135,26 @@ export default async function BlogPostPage({ params }: Props) {
               </article>
             </ScrollReveal>
           </SectionDivider>
+          </div>
 
           <FooterCue />
 
-          <SectionDivider>
-            <ScrollReveal>
-              <PostStorylineNav
-                current={post}
-                newer={neighbors.newer}
-                older={neighbors.older}
-              />
-            </ScrollReveal>
-          </SectionDivider>
-
-          {relatedPosts.length > 0 && (
+          {/* Exclude navigation and related posts from search indexing */}
+          <div data-pagefind-ignore>
             <SectionDivider>
               <ScrollReveal>
-                <section className="space-y-6 rounded-2xl border border-slate-200/60 bg-slate-50/50 p-8 dark:border-slate-800 dark:bg-slate-900/30">
+                <PostStorylineNav
+                  current={post}
+                  newer={neighbors.newer}
+                  older={neighbors.older}
+                />
+              </ScrollReveal>
+            </SectionDivider>
+
+            {relatedPosts.length > 0 && (
+              <SectionDivider>
+                <ScrollReveal>
+                  <section className="space-y-6 rounded-2xl border border-slate-200/60 bg-slate-50/50 p-8 dark:border-slate-800 dark:bg-slate-900/30">
                   <div className="flex items-center justify-between gap-2">
                     <h2 className="type-subtitle font-semibold text-slate-900 dark:text-slate-50">
                       相關文章
@@ -166,7 +171,8 @@ export default async function BlogPostPage({ params }: Props) {
                 </section>
               </ScrollReveal>
             </SectionDivider>
-          )}
+            )}
+          </div>
         </div>
       </PostLayout>
     </>
