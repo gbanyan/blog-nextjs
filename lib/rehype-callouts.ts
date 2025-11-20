@@ -6,31 +6,61 @@ import { visit } from 'unist-util-visit';
  */
 export function rehypeCallouts() {
   return (tree: any) => {
-    visit(tree, 'element', (node, index, parent) => {
+    visit(tree, 'element', (node) => {
       // Only process blockquotes
       if (node.tagName !== 'blockquote') return;
-
-      // Check if first child is a paragraph
       if (!node.children || node.children.length === 0) return;
-      const firstChild = node.children[0];
-      if (firstChild.tagName !== 'p') return;
 
-      // Check if paragraph starts with [!TYPE]
-      if (!firstChild.children || firstChild.children.length === 0) return;
-      const firstText = firstChild.children[0];
-      if (firstText.type !== 'text') return;
+      // Find the first non-whitespace child
+      let contentChild: any = null;
+      for (const child of node.children) {
+        if (child.type === 'text' && child.value.trim()) {
+          contentChild = child;
+          break;
+        } else if (child.tagName === 'p') {
+          contentChild = child;
+          break;
+        }
+      }
 
-      const match = firstText.value.match(/^\[!(NOTE|TIP|IMPORTANT|WARNING|CAUTION)\]\s*/i);
+      if (!contentChild) return;
+
+      // Find the first text node
+      let textNode: any = null;
+      let textParent: any = null;
+
+      if (contentChild.type === 'text') {
+        // Direct text child
+        textNode = contentChild;
+        textParent = node;
+      } else if (contentChild.tagName === 'p' && contentChild.children) {
+        // Text inside paragraph - find first non-whitespace text
+        for (const child of contentChild.children) {
+          if (child.type === 'text' && child.value.trim()) {
+            textNode = child;
+            textParent = contentChild;
+            break;
+          }
+        }
+      }
+
+      if (!textNode || textNode.type !== 'text') return;
+
+      // Check if text starts with [!TYPE]
+      const match = textNode.value.match(/^\[!(NOTE|TIP|IMPORTANT|WARNING|CAUTION)\]\s*/i);
       if (!match) return;
 
-      const type = match[0].replace(/^\[!|\]\s*/g, '').toLowerCase();
+      const type = match[1].toLowerCase();
 
       // Remove the [!TYPE] marker from the text
-      firstText.value = firstText.value.replace(match[0], '');
+      textNode.value = textNode.value.replace(match[0], '').trim();
 
       // If the text node is now empty, remove it
-      if (!firstText.value.trim()) {
-        firstChild.children.shift();
+      if (!textNode.value) {
+        const index = textParent.children.indexOf(textNode);
+        if (index > -1) {
+          textParent.children.splice(index, 1);
+        }
       }
 
       // Add callout data attributes and classes
@@ -38,7 +68,7 @@ export function rehypeCallouts() {
       node.properties.className = ['callout', `callout-${type}`];
       node.properties['data-callout'] = type;
 
-      // Add icon element at the beginning
+      // Add icon and title elements
       const iconMap: Record<string, string> = {
         note: '📝',
         tip: '💡',
@@ -72,7 +102,7 @@ export function rehypeCallouts() {
         type: 'element',
         tagName: 'div',
         properties: { className: ['callout-content'] },
-        children: node.children,
+        children: [...node.children],
       };
 
       node.children = [header, content];

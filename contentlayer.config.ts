@@ -88,6 +88,7 @@ export default makeSource({
   markdown: {
     remarkPlugins: [remarkGfm],
     rehypePlugins: [
+      rehypeCallouts,
       [
         rehypePrettyCode,
         {
@@ -98,7 +99,6 @@ export default makeSource({
           keepBackground: false,
         },
       ],
-      rehypeCallouts,
       rehypeSlug,
       [rehypeAutolinkHeadings, { behavior: 'wrap' }],
       /**
