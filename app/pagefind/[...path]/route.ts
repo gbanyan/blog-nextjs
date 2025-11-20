@@ -8,7 +8,7 @@ export async function GET(
 ) {
   try {
     const { path } = await params;
-    const filePath = join(process.cwd(), '.next', 'pagefind', ...path);
+    const filePath = join(process.cwd(), 'public', '_pagefind', ...path);
 
     // Read the file
     const file = await readFile(filePath);
