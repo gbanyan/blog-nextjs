@@ -1,6 +1,5 @@
 import { SiteHeader } from './site-header';
 import { SiteFooter } from './site-footer';
-
 import { BackToTop } from './back-to-top';
 
 export function LayoutShell({ children }: { children: React.ReactNode }) {
