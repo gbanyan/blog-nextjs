@@ -4,6 +4,7 @@ import rehypeSlug from 'rehype-slug';
 import rehypeAutolinkHeadings from 'rehype-autolink-headings';
 import remarkGfm from 'remark-gfm';
 import rehypePrettyCode from 'rehype-pretty-code';
+import { rehypeCallouts } from './lib/rehype-callouts';
 
 export const Post = defineDocumentType(() => ({
   name: 'Post',
@@ -97,6 +98,7 @@ export default makeSource({
           keepBackground: false,
         },
       ],
+      rehypeCallouts,
       rehypeSlug,
       [rehypeAutolinkHeadings, { behavior: 'wrap' }],
       /**

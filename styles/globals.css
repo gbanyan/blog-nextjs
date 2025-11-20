@@ -426,3 +426,111 @@ body {
 .prose [data-rehype-pretty-code-title] + pre {
   @apply mt-0 rounded-t-none;
 }
+
+/* GitHub-style Callouts/Alerts */
+.prose .callout {
+  @apply my-6 rounded-lg border-l-4 p-4 shadow-sm;
+  background: linear-gradient(135deg, var(--callout-bg-start), var(--callout-bg-end));
+}
+
+.prose .callout-header {
+  @apply mb-3 flex items-center gap-2;
+}
+
+.prose .callout-icon {
+  @apply text-2xl;
+  line-height: 1;
+}
+
+.prose .callout-title {
+  @apply text-sm font-bold uppercase tracking-wider;
+  color: var(--callout-title-color);
+  letter-spacing: 0.05em;
+}
+
+.prose .callout-content {
+  @apply text-sm leading-relaxed;
+}
+
+.prose .callout-content > *:first-child {
+  @apply mt-0;
+}
+
+.prose .callout-content > *:last-child {
+  @apply mb-0;
+}
+
+/* NOTE - Blue */
+.prose .callout-note {
+  --callout-bg-start: rgba(59, 130, 246, 0.08);
+  --callout-bg-end: rgba(59, 130, 246, 0.04);
+  --callout-title-color: #2563eb;
+  @apply border-blue-500;
+}
+
+.dark .prose .callout-note {
+  --callout-bg-start: rgba(96, 165, 250, 0.12);
+  --callout-bg-end: rgba(96, 165, 250, 0.06);
+  --callout-title-color: #93c5fd;
+  @apply border-blue-400;
+}
+
+/* TIP - Green */
+.prose .callout-tip {
+  --callout-bg-start: rgba(34, 197, 94, 0.08);
+  --callout-bg-end: rgba(34, 197, 94, 0.04);
+  --callout-title-color: #16a34a;
+  @apply border-green-500;
+}
+
+.dark .prose .callout-tip {
+  --callout-bg-start: rgba(74, 222, 128, 0.12);
+  --callout-bg-end: rgba(74, 222, 128, 0.06);
+  --callout-title-color: #86efac;
+  @apply border-green-400;
+}
+
+/* IMPORTANT - Purple */
+.prose .callout-important {
+  --callout-bg-start: rgba(168, 85, 247, 0.08);
+  --callout-bg-end: rgba(168, 85, 247, 0.04);
+  --callout-title-color: #9333ea;
+  @apply border-purple-500;
+}
+
+.dark .prose .callout-important {
+  --callout-bg-start: rgba(192, 132, 252, 0.12);
+  --callout-bg-end: rgba(192, 132, 252, 0.06);
+  --callout-title-color: #c084fc;
+  @apply border-purple-400;
+}
+
+/* WARNING - Orange/Yellow */
+.prose .callout-warning {
+  --callout-bg-start: rgba(251, 191, 36, 0.08);
+  --callout-bg-end: rgba(251, 191, 36, 0.04);
+  --callout-title-color: #d97706;
+  @apply border-yellow-500;
+}
+
+.dark .prose .callout-warning {
+  --callout-bg-start: rgba(253, 224, 71, 0.12);
+  --callout-bg-end: rgba(253, 224, 71, 0.06);
+  --callout-title-color: #fde047;
+  @apply border-yellow-400;
+}
+
+/* CAUTION - Red */
+.prose .callout-caution {
+  --callout-bg-start: rgba(239, 68, 68, 0.08);
+  --callout-bg-end: rgba(239, 68, 68, 0.04);
+  --callout-title-color: #dc2626;
+  @apply border-red-500;
+}
+
+.dark .prose .callout-caution {
+  --callout-bg-start: rgba(248, 113, 113, 0.12);
+  --callout-bg-end: rgba(248, 113, 113, 0.06);
+  --callout-title-color: #fca5a5;
+  @apply border-red-400;
+}
