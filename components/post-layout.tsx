@@ -19,6 +19,17 @@ export function PostLayout({ children, hasToc = true, contentKey }: { children: 
         setMounted(true);
     }, []);
 
+    const mobileToc = isTocOpen && hasToc && mounted
+        ? createPortal(
+            <div className="toc-mobile fixed bottom-24 right-4 z-[1150] w-72 rounded-2xl border border-white/20 bg-white/90 p-6 shadow-2xl backdrop-blur-xl dark:border-white/10 dark:bg-slate-900/90 lg:hidden">
+                <div className="max-h-[60vh] overflow-y-auto">
+                    <PostToc contentKey={contentKey} onLinkClick={() => setIsTocOpen(false)} />
+                </div>
+            </div>,
+            document.body
+        )
+        : null;
+
     const tocButton = hasToc && mounted ? (
         <button
             onClick={() => setIsTocOpen(!isTocOpen)}
@@ -64,13 +75,7 @@ export function PostLayout({ children, hasToc = true, contentKey }: { children: 
             </div>
 
             {/* Mobile TOC Overlay */}
-            {isTocOpen && hasToc && (
-                <div className="toc-mobile fixed bottom-24 right-4 z-40 w-72 rounded-2xl border border-white/20 bg-white/90 p-6 shadow-2xl backdrop-blur-xl dark:border-white/10 dark:bg-slate-900/90 lg:hidden">
-                    <div className="max-h-[60vh] overflow-y-auto">
-                        <PostToc contentKey={contentKey} onLinkClick={() => setIsTocOpen(false)} />
-                    </div>
-                </div>
-            )}
+            {mobileToc}
 
             {/* Toggle Button - Rendered via Portal */}
             {tocButton && createPortal(tocButton, document.body)}
