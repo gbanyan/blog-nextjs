@@ -56,7 +56,7 @@ export function PostLayout({ children, hasToc = true, contentKey }: { children: 
                     <div className="sticky top-24 h-[calc(100vh-6rem)] overflow-hidden">
                         {isTocOpen && hasToc && (
                             <div className="toc-sidebar h-full overflow-y-auto pr-2">
-                                <PostToc key={contentKey} />
+                                <PostToc contentKey={contentKey} />
                             </div>
                         )}
                     </div>
@@ -67,7 +67,7 @@ export function PostLayout({ children, hasToc = true, contentKey }: { children: 
             {isTocOpen && hasToc && (
                 <div className="toc-mobile fixed bottom-24 right-4 z-40 w-72 rounded-2xl border border-white/20 bg-white/90 p-6 shadow-2xl backdrop-blur-xl dark:border-white/10 dark:bg-slate-900/90 lg:hidden">
                     <div className="max-h-[60vh] overflow-y-auto">
-                        <PostToc key={contentKey} onLinkClick={() => setIsTocOpen(false)} />
+                        <PostToc contentKey={contentKey} onLinkClick={() => setIsTocOpen(false)} />
                     </div>
                 </div>
             )}

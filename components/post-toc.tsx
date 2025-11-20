@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { usePathname } from 'next/navigation';
 import { FiList } from 'react-icons/fi';
 
 interface TocItem {
@@ -10,63 +9,68 @@ interface TocItem {
   depth: number;
 }
 
-export function PostToc({ onLinkClick }: { onLinkClick?: () => void }) {
+export function PostToc({ onLinkClick, contentKey }: { onLinkClick?: () => void; contentKey?: string }) {
   const [items, setItems] = useState<TocItem[]>([]);
   const [activeId, setActiveId] = useState<string | null>(null);
   const listRef = useRef<HTMLDivElement | null>(null);
   const itemRefs = useRef<Record<string, HTMLDivElement | null>>({});
   const [indicator, setIndicator] = useState({ top: 0, opacity: 0 });
-  const pathname = usePathname();
 
   useEffect(() => {
-    // Clear items immediately when pathname changes
+    // Clear items immediately when content changes
     setItems([]);
     setActiveId(null);
 
     let observer: IntersectionObserver | null = null;
+    let rafId1: number;
+    let rafId2: number;
 
-    // Small delay to ensure DOM has been updated with new article content
-    const timeoutId = setTimeout(() => {
-      const headings = Array.from(
-        document.querySelectorAll<HTMLElement>('article h2, article h3')
-      );
-      const mapped = headings
-        .filter((el) => el.id)
-        .map((el) => ({
-          id: el.id,
-          text: el.innerText,
-          depth: el.tagName === 'H3' ? 3 : 2
-        }));
-      setItems(mapped);
+    // Use double requestAnimationFrame to ensure DOM has been painted
+    // This is more reliable than setTimeout for DOM updates
+    rafId1 = requestAnimationFrame(() => {
+      rafId2 = requestAnimationFrame(() => {
+        const headings = Array.from(
+          document.querySelectorAll<HTMLElement>('article h2, article h3')
+        );
+        const mapped = headings
+          .filter((el) => el.id)
+          .map((el) => ({
+            id: el.id,
+            text: el.innerText,
+            depth: el.tagName === 'H3' ? 3 : 2
+          }));
+        setItems(mapped);
 
-      observer = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((entry) => {
-            if (entry.isIntersecting) {
-              const id = (entry.target as HTMLElement).id;
-              if (id) {
-                setActiveId(id);
+        observer = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                const id = (entry.target as HTMLElement).id;
+                if (id) {
+                  setActiveId(id);
+                }
               }
-            }
-          });
-        },
-        {
-          // Trigger when heading is in upper 40% of viewport
-          rootMargin: '0px 0px -60% 0px',
-          threshold: 0.1
-        }
-      );
+            });
+          },
+          {
+            // Trigger when heading is in upper 40% of viewport
+            rootMargin: '0px 0px -60% 0px',
+            threshold: 0.1
+          }
+        );
 
-      headings.forEach((el) => observer?.observe(el));
-    }, 50); // 50ms delay to ensure DOM is updated
+        headings.forEach((el) => observer?.observe(el));
+      });
+    });
 
     return () => {
-      clearTimeout(timeoutId);
+      cancelAnimationFrame(rafId1);
+      cancelAnimationFrame(rafId2);
       if (observer) {
         observer.disconnect();
       }
     };
-  }, [pathname]);
+  }, [contentKey]);
 
   useEffect(() => {
     if (!activeId || !listRef.current) {
