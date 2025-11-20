@@ -198,7 +198,10 @@ export default async function BlogPostPage({ params }: Props) {
 
           <SectionDivider>
             <ScrollReveal>
-              <article className="prose prose-lg prose-slate mx-auto max-w-none dark:prose-dark">
+              <article
+                data-toc-content={slug}
+                className="prose prose-lg prose-slate mx-auto max-w-none dark:prose-dark"
+              >
                 {post.feature_image && (
                   <div className="-mx-4 mb-8 transition-all duration-500 sm:-mx-12 lg:-mx-20 group-[.toc-open]:lg:-mx-4">
                     <Image

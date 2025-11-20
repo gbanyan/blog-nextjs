@@ -20,6 +20,16 @@ export function PostToc({ onLinkClick, contentKey }: { onLinkClick?: () => void;
     // Clear items immediately when content changes
     setItems([]);
     setActiveId(null);
+    itemRefs.current = {};
+
+    const containerSelector = contentKey
+      ? `[data-toc-content="${contentKey}"]`
+      : '[data-toc-content]';
+    const container = document.querySelector<HTMLElement>(containerSelector);
+
+    if (!container) {
+      return undefined;
+    }
 
     let observer: IntersectionObserver | null = null;
     let rafId1: number;
@@ -30,7 +40,7 @@ export function PostToc({ onLinkClick, contentKey }: { onLinkClick?: () => void;
     rafId1 = requestAnimationFrame(() => {
       rafId2 = requestAnimationFrame(() => {
         const headings = Array.from(
-          document.querySelectorAll<HTMLElement>('article h2, article h3')
+          container.querySelectorAll<HTMLElement>('h2, h3')
         );
         const mapped = headings
           .filter((el) => el.id)
