@@ -12,7 +12,7 @@ function cn(...inputs: ClassValue[]) {
     return twMerge(clsx(inputs));
 }
 
-export function PostLayout({ children, hasToc = true }: { children: React.ReactNode; hasToc?: boolean }) {
+export function PostLayout({ children, hasToc = true, contentKey }: { children: React.ReactNode; hasToc?: boolean; contentKey?: string }) {
     const [isTocOpen, setIsTocOpen] = useState(hasToc);
 
     return (
@@ -43,7 +43,7 @@ export function PostLayout({ children, hasToc = true }: { children: React.ReactN
                                     transition={{ duration: 0.3 }}
                                     className="h-full overflow-y-auto pr-2"
                                 >
-                                    <PostToc />
+                                    <PostToc key={contentKey} />
                                 </motion.div>
                             )}
                         </AnimatePresence>
@@ -62,7 +62,7 @@ export function PostLayout({ children, hasToc = true }: { children: React.ReactN
                         className="fixed bottom-24 right-4 z-40 w-72 rounded-2xl border border-white/20 bg-white/90 p-6 shadow-2xl backdrop-blur-xl dark:border-white/10 dark:bg-slate-900/90 lg:hidden"
                     >
                         <div className="max-h-[60vh] overflow-y-auto">
-                            <PostToc onLinkClick={() => setIsTocOpen(false)} />
+                            <PostToc key={contentKey} onLinkClick={() => setIsTocOpen(false)} />
                         </div>
                     </motion.div>
                 )}

@@ -42,7 +42,7 @@ export default async function StaticPage({ params }: Props) {
   return (
     <>
       <ReadingProgress />
-      <PostLayout hasToc={hasToc}>
+      <PostLayout hasToc={hasToc} contentKey={slug}>
         <div className="space-y-8">
           <SectionDivider>
             <ScrollReveal>

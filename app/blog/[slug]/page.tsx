@@ -79,7 +79,7 @@ export default async function BlogPostPage({ params }: Props) {
   return (
     <>
       <ReadingProgress />
-      <PostLayout hasToc={hasToc}>
+      <PostLayout hasToc={hasToc} contentKey={slug}>
         <div className="space-y-8">
           {/* Main content area for Pagefind indexing */}
           <div data-pagefind-body>
