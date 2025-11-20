@@ -6,6 +6,7 @@ import { faFire, faArrowRight } from '@fortawesome/free-solid-svg-icons';
 import { siteConfig } from '@/lib/config';
 import { getAllTagsWithCount } from '@/lib/posts';
 import { allPages } from 'contentlayer2/generated';
+import { MastodonFeed } from './mastodon-feed';
 
 export function RightSidebar() {
   const tags = getAllTagsWithCount().slice(0, 5);
@@ -90,6 +91,9 @@ export function RightSidebar() {
             )}
           </div>
         </section>
+
+        {/* Mastodon Feed */}
+        <MastodonFeed />
 
         {tags.length > 0 && (
           <section className="motion-card rounded-xl border bg-white px-4 py-3 shadow-sm dark:border-slate-800 dark:bg-slate-900 dark:text-slate-100">
