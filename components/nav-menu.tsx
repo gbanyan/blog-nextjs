@@ -14,7 +14,8 @@ import {
   FiTag,
   FiServer,
   FiCpu,
-  FiList
+  FiList,
+  FiChevronDown
 } from 'react-icons/fi';
 import Link from 'next/link';
 
@@ -47,9 +48,10 @@ const ICON_MAP: Record<IconKey, any> = {
 
 export interface NavLinkItem {
   key: string;
-  href: string;
-  label?: string;
+  href?: string;
+  label: string;
   iconKey: IconKey;
+  children?: NavLinkItem[];
 }
 
 interface NavMenuProps {
@@ -61,6 +63,21 @@ export function NavMenu({ items }: NavMenuProps) {
 
   const toggle = () => setOpen((val) => !val);
   const close = () => setOpen(false);
+
+  const renderChild = (item: NavLinkItem) => {
+    const Icon = ICON_MAP[item.iconKey] ?? FiFile;
+    return item.href ? (
+      <Link
+        key={item.key}
+        href={item.href}
+        className="motion-link inline-flex items-center gap-2 rounded-xl px-3 py-2 text-sm text-slate-600 hover:bg-slate-100 hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40 dark:text-slate-200 dark:hover:bg-slate-800"
+        onClick={close}
+      >
+        <Icon className="h-4 w-4 text-slate-400" />
+        <span>{item.label}</span>
+      </Link>
+    ) : null;
+  };
 
   return (
     <div className="flex items-center gap-3">
@@ -76,21 +93,49 @@ export function NavMenu({ items }: NavMenuProps) {
       <nav
         className={`${open ? 'flex' : 'hidden'} flex-col gap-2 sm:flex sm:flex-row sm:items-center sm:gap-3`}
       >
-        {items.map((item) => (
-          <Link
-            key={item.key}
-            href={item.href}
-            className="motion-link type-nav group relative inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-slate-600 hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40 dark:text-slate-200"
-            onClick={close}
-          >
-            {(() => {
-              const Icon = ICON_MAP[item.iconKey] ?? FiFile;
-              return <Icon className="h-3.5 w-3.5 text-slate-400 transition group-hover:text-accent" />;
-            })()}
-            <span>{item.label}</span>
-            <span className="absolute inset-x-3 -bottom-0.5 h-px origin-left scale-x-0 bg-accent transition duration-180 ease-snappy group-hover:scale-x-100" aria-hidden="true" />
-          </Link>
-        ))}
+        {items.map((item) => {
+          const Icon = ICON_MAP[item.iconKey] ?? FiFile;
+
+          if (item.children && item.children.length > 0) {
+            return (
+              <div key={item.key} className="group relative">
+                <button
+                  type="button"
+                  className="motion-link type-nav inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-slate-600 hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40 dark:text-slate-200"
+                >
+                  <Icon className="h-3.5 w-3.5 text-slate-400 transition group-hover:text-accent" />
+                  <span>{item.label}</span>
+                  <FiChevronDown className="h-3 w-3 text-slate-400 transition group-hover:text-accent" />
+                </button>
+
+                {/* Desktop dropdown */}
+                <div className="pointer-events-none absolute left-0 top-full hidden min-w-[12rem] translate-y-1 rounded-2xl border border-slate-200 bg-white p-2 opacity-0 shadow-lg transition duration-200 ease-snappy group-hover:pointer-events-auto group-hover:translate-y-2 group-hover:opacity-100 dark:border-slate-800 dark:bg-slate-900 sm:block">
+                  <div className="flex flex-col gap-1">
+                    {item.children.map((child) => renderChild(child))}
+                  </div>
+                </div>
+
+                {/* Mobile inline list */}
+                <div className="sm:hidden ml-3 mt-1 flex flex-col gap-1">
+                  {item.children.map((child) => renderChild(child))}
+                </div>
+              </div>
+            );
+          }
+
+          return item.href ? (
+            <Link
+              key={item.key}
+              href={item.href}
+              className="motion-link type-nav group relative inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-slate-600 hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40 dark:text-slate-200"
+              onClick={close}
+            >
+              <Icon className="h-3.5 w-3.5 text-slate-400 transition group-hover:text-accent" />
+              <span>{item.label}</span>
+              <span className="absolute inset-x-3 -bottom-0.5 h-px origin-left scale-x-0 bg-accent transition duration-180 ease-snappy group-hover:scale-x-100" aria-hidden="true" />
+            </Link>
+          ) : null;
+        })}
       </nav>
     </div>
   );

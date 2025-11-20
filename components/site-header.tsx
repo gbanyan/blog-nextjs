@@ -21,15 +21,56 @@ export function SiteHeader() {
     .slice()
     .sort((a, b) => (a.title || '').localeCompare(b.title || ''));
 
+  const findPage = (title: string) => pages.find((page) => page.title === title);
+
+  const aboutChildren = [
+    { title: '關於作者', label: '作者' },
+    { title: '關於本站', label: '本站' }
+  ]
+    .map(({ title, label }) => {
+      const page = findPage(title);
+      if (!page) return null;
+      return {
+        key: page._id,
+        href: page.url,
+        label,
+        iconKey: getIconForPage(page.title, page.slug)
+      } satisfies NavLinkItem;
+    })
+    .filter(Boolean) as NavLinkItem[];
+
+  const deviceChildren = [
+    { title: '開發工作環境', label: '開發環境' },
+    { title: 'HomeLab', label: 'HomeLab' }
+  ]
+    .map(({ title, label }) => {
+      const page = findPage(title);
+      if (!page) return null;
+      return {
+        key: page._id,
+        href: page.url,
+        label,
+        iconKey: getIconForPage(page.title, page.slug)
+      } satisfies NavLinkItem;
+    })
+    .filter(Boolean) as NavLinkItem[];
+
   const navItems: NavLinkItem[] = [
     { key: 'home', href: '/', label: '首頁', iconKey: 'home' },
-    { key: 'blog', href: '/blog', label: 'Blog', iconKey: 'blog' },
-    ...pages.map((page) => ({
-      key: page._id,
-      href: page.url,
-      label: page.title,
-      iconKey: getIconForPage(page.title, page.slug)
-    }))
+    {
+      key: 'about',
+      href: aboutChildren[0]?.href,
+      label: '關於',
+      iconKey: 'user',
+      children: aboutChildren
+    },
+    {
+      key: 'devices',
+      href: deviceChildren[0]?.href,
+      label: '裝置',
+      iconKey: 'device',
+      children: deviceChildren
+    }
   ];
 
   return (
