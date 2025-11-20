@@ -4,6 +4,7 @@ import { siteConfig } from '@/lib/config';
 import { LayoutShell } from '@/components/layout-shell';
 import { ThemeProvider } from 'next-themes';
 import { Playfair_Display } from 'next/font/google';
+import { JsonLd } from '@/components/json-ld';
 
 const playfair = Playfair_Display({
   subsets: ['latin'],
@@ -49,9 +50,48 @@ export default function RootLayout({
 }) {
   const theme = siteConfig.theme;
 
+  // WebSite Schema
+  const websiteSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: siteConfig.title,
+    description: siteConfig.description,
+    url: siteConfig.url,
+    inLanguage: siteConfig.defaultLocale,
+    author: {
+      '@type': 'Person',
+      name: siteConfig.author,
+      url: siteConfig.url,
+    },
+    potentialAction: {
+      '@type': 'SearchAction',
+      target: {
+        '@type': 'EntryPoint',
+        urlTemplate: `${siteConfig.url}/blog?search={search_term_string}`,
+      },
+      'query-input': 'required name=search_term_string',
+    },
+  };
+
+  // Organization Schema
+  const organizationSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    name: siteConfig.name,
+    url: siteConfig.url,
+    logo: `${siteConfig.url}${siteConfig.avatar}`,
+    sameAs: [
+      siteConfig.social.github,
+      siteConfig.social.twitter && `https://twitter.com/${siteConfig.social.twitter.replace('@', '')}`,
+      siteConfig.social.mastodon,
+    ].filter(Boolean),
+  };
+
   return (
     <html lang={siteConfig.defaultLocale} suppressHydrationWarning className={playfair.variable}>
       <body>
+        <JsonLd data={websiteSchema} />
+        <JsonLd data={organizationSchema} />
         <style
           // Set CSS variables for accent colors (light + dark variants)
           dangerouslySetInnerHTML={{

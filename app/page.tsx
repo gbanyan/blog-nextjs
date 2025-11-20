@@ -4,12 +4,35 @@ import { siteConfig } from '@/lib/config';
 import { PostListItem } from '@/components/post-list-item';
 import { TimelineWrapper } from '@/components/timeline-wrapper';
 import { SidebarLayout } from '@/components/sidebar-layout';
+import { JsonLd } from '@/components/json-ld';
 
 export default function HomePage() {
   const posts = getAllPostsSorted().slice(0, siteConfig.postsPerPage);
 
+  // CollectionPage Schema for homepage
+  const collectionPageSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'CollectionPage',
+    name: `${siteConfig.name} 的最新動態`,
+    description: siteConfig.description,
+    url: siteConfig.url,
+    inLanguage: siteConfig.defaultLocale,
+    isPartOf: {
+      '@type': 'WebSite',
+      name: siteConfig.title,
+      url: siteConfig.url,
+    },
+    about: {
+      '@type': 'Blog',
+      name: siteConfig.title,
+      description: siteConfig.description,
+    },
+  };
+
   return (
-    <section className="space-y-6">
+    <>
+      <JsonLd data={collectionPageSchema} />
+      <section className="space-y-6">
       <SidebarLayout>
         <header className="space-y-1 text-center">
           <h1 className="type-title font-bold text-slate-900 dark:text-slate-50">
@@ -40,5 +63,6 @@ export default function HomePage() {
         </div>
       </SidebarLayout>
     </section>
+    </>
   );
 }

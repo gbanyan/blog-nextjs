@@ -9,6 +9,7 @@ import { ReadingProgress } from '@/components/reading-progress';
 import { PostLayout } from '@/components/post-layout';
 import { ScrollReveal } from '@/components/scroll-reveal';
 import { SectionDivider } from '@/components/section-divider';
+import { JsonLd } from '@/components/json-ld';
 
 export function generateStaticParams() {
   return allPages.map((page) => ({
@@ -39,8 +40,39 @@ export default async function StaticPage({ params }: Props) {
 
   const hasToc = /<h[23]/.test(page.body.html);
 
+  // Generate absolute URL for the page
+  const pageUrl = `${siteConfig.url}${page.url}`;
+
+  // Get image URL if available
+  const imageUrl = page.feature_image
+    ? `${siteConfig.url}${page.feature_image.replace('../assets', '/assets')}`
+    : `${siteConfig.url}${siteConfig.ogImage}`;
+
+  // WebPage Schema
+  const webPageSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'WebPage',
+    name: page.title,
+    description: page.description || page.title,
+    url: pageUrl,
+    image: imageUrl,
+    inLanguage: siteConfig.defaultLocale,
+    isPartOf: {
+      '@type': 'WebSite',
+      name: siteConfig.title,
+      url: siteConfig.url,
+    },
+    ...(page.published_at && {
+      datePublished: page.published_at,
+    }),
+    ...(page.updated_at && {
+      dateModified: page.updated_at,
+    }),
+  };
+
   return (
     <>
+      <JsonLd data={webPageSchema} />
       <ReadingProgress />
       <PostLayout hasToc={hasToc} contentKey={slug}>
         <div className="space-y-8">

@@ -12,6 +12,7 @@ import { PostCard } from '@/components/post-card';
 import { PostStorylineNav } from '@/components/post-storyline-nav';
 import { SectionDivider } from '@/components/section-divider';
 import { FooterCue } from '@/components/footer-cue';
+import { JsonLd } from '@/components/json-ld';
 
 export function generateStaticParams() {
   return allPosts.map((post) => ({
@@ -76,8 +77,88 @@ export default async function BlogPostPage({ params }: Props) {
 
   const hasToc = /<h[23]/.test(post.body.html);
 
+  // Generate absolute URL for the post
+  const postUrl = `${siteConfig.url}${post.url}`;
+
+  // Get the OG image URL (same as in metadata)
+  const ogImageUrl = new URL('/api/og', siteConfig.url);
+  ogImageUrl.searchParams.set('title', post.title);
+  if (post.description) {
+    ogImageUrl.searchParams.set('description', post.description);
+  }
+  if (post.tags && post.tags.length > 0) {
+    ogImageUrl.searchParams.set('tags', post.tags.slice(0, 3).join(','));
+  }
+
+  // Get image URL - prefer feature_image, fallback to OG image
+  const imageUrl = post.feature_image
+    ? `${siteConfig.url}${post.feature_image.replace('../assets', '/assets')}`
+    : ogImageUrl.toString();
+
+  // BlogPosting Schema
+  const blogPostingSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'BlogPosting',
+    headline: post.title,
+    description: post.description || post.custom_excerpt || post.title,
+    image: imageUrl,
+    datePublished: post.published_at,
+    dateModified: post.updated_at || post.published_at,
+    author: {
+      '@type': 'Person',
+      name: post.authors?.[0] || siteConfig.author,
+      url: siteConfig.url,
+    },
+    publisher: {
+      '@type': 'Organization',
+      name: siteConfig.name,
+      logo: {
+        '@type': 'ImageObject',
+        url: `${siteConfig.url}${siteConfig.avatar}`,
+      },
+    },
+    mainEntityOfPage: {
+      '@type': 'WebPage',
+      '@id': postUrl,
+    },
+    ...(post.tags && post.tags.length > 0 && {
+      keywords: post.tags.join(', '),
+      articleSection: post.tags[0],
+    }),
+    inLanguage: siteConfig.defaultLocale,
+    url: postUrl,
+  };
+
+  // BreadcrumbList Schema
+  const breadcrumbSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      {
+        '@type': 'ListItem',
+        position: 1,
+        name: '首頁',
+        item: siteConfig.url,
+      },
+      {
+        '@type': 'ListItem',
+        position: 2,
+        name: '所有文章',
+        item: `${siteConfig.url}/blog`,
+      },
+      {
+        '@type': 'ListItem',
+        position: 3,
+        name: post.title,
+        item: postUrl,
+      },
+    ],
+  };
+
   return (
     <>
+      <JsonLd data={blogPostingSchema} />
+      <JsonLd data={breadcrumbSchema} />
       <ReadingProgress />
       <PostLayout hasToc={hasToc} contentKey={slug}>
         <div className="space-y-8">
