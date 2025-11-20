@@ -19,39 +19,53 @@ export function PostToc({ onLinkClick }: { onLinkClick?: () => void }) {
   const pathname = usePathname();
 
   useEffect(() => {
-    const headings = Array.from(
-      document.querySelectorAll<HTMLElement>('article h2, article h3')
-    );
-    const mapped = headings
-      .filter((el) => el.id)
-      .map((el) => ({
-        id: el.id,
-        text: el.innerText,
-        depth: el.tagName === 'H3' ? 3 : 2
-      }));
-    setItems(mapped);
+    // Clear items immediately when pathname changes
+    setItems([]);
+    setActiveId(null);
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            const id = (entry.target as HTMLElement).id;
-            if (id) {
-              setActiveId(id);
+    let observer: IntersectionObserver | null = null;
+
+    // Small delay to ensure DOM has been updated with new article content
+    const timeoutId = setTimeout(() => {
+      const headings = Array.from(
+        document.querySelectorAll<HTMLElement>('article h2, article h3')
+      );
+      const mapped = headings
+        .filter((el) => el.id)
+        .map((el) => ({
+          id: el.id,
+          text: el.innerText,
+          depth: el.tagName === 'H3' ? 3 : 2
+        }));
+      setItems(mapped);
+
+      observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              const id = (entry.target as HTMLElement).id;
+              if (id) {
+                setActiveId(id);
+              }
             }
-          }
-        });
-      },
-      {
-        // Trigger when heading is in upper 40% of viewport
-        rootMargin: '0px 0px -60% 0px',
-        threshold: 0.1
+          });
+        },
+        {
+          // Trigger when heading is in upper 40% of viewport
+          rootMargin: '0px 0px -60% 0px',
+          threshold: 0.1
+        }
+      );
+
+      headings.forEach((el) => observer?.observe(el));
+    }, 50); // 50ms delay to ensure DOM is updated
+
+    return () => {
+      clearTimeout(timeoutId);
+      if (observer) {
+        observer.disconnect();
       }
-    );
-
-    headings.forEach((el) => observer.observe(el));
-
-    return () => observer.disconnect();
+    };
   }, [pathname]);
 
   useEffect(() => {
