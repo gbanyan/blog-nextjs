@@ -32,7 +32,7 @@ export function ReadingProgress() {
   if (!mounted) return null;
 
   return (
-    <div className="pointer-events-none fixed inset-x-0 top-0 z-40 h-px bg-transparent">
+    <div className="pointer-events-none fixed inset-x-0 top-0 z-60 h-px bg-transparent">
       <div className="relative h-1 w-full overflow-visible">
         <div
           className="absolute inset-y-0 left-0 w-full origin-left rounded-full bg-gradient-to-r from-blue-500/70 via-sky-400/70 to-indigo-500/70 shadow-[0_0_8px_rgba(59,130,246,0.45)] transition-[transform,opacity] duration-300 ease-out dark:from-blue-400/70 dark:via-sky-300/70 dark:to-indigo-400/70"
