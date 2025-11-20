@@ -3,6 +3,7 @@ import { visit } from 'unist-util-visit';
 import rehypeSlug from 'rehype-slug';
 import rehypeAutolinkHeadings from 'rehype-autolink-headings';
 import remarkGfm from 'remark-gfm';
+import rehypePrettyCode from 'rehype-pretty-code';
 
 export const Post = defineDocumentType(() => ({
   name: 'Post',
@@ -86,6 +87,16 @@ export default makeSource({
   markdown: {
     remarkPlugins: [remarkGfm],
     rehypePlugins: [
+      [
+        rehypePrettyCode,
+        {
+          theme: {
+            dark: 'github-dark',
+            light: 'github-light',
+          },
+          keepBackground: false,
+        },
+      ],
       rehypeSlug,
       [rehypeAutolinkHeadings, { behavior: 'wrap' }],
       /**

@@ -34,6 +34,11 @@ export const metadata: Metadata = {
   },
   icons: {
     icon: '/favicon.png'
+  },
+  alternates: {
+    types: {
+      'application/rss+xml': `${siteConfig.url}/feed.xml`
+    }
   }
 };
 

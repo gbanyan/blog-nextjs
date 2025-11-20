@@ -360,3 +360,69 @@ body {
 .pagefind-ui__search-input:focus {
   @apply ring-2 ring-blue-500 dark:ring-blue-400;
 }
+
+/* Code Syntax Highlighting Styles (rehype-pretty-code) */
+.prose pre {
+  @apply overflow-x-auto rounded-lg border border-slate-200 dark:border-slate-700;
+  padding: 1rem 1.2rem;
+  margin: 1.5rem 0;
+  background-color: #f8fafc;
+}
+
+.dark .prose pre {
+  background-color: #0f172a;
+}
+
+.prose pre > code {
+  @apply grid;
+  counter-reset: line;
+  font-size: 0.9em;
+  line-height: 1.7;
+}
+
+.prose pre > code > [data-line] {
+  padding: 0 1rem;
+  border-left: 2px solid transparent;
+}
+
+.prose pre > code > [data-line]::before {
+  counter-increment: line;
+  content: counter(line);
+  display: inline-block;
+  width: 1.5rem;
+  margin-right: 1.5rem;
+  text-align: right;
+  color: #94a3b8;
+  user-select: none;
+}
+
+.dark .prose pre > code > [data-line]::before {
+  color: #475569;
+}
+
+/* Highlighted lines */
+.prose pre > code > [data-highlighted-line] {
+  background-color: rgba(59, 130, 246, 0.1);
+  border-left-color: rgb(59, 130, 246);
+}
+
+.dark .prose pre > code > [data-highlighted-line] {
+  background-color: rgba(96, 165, 250, 0.15);
+  border-left-color: rgb(96, 165, 250);
+}
+
+/* Inline code */
+.prose :not(pre) > code {
+  @apply rounded bg-slate-100 px-1.5 py-0.5 text-sm font-semibold text-slate-800 dark:bg-slate-800 dark:text-slate-200;
+  white-space: nowrap;
+}
+
+/* Code title (if specified in markdown: ```js title="example.js") */
+.prose [data-rehype-pretty-code-title] {
+  @apply rounded-t-lg border border-b-0 border-slate-200 bg-slate-100 px-4 py-2 text-sm font-semibold text-slate-700 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300;
+  margin-bottom: 0;
+}
+
+.prose [data-rehype-pretty-code-title] + pre {
+  @apply mt-0 rounded-t-none;
+}
