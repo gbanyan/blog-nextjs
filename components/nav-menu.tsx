@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, FocusEvent } from 'react';
 import {
   FiMenu,
   FiX,
@@ -60,9 +60,15 @@ interface NavMenuProps {
 
 export function NavMenu({ items }: NavMenuProps) {
   const [open, setOpen] = useState(false);
+  const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
 
   const toggle = () => setOpen((val) => !val);
   const close = () => setOpen(false);
+  const handleBlur = (event: FocusEvent<HTMLDivElement>) => {
+    if (!event.currentTarget.contains(event.relatedTarget as Node)) {
+      setActiveDropdown(null);
+    }
+  };
 
   const renderChild = (item: NavLinkItem) => {
     const Icon = ICON_MAP[item.iconKey] ?? FiFile;
@@ -94,14 +100,23 @@ export function NavMenu({ items }: NavMenuProps) {
         className={`${open ? 'flex' : 'hidden'} flex-col gap-2 sm:flex sm:flex-row sm:items-center sm:gap-3`}
       >
         {items.map((item) => {
-          const Icon = ICON_MAP[item.iconKey] ?? FiFile;
-
           if (item.children && item.children.length > 0) {
+            const Icon = ICON_MAP[item.iconKey] ?? FiFile;
+            const isOpen = activeDropdown === item.key;
             return (
-              <div key={item.key} className="group relative">
+              <div
+                key={item.key}
+                className="group relative"
+                onMouseEnter={() => setActiveDropdown(item.key)}
+                onMouseLeave={() => setActiveDropdown(null)}
+                onFocus={() => setActiveDropdown(item.key)}
+                onBlur={handleBlur}
+              >
                 <button
                   type="button"
                   className="motion-link type-nav inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-slate-600 hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40 dark:text-slate-200"
+                  aria-haspopup="menu"
+                  aria-expanded={isOpen}
                 >
                   <Icon className="h-3.5 w-3.5 text-slate-400 transition group-hover:text-accent" />
                   <span>{item.label}</span>
@@ -109,7 +124,13 @@ export function NavMenu({ items }: NavMenuProps) {
                 </button>
 
                 {/* Desktop dropdown */}
-                <div className="pointer-events-none absolute left-0 top-full hidden min-w-[12rem] translate-y-1 rounded-2xl border border-slate-200 bg-white p-2 opacity-0 shadow-lg transition duration-200 ease-snappy group-hover:pointer-events-auto group-hover:translate-y-2 group-hover:opacity-100 dark:border-slate-800 dark:bg-slate-900 sm:block">
+                <div
+                  className={`absolute left-0 top-full hidden min-w-[12rem] rounded-2xl border border-slate-200 bg-white p-2 shadow-lg transition duration-200 ease-snappy dark:border-slate-800 dark:bg-slate-900 sm:block ${
+                    isOpen ? 'pointer-events-auto translate-y-2 opacity-100' : 'pointer-events-none translate-y-1 opacity-0'
+                  }`}
+                  role="menu"
+                  aria-label={item.label}
+                >
                   <div className="flex flex-col gap-1">
                     {item.children.map((child) => renderChild(child))}
                   </div>
@@ -122,6 +143,8 @@ export function NavMenu({ items }: NavMenuProps) {
               </div>
             );
           }
+
+          const Icon = ICON_MAP[item.iconKey] ?? FiFile;
 
           return item.href ? (
             <Link
