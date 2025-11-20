@@ -2,7 +2,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import type { Post } from 'contentlayer2/generated';
 import { siteConfig } from '@/lib/config';
-import { faCalendarDays, faTags } from '@fortawesome/free-solid-svg-icons';
+import { FiCalendar, FiTag } from 'react-icons/fi';
 import { MetaItem } from './meta-item';
 
 interface PostCardProps {
@@ -35,14 +35,14 @@ export function PostCard({ post, showTags = true }: PostCardProps) {
       <div className="space-y-3 px-4 py-4">
         <div className="flex flex-wrap items-center gap-3 text-xs">
           {post.published_at && (
-            <MetaItem icon={faCalendarDays}>
+            <MetaItem icon={FiCalendar}>
               {new Date(post.published_at).toLocaleDateString(
                 siteConfig.defaultLocale
               )}
             </MetaItem>
           )}
           {showTags && post.tags && post.tags.length > 0 && (
-            <MetaItem icon={faTags} tone="muted">
+            <MetaItem icon={FiTag} tone="muted">
               {post.tags.slice(0, 3).join(', ')}
             </MetaItem>
           )}

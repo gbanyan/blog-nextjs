@@ -1,13 +1,6 @@
 import { siteConfig } from '@/lib/config';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-  faGithub,
-  faTwitter,
-  faMastodon,
-  faGitAlt,
-  faLinkedin
-} from '@fortawesome/free-brands-svg-icons';
-import { faEnvelope, faPenNib } from '@fortawesome/free-solid-svg-icons';
+import { FaGithub, FaTwitter, FaMastodon, FaGit, FaLinkedin } from 'react-icons/fa';
+import { FiMail, FiFeather } from 'react-icons/fi';
 import { MetaItem } from './meta-item';
 
 export function Hero() {
@@ -19,37 +12,37 @@ export function Hero() {
       key: 'github',
       href: social.github,
       label: 'GitHub',
-      icon: faGithub
+      icon: FaGithub
     },
     social.twitter && {
       key: 'twitter',
       href: `https://twitter.com/${social.twitter.replace('@', '')}`,
       label: 'Twitter',
-      icon: faTwitter
+      icon: FaTwitter
     },
     social.mastodon && {
       key: 'mastodon',
       href: social.mastodon,
       label: 'Mastodon',
-      icon: faMastodon
+      icon: FaMastodon
     },
     social.gitea && {
       key: 'gitea',
       href: social.gitea,
       label: 'Gitea',
-      icon: faGitAlt
+      icon: FaGit
     },
     social.linkedin && {
       key: 'linkedin',
       href: social.linkedin,
       label: 'LinkedIn',
-      icon: faLinkedin
+      icon: FaLinkedin
     },
     social.email && {
       key: 'email',
       href: `mailto:${social.email}`,
       label: 'Email',
-      icon: faEnvelope
+      icon: FiMail
     }
   ].filter(Boolean) as {
     key: string;
@@ -73,7 +66,7 @@ export function Hero() {
             {name}
           </h1>
           <div className="mt-1">
-            <MetaItem icon={faPenNib}>
+            <MetaItem icon={FiFeather}>
               {tagline}
             </MetaItem>
           </div>
@@ -87,7 +80,7 @@ export function Hero() {
                   rel="noopener noreferrer"
                   className="motion-link flex items-center gap-2 rounded-full bg-white/80 px-3 py-1 text-slate-600 shadow-sm ring-1 ring-slate-200 hover:-translate-y-0.5 hover:bg-accent-soft hover:text-accent hover:shadow-md dark:bg-slate-900/80 dark:text-slate-200 dark:ring-slate-700"
                 >
-                  <FontAwesomeIcon icon={item.icon} className="h-3.5 w-3.5 text-accent" />
+                  <item.icon className="h-3.5 w-3.5 text-accent" />
                   <span>{item.label}</span>
                 </a>
               ))}

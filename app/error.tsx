@@ -1,8 +1,7 @@
 'use client';
 
 import { useEffect } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTriangleExclamation } from '@fortawesome/free-solid-svg-icons';
+import { FiAlertTriangle } from 'react-icons/fi';
 
 export default function Error({
   error,
@@ -20,10 +19,7 @@ export default function Error({
     <div className="flex min-h-screen items-center justify-center px-4">
       <div className="max-w-md text-center">
         <div className="mb-6 inline-flex h-16 w-16 items-center justify-center rounded-full bg-red-100 dark:bg-red-900/20">
-          <FontAwesomeIcon
-            icon={faTriangleExclamation}
-            className="h-8 w-8 text-red-600 dark:text-red-400"
-          />
+          <FiAlertTriangle className="h-8 w-8 text-red-600 dark:text-red-400" />
         </div>
 
         <h2 className="mb-2 text-2xl font-semibold text-slate-900 dark:text-slate-100">

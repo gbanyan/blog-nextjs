@@ -1,7 +1,6 @@
 import Link from 'next/link';
 import type { Metadata } from 'next';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTags, faFire } from '@fortawesome/free-solid-svg-icons';
+import { FiTag, FiTrendingUp } from 'react-icons/fi';
 import { getAllTagsWithCount } from '@/lib/posts';
 import { SectionDivider } from '@/components/section-divider';
 import { ScrollReveal } from '@/components/scroll-reveal';
@@ -30,7 +29,7 @@ export default function TagIndexPage() {
           <ScrollReveal>
             <div className="motion-card rounded-2xl border border-white/40 bg-white/60 p-8 text-center shadow-lg backdrop-blur-md dark:border-white/10 dark:bg-slate-900/60">
               <div className="inline-flex items-center gap-2 text-accent">
-                <FontAwesomeIcon icon={faTags} className="h-5 w-5" />
+                <FiTag className="h-5 w-5" />
                 <span className="type-small uppercase tracking-[0.4em] text-slate-500 dark:text-slate-400">
                   標籤索引
                 </span>
@@ -65,7 +64,7 @@ export default function TagIndexPage() {
                   </span>
                 </div>
                 <span className="mt-1 inline-flex items-center gap-1 text-xs text-slate-500 dark:text-slate-400">
-                  <FontAwesomeIcon icon={faFire} className="h-3 w-3 text-orange-400" />
+                  <FiTrendingUp className="h-3 w-3 text-orange-400" />
                   熱度 #{index + 1}
                 </span>
               </Link>

@@ -2,7 +2,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Post } from 'contentlayer2/generated';
 import { siteConfig } from '@/lib/config';
-import { faCalendarDays, faTags } from '@fortawesome/free-solid-svg-icons';
+import { FiCalendar, FiTag } from 'react-icons/fi';
 import { MetaItem } from './meta-item';
 
 interface Props {
@@ -37,14 +37,14 @@ export function PostListItem({ post }: Props) {
       <div className="flex-1 space-y-1.5">
         <div className="flex flex-wrap gap-3 text-xs">
           {post.published_at && (
-            <MetaItem icon={faCalendarDays}>
+            <MetaItem icon={FiCalendar}>
               {new Date(post.published_at).toLocaleDateString(
                 siteConfig.defaultLocale
               )}
             </MetaItem>
           )}
           {post.tags && post.tags.length > 0 && (
-            <MetaItem icon={faTags} tone="muted">
+            <MetaItem icon={FiTag} tone="muted">
               {post.tags.slice(0, 3).join(', ')}
             </MetaItem>
           )}

@@ -1,13 +1,6 @@
 import { siteConfig } from '@/lib/config';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-  faGithub,
-  faTwitter,
-  faMastodon,
-  faGitAlt,
-  faLinkedin
-} from '@fortawesome/free-brands-svg-icons';
-import { faEnvelope } from '@fortawesome/free-solid-svg-icons';
+import { FaGithub, FaTwitter, FaMastodon, FaGit, FaLinkedin } from 'react-icons/fa';
+import { FiMail } from 'react-icons/fi';
 
 // Calculate year at build time for PPR compatibility
 const currentYear = new Date().getFullYear();
@@ -20,37 +13,37 @@ export function SiteFooter() {
       key: 'github',
       href: social.github,
       label: 'GitHub',
-      icon: faGithub
+      icon: FaGithub
     },
     social.twitter && {
       key: 'twitter',
       href: `https://twitter.com/${social.twitter.replace('@', '')}`,
       label: 'Twitter',
-      icon: faTwitter
+      icon: FaTwitter
     },
     social.mastodon && {
       key: 'mastodon',
       href: social.mastodon,
       label: 'Mastodon',
-      icon: faMastodon
+      icon: FaMastodon
     },
     social.gitea && {
       key: 'gitea',
       href: social.gitea,
       label: 'Gitea',
-      icon: faGitAlt
+      icon: FaGit
     },
     social.linkedin && {
       key: 'linkedin',
       href: social.linkedin,
       label: 'LinkedIn',
-      icon: faLinkedin
+      icon: FaLinkedin
     },
     social.email && {
       key: 'email',
       href: `mailto:${social.email}`,
       label: 'Email',
-      icon: faEnvelope
+      icon: FiMail
     }
   ].filter(Boolean) as {
     key: string;
@@ -75,7 +68,7 @@ export function SiteFooter() {
               aria-label={item.label}
               className="text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-100"
             >
-              <FontAwesomeIcon icon={item.icon} className="h-4 w-4" />
+              <item.icon className="h-4 w-4" />
             </a>
           ))}
         </div>

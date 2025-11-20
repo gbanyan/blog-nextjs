@@ -2,8 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faMagnifyingGlass, faXmark } from '@fortawesome/free-solid-svg-icons';
+import { FiSearch, FiX } from 'react-icons/fi';
 
 interface SearchModalProps {
   isOpen: boolean;
@@ -136,7 +135,7 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
         {/* Header */}
         <div className="flex items-center justify-between border-b border-slate-200 px-6 py-4 dark:border-slate-700">
           <div className="flex items-center gap-2 text-slate-600 dark:text-slate-300">
-            <FontAwesomeIcon icon={faMagnifyingGlass} className="h-5 w-5" />
+            <FiSearch className="h-5 w-5" />
             <span className="text-sm font-medium">全站搜尋</span>
           </div>
           <button
@@ -144,7 +143,7 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
             className="inline-flex h-8 w-8 items-center justify-center rounded-full text-slate-500 transition hover:bg-slate-100 hover:text-slate-700 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-slate-200"
             aria-label="關閉搜尋"
           >
-            <FontAwesomeIcon icon={faXmark} className="h-5 w-5" />
+            <FiX className="h-5 w-5" />
           </button>
         </div>
 
@@ -199,7 +198,7 @@ export function SearchButton({ onClick }: { onClick: () => void }) {
       className="motion-link inline-flex h-9 items-center gap-2 rounded-full bg-slate-100 px-3 py-1.5 text-sm text-slate-600 transition hover:bg-slate-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700"
       aria-label="搜尋 (Cmd+K)"
     >
-      <FontAwesomeIcon icon={faMagnifyingGlass} className="h-3.5 w-3.5" />
+      <FiSearch className="h-3.5 w-3.5" />
       <span className="hidden sm:inline">搜尋</span>
       <kbd className="hidden rounded bg-white px-1.5 py-0.5 text-xs font-semibold text-slate-500 shadow-sm dark:bg-slate-900 dark:text-slate-400 sm:inline-block">
         ⌘K

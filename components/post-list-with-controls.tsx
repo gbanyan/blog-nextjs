@@ -2,13 +2,7 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import { Post, Page } from 'contentlayer2/generated';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-  faArrowDownWideShort,
-  faArrowUpWideShort,
-  faMagnifyingGlass,
-  faListUl
-} from '@fortawesome/free-solid-svg-icons';
+import { FiArrowDown, FiArrowUp, FiSearch, FiList } from 'react-icons/fi';
 import { siteConfig } from '@/lib/config';
 import { PostListItem } from './post-list-item';
 import { TimelineWrapper } from './timeline-wrapper';
@@ -83,7 +77,7 @@ export function PostListWithControls({ posts, pageSize }: Props) {
     <div className="space-y-4">
       <div className="flex flex-col gap-4 text-xs text-slate-500 dark:text-slate-400 sm:flex-row sm:items-center sm:justify-between">
         <div className="inline-flex items-center gap-2 rounded-full bg-slate-100/70 px-2 py-1 text-slate-600 dark:bg-slate-800/70 dark:text-slate-300">
-          <FontAwesomeIcon icon={faListUl} className="h-3.5 w-3.5" />
+          <FiList className="h-3.5 w-3.5" />
           <span>排序</span>
           <button
             type="button"
@@ -93,7 +87,7 @@ export function PostListWithControls({ posts, pageSize }: Props) {
               : 'bg-white text-slate-600 hover:bg-slate-200 dark:bg-slate-900 dark:text-slate-300 dark:hover:bg-slate-700'
               }`}
           >
-            <FontAwesomeIcon icon={faArrowDownWideShort} className="h-3 w-3" />
+            <FiArrowDown className="h-3 w-3" />
             新到舊
           </button>
           <button
@@ -104,7 +98,7 @@ export function PostListWithControls({ posts, pageSize }: Props) {
               : 'bg-white text-slate-600 hover:bg-slate-200 dark:bg-slate-900 dark:text-slate-300 dark:hover:bg-slate-700'
               }`}
           >
-            <FontAwesomeIcon icon={faArrowUpWideShort} className="h-3 w-3" />
+            <FiArrowUp className="h-3 w-3" />
             舊到新
           </button>
         </div>
@@ -113,8 +107,7 @@ export function PostListWithControls({ posts, pageSize }: Props) {
             搜尋文章
           </label>
           <div className="relative w-full sm:w-64">
-            <FontAwesomeIcon
-              icon={faMagnifyingGlass}
+            <FiSearch
               className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-slate-400"
             />
             <input

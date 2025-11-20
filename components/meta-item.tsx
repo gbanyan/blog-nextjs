@@ -1,16 +1,15 @@
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import type { IconDefinition } from '@fortawesome/free-solid-svg-icons';
 import { ReactNode } from 'react';
 import clsx from 'clsx';
+import { IconType } from 'react-icons';
 
 interface MetaItemProps {
-  icon: IconDefinition;
+  icon: IconType;
   children: ReactNode;
   className?: string;
   tone?: 'default' | 'muted';
 }
 
-export function MetaItem({ icon, children, className, tone = 'default' }: MetaItemProps) {
+export function MetaItem({ icon: Icon, children, className, tone = 'default' }: MetaItemProps) {
   return (
     <span
       className={clsx(
@@ -19,7 +18,7 @@ export function MetaItem({ icon, children, className, tone = 'default' }: MetaIt
         className
       )}
     >
-      <FontAwesomeIcon icon={icon} className="h-3.5 w-3.5 text-slate-400 dark:text-slate-500" />
+      <Icon className="h-3.5 w-3.5 text-slate-400 dark:text-slate-500" />
       <span>{children}</span>
     </span>
   );

@@ -5,8 +5,7 @@ import { getTagSlug } from '@/lib/posts';
 import { SidebarLayout } from '@/components/sidebar-layout';
 import { SectionDivider } from '@/components/section-divider';
 import { ScrollReveal } from '@/components/scroll-reveal';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTag } from '@fortawesome/free-solid-svg-icons';
+import { FiTag } from 'react-icons/fi';
 
 export function generateStaticParams() {
   const slugs = new Set<string>();
@@ -57,7 +56,7 @@ export default async function TagPage({ params }: Props) {
         <ScrollReveal>
           <div className="motion-card mb-8 rounded-2xl border border-white/40 bg-white/60 p-8 text-center shadow-lg backdrop-blur-md dark:border-white/10 dark:bg-slate-900/60">
             <div className="inline-flex items-center gap-2 text-accent">
-              <FontAwesomeIcon icon={faTag} className="h-5 w-5" />
+              <FiTag className="h-5 w-5" />
               <span className="type-small uppercase tracking-[0.4em] text-slate-500 dark:text-slate-400">
                 TAG ARCHIVE
               </span>

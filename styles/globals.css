@@ -233,6 +233,69 @@ body {
   left: 0;
 }
 
+/* TOC transitions - replaces Framer Motion */
+.toc-sidebar {
+  transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+  will-change: opacity, transform;
+}
+
+.toc-sidebar-enter {
+  opacity: 0;
+  transform: translateX(20px);
+}
+
+.toc-sidebar-enter-active {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.toc-sidebar-exit {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.toc-sidebar-exit-active {
+  opacity: 0;
+  transform: translateX(20px);
+}
+
+.toc-mobile {
+  transition: opacity 0.2s ease-in-out, transform 0.2s ease-in-out;
+  will-change: opacity, transform;
+}
+
+.toc-mobile-enter {
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.toc-mobile-enter-active {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.toc-mobile-exit {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.toc-mobile-exit-active {
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.toc-button {
+  transition: all 0.2s ease-in-out;
+}
+
+.toc-button:active {
+  transform: scale(0.95);
+}
+
+.toc-button:hover {
+  transform: scale(1.05);
+}
+
 @layer components {
   .type-display {
     font-size: clamp(2.2rem, 1.6rem + 2.4vw, 3.5rem);

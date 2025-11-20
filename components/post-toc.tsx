@@ -2,8 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { usePathname } from 'next/navigation';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faListUl } from '@fortawesome/free-solid-svg-icons';
+import { FiList } from 'react-icons/fi';
 
 interface TocItem {
   id: string;
@@ -101,7 +100,7 @@ export function PostToc({ onLinkClick }: { onLinkClick?: () => void }) {
   return (
     <nav className="not-prose sticky top-20 text-slate-500 dark:text-slate-400">
       <div className="mb-2 inline-flex items-center gap-2 font-semibold text-slate-700 dark:text-slate-200">
-        <FontAwesomeIcon icon={faListUl} className="h-4 w-4 text-slate-400" />
+        <FiList className="h-4 w-4 text-slate-400" />
         目錄
       </div>
       <div className="relative pl-4">

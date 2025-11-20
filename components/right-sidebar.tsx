@@ -1,8 +1,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faGithub, faMastodon, faLinkedin } from '@fortawesome/free-brands-svg-icons';
-import { faFire, faArrowRight } from '@fortawesome/free-solid-svg-icons';
+import { FaGithub, FaMastodon, FaLinkedin } from 'react-icons/fa';
+import { FiTrendingUp, FiArrowRight } from 'react-icons/fi';
 import { siteConfig } from '@/lib/config';
 import { getAllTagsWithCount } from '@/lib/posts';
 import { allPages } from 'contentlayer2/generated';
@@ -21,19 +20,19 @@ export function RightSidebar() {
     siteConfig.social.github && {
       key: 'github',
       href: siteConfig.social.github,
-      icon: faGithub,
+      icon: FaGithub,
       label: 'GitHub'
     },
     siteConfig.social.mastodon && {
       key: 'mastodon',
       href: siteConfig.social.mastodon,
-      icon: faMastodon,
+      icon: FaMastodon,
       label: 'Mastodon'
     },
     siteConfig.social.linkedin && {
       key: 'linkedin',
       href: siteConfig.social.linkedin,
-      icon: faLinkedin,
+      icon: FaLinkedin,
       label: 'LinkedIn'
     }
   ].filter(Boolean) as { key: string; href: string; icon: any; label: string }[];
@@ -77,7 +76,7 @@ export function RightSidebar() {
                     aria-label={item.label}
                     className="motion-link inline-flex h-8 w-8 items-center justify-center rounded-full bg-slate-100 text-slate-600 hover:-translate-y-0.5 hover:bg-accent-soft hover:text-accent dark:bg-slate-800 dark:text-slate-200"
                   >
-                    <FontAwesomeIcon icon={item.icon} className="h-4 w-4" />
+                    <item.icon className="h-4 w-4" />
                   </a>
                 ))}
               </div>
@@ -98,7 +97,7 @@ export function RightSidebar() {
         {tags.length > 0 && (
           <section className="motion-card rounded-xl border bg-white px-4 py-3 shadow-sm dark:border-slate-800 dark:bg-slate-900 dark:text-slate-100">
             <h2 className="type-small flex items-center gap-2 font-semibold uppercase tracking-[0.35em] text-slate-500 dark:text-slate-400">
-              <FontAwesomeIcon icon={faFire} className="h-3 w-3 text-orange-400" />
+              <FiTrendingUp className="h-3 w-3 text-orange-400" />
               熱門標籤
             </h2>
             <div className="mt-2 flex flex-wrap gap-2 text-base">
@@ -120,7 +119,7 @@ export function RightSidebar() {
             </div>
             <div className="mt-3 flex items-center justify-between type-small text-slate-500 dark:text-slate-400">
               <span className="inline-flex items-center gap-1">
-                <FontAwesomeIcon icon={faArrowRight} className="h-3 w-3" />
+                <FiArrowRight className="h-3 w-3" />
                 一覽所有標籤
               </span>
               <Link

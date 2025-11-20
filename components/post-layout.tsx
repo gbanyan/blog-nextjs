@@ -1,9 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faListUl, faChevronRight, faChevronLeft } from '@fortawesome/free-solid-svg-icons';
+import { FiList, FiChevronRight } from 'react-icons/fi';
 import { PostToc } from './post-toc';
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
@@ -23,70 +21,50 @@ export function PostLayout({ children, hasToc = true, contentKey }: { children: 
             )}>
                 {/* Main Content Area */}
                 <div className="min-w-0">
-                    <motion.div
-                        layout
-                        className={cn("mx-auto transition-all duration-500 ease-snappy", isTocOpen && hasToc ? "max-w-3xl" : "max-w-4xl")}
-                    >
+                    <div className={cn("mx-auto transition-all duration-500 ease-snappy", isTocOpen && hasToc ? "max-w-3xl" : "max-w-4xl")}>
                         {children}
-                    </motion.div>
+                    </div>
                 </div>
 
                 {/* Desktop Sidebar (TOC) */}
                 <aside className="hidden lg:block">
                     <div className="sticky top-24 h-[calc(100vh-6rem)] overflow-hidden">
-                        <AnimatePresence mode="wait">
-                            {isTocOpen && hasToc && (
-                                <motion.div
-                                    initial={{ opacity: 0, x: 20 }}
-                                    animate={{ opacity: 1, x: 0 }}
-                                    exit={{ opacity: 0, x: 20 }}
-                                    transition={{ duration: 0.3 }}
-                                    className="h-full overflow-y-auto pr-2"
-                                >
-                                    <PostToc key={contentKey} />
-                                </motion.div>
-                            )}
-                        </AnimatePresence>
+                        {isTocOpen && hasToc && (
+                            <div className="toc-sidebar h-full overflow-y-auto pr-2">
+                                <PostToc key={contentKey} />
+                            </div>
+                        )}
                     </div>
                 </aside>
             </div>
 
             {/* Mobile TOC Overlay */}
-            <AnimatePresence>
-                {isTocOpen && hasToc && (
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: 20 }}
-                        transition={{ duration: 0.2 }}
-                        className="fixed bottom-24 right-4 z-40 w-72 rounded-2xl border border-white/20 bg-white/90 p-6 shadow-2xl backdrop-blur-xl dark:border-white/10 dark:bg-slate-900/90 lg:hidden"
-                    >
-                        <div className="max-h-[60vh] overflow-y-auto">
-                            <PostToc key={contentKey} onLinkClick={() => setIsTocOpen(false)} />
-                        </div>
-                    </motion.div>
-                )}
-            </AnimatePresence>
+            {isTocOpen && hasToc && (
+                <div className="toc-mobile fixed bottom-24 right-4 z-40 w-72 rounded-2xl border border-white/20 bg-white/90 p-6 shadow-2xl backdrop-blur-xl dark:border-white/10 dark:bg-slate-900/90 lg:hidden">
+                    <div className="max-h-[60vh] overflow-y-auto">
+                        <PostToc key={contentKey} onLinkClick={() => setIsTocOpen(false)} />
+                    </div>
+                </div>
+            )}
 
             {/* Toggle Button (Glassmorphism Pill) */}
             {hasToc && (
-                <motion.button
-                    layout
+                <button
                     onClick={() => setIsTocOpen(!isTocOpen)}
                     className={cn(
-                        "fixed bottom-8 right-8 z-50 flex items-center gap-2 rounded-full border border-white/20 bg-white/80 px-4 py-2.5 shadow-lg backdrop-blur-md transition-all hover:bg-white hover:scale-105 dark:border-white/10 dark:bg-slate-900/80 dark:hover:bg-slate-900",
+                        "toc-button fixed bottom-8 right-8 z-50 flex items-center gap-2 rounded-full border border-white/20 bg-white/80 px-4 py-2.5 shadow-lg backdrop-blur-md hover:bg-white dark:border-white/10 dark:bg-slate-900/80 dark:hover:bg-slate-900",
                         "text-sm font-medium text-slate-600 dark:text-slate-300",
                         "lg:right-20" // Adjust position for desktop
                     )}
-                    whileTap={{ scale: 0.95 }}
                     aria-label="Toggle Table of Contents"
                 >
-                    <FontAwesomeIcon
-                        icon={isTocOpen ? faChevronRight : faListUl}
-                        className="h-3.5 w-3.5"
-                    />
+                    {isTocOpen ? (
+                        <FiChevronRight className="h-3.5 w-3.5" />
+                    ) : (
+                        <FiList className="h-3.5 w-3.5" />
+                    )}
                     <span>{isTocOpen ? 'Hide' : 'Menu'}</span>
-                </motion.button>
+                </button>
             )}
         </div>
     );

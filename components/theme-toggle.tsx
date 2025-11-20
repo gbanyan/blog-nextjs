@@ -2,8 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useTheme } from 'next-themes';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faMoon, faSun } from '@fortawesome/free-solid-svg-icons';
+import { FiMoon, FiSun } from 'react-icons/fi';
 
 export function ThemeToggle() {
   const { theme, setTheme } = useTheme();
@@ -27,12 +26,11 @@ export function ThemeToggle() {
       onClick={() => setTheme(next)}
       aria-label={theme === 'dark' ? '切換為淺色主題' : '切換為深色主題'}
     >
-      <FontAwesomeIcon
-        icon={isDark ? faSun : faMoon}
-        className={`h-4 w-4 transition-transform duration-260 ease-snappy ${
-          isDark ? 'rotate-0 text-amber-400' : 'rotate-180 text-blue-500'
-        }`}
-      />
+      {isDark ? (
+        <FiSun className="h-4 w-4 rotate-0 text-amber-400 transition-transform duration-260 ease-snappy" />
+      ) : (
+        <FiMoon className="h-4 w-4 rotate-180 text-blue-500 transition-transform duration-260 ease-snappy" />
+      )}
     </button>
   );
 }
