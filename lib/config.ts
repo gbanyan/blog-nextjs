@@ -42,7 +42,7 @@ export const siteConfig = {
     },
     slugs: {}
   },
-  ogImage: process.env.NEXT_PUBLIC_OG_DEFAULT_IMAGE || '/assets/og-default.jpg',
+  ogImage: process.env.NEXT_PUBLIC_OG_DEFAULT_IMAGE || '/assets/og-default.png',
   twitterCard:
     (process.env.NEXT_PUBLIC_TWITTER_CARD_TYPE as
       | 'summary'

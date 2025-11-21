@@ -9,7 +9,17 @@ interface TocItem {
   depth: number;
 }
 
-export function PostToc({ onLinkClick, contentKey }: { onLinkClick?: () => void; contentKey?: string }) {
+export function PostToc({
+  onLinkClick,
+  contentKey,
+  showTitle = true,
+  className
+}: {
+  onLinkClick?: () => void;
+  contentKey?: string;
+  showTitle?: boolean;
+  className?: string;
+}) {
   const [items, setItems] = useState<TocItem[]>([]);
   const [activeId, setActiveId] = useState<string | null>(null);
   const listRef = useRef<HTMLDivElement | null>(null);
@@ -126,11 +136,13 @@ export function PostToc({ onLinkClick, contentKey }: { onLinkClick?: () => void;
   if (items.length === 0) return null;
 
   return (
-    <nav className="not-prose sticky top-20 text-slate-500 dark:text-slate-400">
-      <div className="mb-2 inline-flex items-center gap-2 font-semibold text-slate-700 dark:text-slate-200">
-        <FiList className="h-4 w-4 text-slate-400" />
-        目錄
-      </div>
+    <nav className={`not-prose text-slate-500 dark:text-slate-400 ${className || 'sticky top-20'}`}>
+      {showTitle && (
+        <div className="mb-2 inline-flex items-center gap-2 font-semibold text-slate-700 dark:text-slate-200">
+          <FiList className="h-4 w-4 text-slate-400" />
+          目錄
+        </div>
+      )}
       <div className="relative pl-4">
         <span className="absolute left-1 top-0 h-full w-px bg-slate-200 dark:bg-slate-800" aria-hidden="true" />
         <span
@@ -155,11 +167,10 @@ export function PostToc({ onLinkClick, contentKey }: { onLinkClick?: () => void;
               <a
                 href={`#${item.id}`}
                 onClick={handleClick(item.id)}
-                className={`line-clamp-2 inline-flex items-center pl-2 hover:text-blue-600 dark:hover:text-blue-400 ${
-                  item.id === activeId
+                className={`line-clamp-2 inline-flex items-center py-1 pl-2 hover:text-blue-600 dark:hover:text-blue-400 ${item.id === activeId
                     ? 'text-blue-600 dark:text-blue-400 font-semibold'
                     : ''
-                }`}
+                  }`}
               >
                 {item.text}
               </a>

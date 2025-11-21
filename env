@@ -1,0 +1,32 @@
+# Public site metadata (safe to expose to browser)
+NEXT_PUBLIC_SITE_NAME="Gbanyan"
+NEXT_PUBLIC_SITE_TITLE="霍德爾之目"
+NEXT_PUBLIC_SITE_DESCRIPTION="醫學、科技與生活隨筆。"
+NEXT_PUBLIC_SITE_URL="http://localhost:3000"
+NEXT_PUBLIC_SITE_AUTHOR="Gbanyan"
+NEXT_PUBLIC_SITE_TAGLINE="醫學、科技與生活的隨筆記錄。"
+NEXT_PUBLIC_POSTS_PER_PAGE="5"
+NEXT_PUBLIC_DEFAULT_LOCALE="zh-TW"
+NEXT_PUBLIC_SITE_AVATAR_URL="https://www.gravatar.com/avatar/53f2a6e011d5ececcd0d6e33e8e7329f60efcd23a5b77ba382273d5060a2cffe?s=160&d=identicon"
+NEXT_PUBLIC_SITE_ABOUT_SHORT="掙扎混亂過日子 \n 對平淡美好日常的期待即是救贖"
+
+# Color scheme / accents
+NEXT_PUBLIC_COLOR_ACCENT="#2563eb"
+NEXT_PUBLIC_COLOR_ACCENT_SOFT="#dbeafe"
+NEXT_PUBLIC_COLOR_ACCENT_TEXT_LIGHT="#1d4ed8"
+NEXT_PUBLIC_COLOR_ACCENT_TEXT_DARK="#93c5fd"
+
+# Social and profile
+NEXT_PUBLIC_TWITTER_HANDLE="@gbanyan"
+NEXT_PUBLIC_GITHUB_URL="https://github.com/gbanyan"
+NEXT_PUBLIC_LINKEDIN_URL=""
+NEXT_PUBLIC_EMAIL_CONTACT=""
+NEXT_PUBLIC_MASTODON_URL=""
+NEXT_PUBLIC_GITEA_URL=""
+
+# SEO / Open Graph
+NEXT_PUBLIC_OG_DEFAULT_IMAGE="/assets/og-default.jpg"
+NEXT_PUBLIC_TWITTER_CARD_TYPE="summary_large_image"
+
+# Analytics (public ID only)
+NEXT_PUBLIC_ANALYTICS_ID=""
