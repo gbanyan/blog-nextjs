@@ -121,7 +121,7 @@ export function MastodonFeed() {
                   )}
 
                   {/* Content */}
-                  <p className="text-sm leading-relaxed text-slate-700 dark:text-slate-200">
+                  <p className="whitespace-pre-line text-sm leading-relaxed text-slate-700 dark:text-slate-200">
                     {truncated}
                   </p>
 
