@@ -4,6 +4,7 @@ import type { Post } from 'contentlayer2/generated';
 import { siteConfig } from '@/lib/config';
 import { FiCalendar, FiTag } from 'react-icons/fi';
 import { MetaItem } from './meta-item';
+import { Card } from '@heroui/react';
 
 interface PostCardProps {
   post: Post;
@@ -17,7 +18,8 @@ export function PostCard({ post, showTags = true }: PostCardProps) {
       : undefined;
 
   return (
-    <article className="motion-card group relative overflow-hidden rounded-xl border bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900">
+    <article>
+      <Card className="motion-card group relative overflow-hidden rounded-xl border dark:border-slate-800">
       <div className="pointer-events-none absolute inset-x-0 top-0 h-1 origin-left scale-x-0 bg-gradient-to-r from-blue-500 via-sky-400 to-indigo-500 opacity-80 transition-transform duration-300 ease-out group-hover:scale-x-100 dark:from-blue-400 dark:via-sky-300 dark:to-indigo-400" />
       {cover && (
         <div className="relative w-full bg-slate-100 dark:bg-slate-800">
@@ -32,7 +34,7 @@ export function PostCard({ post, showTags = true }: PostCardProps) {
           />
         </div>
       )}
-      <div className="space-y-3 px-4 py-4">
+      <Card.Content className="space-y-3 px-4 py-4">
         <div className="flex flex-wrap items-center gap-3 text-xs">
           {post.published_at && (
             <MetaItem icon={FiCalendar}>
@@ -47,20 +49,23 @@ export function PostCard({ post, showTags = true }: PostCardProps) {
             </MetaItem>
           )}
         </div>
-        <h2 className="text-lg font-semibold leading-snug">
-          <Link
-            href={post.url}
-            className="hover:text-blue-600 dark:hover:text-blue-400"
-          >
-            {post.title}
-          </Link>
-        </h2>
+        <Card.Header className="p-0">
+          <Card.Title className="text-lg font-semibold leading-snug">
+            <Link
+              href={post.url}
+              className="hover:text-blue-600 dark:hover:text-blue-400"
+            >
+              {post.title}
+            </Link>
+          </Card.Title>
+        </Card.Header>
         {post.description && (
-          <p className="line-clamp-3 text-sm text-slate-700 dark:text-slate-100">
+          <Card.Description className="line-clamp-3 text-sm text-slate-700 dark:text-slate-100">
             {post.description}
-          </p>
+          </Card.Description>
         )}
-      </div>
+      </Card.Content>
+      </Card>
     </article>
   );
 }

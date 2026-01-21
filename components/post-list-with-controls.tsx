@@ -1,11 +1,12 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
-import { Post, Page } from 'contentlayer2/generated';
+import { Post } from 'contentlayer2/generated';
 import { FiArrowDown, FiArrowUp, FiSearch, FiList } from 'react-icons/fi';
 import { siteConfig } from '@/lib/config';
 import { PostListItem } from './post-list-item';
 import { TimelineWrapper } from './timeline-wrapper';
+import { Button, Input } from '@heroui/react';
 
 interface Props {
   posts: Post[];
@@ -79,28 +80,30 @@ export function PostListWithControls({ posts, pageSize }: Props) {
         <div className="inline-flex items-center gap-2 rounded-full bg-slate-100/70 px-2 py-1 text-slate-600 dark:bg-slate-800/70 dark:text-slate-300">
           <FiList className="h-3.5 w-3.5" />
           <span>排序</span>
-          <button
-            type="button"
-            onClick={() => handleChangeSort('new')}
-            className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 transition duration-180 ease-snappy ${sortOrder === 'new'
+          <Button
+            size="sm"
+            variant={sortOrder === 'new' ? 'primary' : 'ghost'}
+            onPress={() => handleChangeSort('new')}
+            className={`h-auto rounded-full px-2 py-0.5 text-xs ${sortOrder === 'new'
               ? 'bg-blue-600 text-white dark:bg-blue-500'
               : 'bg-white text-slate-600 hover:bg-slate-200 dark:bg-slate-900 dark:text-slate-300 dark:hover:bg-slate-700'
               }`}
           >
             <FiArrowDown className="h-3 w-3" />
             新到舊
-          </button>
-          <button
-            type="button"
-            onClick={() => handleChangeSort('old')}
-            className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 transition duration-180 ease-snappy ${sortOrder === 'old'
+          </Button>
+          <Button
+            size="sm"
+            variant={sortOrder === 'old' ? 'primary' : 'ghost'}
+            onPress={() => handleChangeSort('old')}
+            className={`h-auto rounded-full px-2 py-0.5 text-xs ${sortOrder === 'old'
               ? 'bg-blue-600 text-white dark:bg-blue-500'
               : 'bg-white text-slate-600 hover:bg-slate-200 dark:bg-slate-900 dark:text-slate-300 dark:hover:bg-slate-700'
               }`}
           >
             <FiArrowUp className="h-3 w-3" />
             舊到新
-          </button>
+          </Button>
         </div>
         <div className="flex w-full items-center text-sm sm:w-auto">
           <label htmlFor="post-search" className="sr-only">
@@ -108,7 +111,7 @@ export function PostListWithControls({ posts, pageSize }: Props) {
           </label>
           <div className="relative w-full sm:w-64">
             <FiSearch
-              className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-slate-400"
+              className="pointer-events-none absolute left-3 top-1/2 z-10 h-3.5 w-3.5 -translate-y-1/2 text-slate-400"
             />
             <input
               id="post-search"
@@ -116,7 +119,7 @@ export function PostListWithControls({ posts, pageSize }: Props) {
               placeholder="標題、標籤、摘要關鍵字"
               value={searchTerm}
               onChange={(event) => setSearchTerm(event.target.value)}
-              className="w-full rounded-full border border-slate-200 bg-white py-1.5 pl-9 pr-3 text-sm text-slate-700 shadow-sm transition duration-180 ease-snappy focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:focus:ring-blue-500"
+              className="w-full rounded-full border border-slate-200 bg-white py-1.5 pl-9 pr-3 text-sm text-slate-700 shadow-sm transition duration-180 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:focus:ring-blue-500"
             />
           </div>
         </div>
@@ -128,13 +131,14 @@ export function PostListWithControls({ posts, pageSize }: Props) {
           {normalizedQuery && `（搜尋「${searchTerm}」）`}
         </p>
         {normalizedQuery && sortedPosts.length === 0 && (
-          <button
-            type="button"
-            onClick={() => setSearchTerm('')}
-            className="text-blue-600 underline-offset-2 hover:underline dark:text-blue-400"
+          <Button
+            variant="ghost"
+            size="sm"
+            onPress={() => setSearchTerm('')}
+            className="h-auto p-0 text-blue-600 underline-offset-2 hover:underline dark:text-blue-400"
           >
             清除搜尋
-          </button>
+          </Button>
         )}
       </div>
 
@@ -152,41 +156,44 @@ export function PostListWithControls({ posts, pageSize }: Props) {
 
       {totalPages > 1 && currentPosts.length > 0 && (
         <nav className="flex items-center justify-center gap-3 text-xs text-slate-600 dark:text-slate-300">
-          <button
-            type="button"
-            onClick={() => goToPage(currentPage - 1)}
-            disabled={currentPage === 1}
-            className="rounded border border-slate-200 px-2 py-1 disabled:opacity-40 dark:border-slate-700"
+          <Button
+            variant="secondary"
+            size="sm"
+            onPress={() => goToPage(currentPage - 1)}
+            isDisabled={currentPage === 1}
+            className="h-auto rounded border border-slate-200 px-2 py-1 text-xs disabled:opacity-40 dark:border-slate-700"
           >
             上一頁
-          </button>
+          </Button>
           <div className="flex items-center gap-1">
             {Array.from({ length: totalPages }).map((_, i) => {
               const p = i + 1;
               const isActive = p === currentPage;
               return (
-                <button
+                <Button
                   key={p}
-                  type="button"
-                  onClick={() => goToPage(p)}
-                  className={`h-7 w-7 rounded text-xs ${isActive
+                  variant={isActive ? 'primary' : 'ghost'}
+                  size="sm"
+                  onPress={() => goToPage(p)}
+                  className={`h-7 w-7 min-w-0 rounded p-0 text-xs ${isActive
                     ? 'bg-blue-600 text-white dark:bg-blue-500'
                     : 'hover:bg-slate-100 dark:hover:bg-slate-800'
                     }`}
                 >
                   {p}
-                </button>
+                </Button>
               );
             })}
           </div>
-          <button
-            type="button"
-            onClick={() => goToPage(currentPage + 1)}
-            disabled={currentPage === totalPages}
-            className="rounded border border-slate-200 px-2 py-1 disabled:opacity-40 dark:border-slate-700"
+          <Button
+            variant="secondary"
+            size="sm"
+            onPress={() => goToPage(currentPage + 1)}
+            isDisabled={currentPage === totalPages}
+            className="h-auto rounded border border-slate-200 px-2 py-1 text-xs disabled:opacity-40 dark:border-slate-700"
           >
             下一頁
-          </button>
+          </Button>
         </nav>
       )}
     </div>
