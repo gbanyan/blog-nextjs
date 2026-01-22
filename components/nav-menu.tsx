@@ -21,7 +21,6 @@ import {
 } from 'react-icons/fi';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Button } from '@heroui/react';
 
 export type IconKey =
   | 'home'
@@ -36,7 +35,7 @@ export type IconKey =
   | 'device'
   | 'menu';
 
-const ICON_MAP: Record<IconKey, React.ComponentType<{ className?: string }>> = {
+const ICON_MAP: Record<IconKey, any> = {
   home: FiHome,
   blog: FiFileText,
   file: FiFile,
@@ -129,7 +128,7 @@ export function NavMenu({ items }: NavMenuProps) {
       <Link
         key={item.key}
         href={item.href}
-        className="motion-link inline-flex items-center gap-2 rounded-xl px-3 py-2 text-sm text-slate-600 hover:bg-slate-100 hover:text-[var(--color-accent)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)]/40 dark:text-slate-200 dark:hover:bg-slate-800"
+        className="motion-link inline-flex items-center gap-2 rounded-xl px-3 py-2 text-sm text-slate-600 hover:bg-slate-100 hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40 dark:text-slate-200 dark:hover:bg-slate-800"
         onClick={close}
       >
         <Icon className="h-4 w-4 text-slate-400" />
@@ -146,9 +145,8 @@ export function NavMenu({ items }: NavMenuProps) {
     if (hasChildren) {
       return (
         <div key={item.key} className="flex flex-col">
-          <Button
-            variant="ghost"
-            onPress={() => toggleMobileItem(item.key)}
+          <button
+            onClick={() => toggleMobileItem(item.key)}
             className="flex w-full items-center justify-between rounded-xl px-4 py-3 text-base font-medium text-slate-700 transition-colors active:bg-slate-100 dark:text-slate-200 dark:active:bg-slate-800"
           >
             <div className="flex items-center gap-3">
@@ -158,7 +156,7 @@ export function NavMenu({ items }: NavMenuProps) {
             <FiChevronRight
               className={`h-5 w-5 text-slate-400 transition-transform duration-200 ${isExpanded ? 'rotate-90' : ''}`}
             />
-          </Button>
+          </button>
           <div
             className={`grid transition-all duration-200 ease-in-out ${isExpanded ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'
               }`}
@@ -189,50 +187,48 @@ export function NavMenu({ items }: NavMenuProps) {
   return (
     <>
       {/* Mobile Menu Trigger */}
-      <Button
-        isIconOnly
-        variant="ghost"
-        className="relative z-50 h-10 w-10 rounded-full text-slate-600 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-800 sm:hidden"
+      <button
+        type="button"
+        className="relative z-50 inline-flex h-10 w-10 items-center justify-center rounded-full text-slate-600 transition-colors hover:bg-slate-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40 dark:text-slate-200 dark:hover:bg-slate-800 sm:hidden"
         aria-label={open ? '關閉選單' : '開啟選單'}
         aria-expanded={open}
-        onPress={toggle}
+        onClick={toggle}
       >
         <div className="relative h-5 w-5">
           <span
-            className={`absolute left-0 top-1/2 h-0.5 w-5 -translate-y-1/2 bg-current transition-all duration-300 ${open ? 'rotate-45' : '-translate-y-1.5'
+            className={`absolute left-0 top-1/2 h-0.5 w-5 -translate-y-1/2 bg-current transition-all duration-300 ease-snappy ${open ? 'rotate-45' : '-translate-y-1.5'
               }`}
           />
           <span
-            className={`absolute left-0 top-1/2 h-0.5 w-5 -translate-y-1/2 bg-current transition-all duration-300 ${open ? 'opacity-0' : 'opacity-100'
+            className={`absolute left-0 top-1/2 h-0.5 w-5 -translate-y-1/2 bg-current transition-all duration-300 ease-snappy ${open ? 'opacity-0' : 'opacity-100'
               }`}
           />
           <span
-            className={`absolute left-0 top-1/2 h-0.5 w-5 -translate-y-1/2 bg-current transition-all duration-300 ${open ? '-rotate-45' : 'translate-y-1.5'
+            className={`absolute left-0 top-1/2 h-0.5 w-5 -translate-y-1/2 bg-current transition-all duration-300 ease-snappy ${open ? '-rotate-45' : 'translate-y-1.5'
               }`}
           />
         </div>
-      </Button>
+      </button>
 
       {/* Mobile Menu Overlay - Portaled */}
       {mounted && createPortal(
         <div
-          className={`fixed inset-0 z-[100] flex flex-col bg-white/95 backdrop-blur-xl transition-all duration-300 dark:bg-gray-950/95 sm:hidden ${open ? 'visible opacity-100' : 'invisible opacity-0 pointer-events-none'
+          className={`fixed inset-0 z-[100] flex flex-col bg-white/95 backdrop-blur-xl transition-all duration-300 ease-snappy dark:bg-gray-950/95 sm:hidden ${open ? 'visible opacity-100' : 'invisible opacity-0 pointer-events-none'
             }`}
         >
           {/* Close button area */}
           <div className="flex items-center justify-end px-4 py-3">
-            <Button
-              isIconOnly
-              variant="ghost"
-              className="h-10 w-10 rounded-full text-slate-600 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-800"
-              onPress={close}
+            <button
+              type="button"
+              className="inline-flex h-10 w-10 items-center justify-center rounded-full text-slate-600 transition-colors hover:bg-slate-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40 dark:text-slate-200 dark:hover:bg-slate-800"
+              onClick={close}
               aria-label="Close menu"
             >
               <div className="relative h-5 w-5">
                 <span className="absolute left-0 top-1/2 h-0.5 w-5 -translate-y-1/2 rotate-45 bg-current" />
                 <span className="absolute left-0 top-1/2 h-0.5 w-5 -translate-y-1/2 -rotate-45 bg-current" />
               </div>
-            </Button>
+            </button>
           </div>
 
           <div className="container mx-auto flex flex-1 flex-col px-4 pb-8">
@@ -265,17 +261,17 @@ export function NavMenu({ items }: NavMenuProps) {
               >
                 <button
                   type="button"
-                  className="motion-link type-nav inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-slate-600 hover:text-[var(--color-accent)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)]/40 dark:text-slate-200"
+                  className="motion-link type-nav inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-slate-600 hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40 dark:text-slate-200"
                   aria-haspopup="menu"
                   aria-expanded={isOpen}
                 >
-                  <Icon className="h-3.5 w-3.5 text-slate-400 transition group-hover:text-[var(--color-accent)]" />
+                  <Icon className="h-3.5 w-3.5 text-slate-400 transition group-hover:text-accent" />
                   <span>{item.label}</span>
-                  <FiChevronDown className="h-3 w-3 text-slate-400 transition group-hover:text-[var(--color-accent)]" />
+                  <FiChevronDown className="h-3 w-3 text-slate-400 transition group-hover:text-accent" />
                 </button>
 
                 <div
-                  className={`absolute left-0 top-full z-50 hidden min-w-[12rem] rounded-2xl border border-slate-200 bg-white p-2 shadow-lg transition duration-200 dark:border-slate-800 dark:bg-slate-900 sm:block ${isOpen ? 'pointer-events-auto translate-y-2 opacity-100' : 'pointer-events-none translate-y-1 opacity-0'
+                  className={`absolute left-0 top-full z-50 hidden min-w-[12rem] rounded-2xl border border-slate-200 bg-white p-2 shadow-lg transition duration-200 ease-snappy dark:border-slate-800 dark:bg-slate-900 sm:block ${isOpen ? 'pointer-events-auto translate-y-2 opacity-100' : 'pointer-events-none translate-y-1 opacity-0'
                     }`}
                   role="menu"
                   aria-label={item.label}
@@ -294,12 +290,12 @@ export function NavMenu({ items }: NavMenuProps) {
             <Link
               key={item.key}
               href={item.href}
-              className="motion-link type-nav group relative inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-slate-600 hover:text-[var(--color-accent)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)]/40 dark:text-slate-200"
+              className="motion-link type-nav group relative inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-slate-600 hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40 dark:text-slate-200"
               onClick={close}
             >
-              <Icon className="h-3.5 w-3.5 text-slate-400 transition group-hover:text-[var(--color-accent)]" />
+              <Icon className="h-3.5 w-3.5 text-slate-400 transition group-hover:text-accent" />
               <span>{item.label}</span>
-              <span className="absolute inset-x-3 -bottom-0.5 h-px origin-left scale-x-0 bg-[var(--color-accent)] transition duration-180 group-hover:scale-x-100" aria-hidden="true" />
+              <span className="absolute inset-x-3 -bottom-0.5 h-px origin-left scale-x-0 bg-accent transition duration-180 ease-snappy group-hover:scale-x-100" aria-hidden="true" />
             </Link>
           ) : null;
         })}
