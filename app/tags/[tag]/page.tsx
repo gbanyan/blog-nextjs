@@ -15,9 +15,10 @@ export function generateStaticParams() {
       slugs.add(getTagSlug(tag));
     }
   }
-  return Array.from(slugs).map((slug) => ({
+  const params = Array.from(slugs).map((slug) => ({
     tag: slug
   }));
+  return params.length > 0 ? params : [{ tag: '__placeholder__' }];
 }
 
 interface Props {

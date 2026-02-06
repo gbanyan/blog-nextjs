@@ -15,9 +15,10 @@ import { FooterCue } from '@/components/footer-cue';
 import { JsonLd } from '@/components/json-ld';
 
 export function generateStaticParams() {
-  return allPosts.map((post) => ({
+  const params = allPosts.map((post) => ({
     slug: post.slug || post.flattenedPath
   }));
+  return params.length > 0 ? params : [{ slug: '__placeholder__' }];
 }
 
 interface Props {

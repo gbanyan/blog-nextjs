@@ -56,7 +56,7 @@ The `content/` directory is a git submodule pointing to a separate `personal-blo
 
 ## Deployment
 
-Push to `main` on the Gitea remote (`git.gbanyan.net`) triggers CI/CD automatically (server-side hook). No Dockerfile or workflow file in this repo.
+Two Git remotes are involved: `git.gbanyan.net` (SSH, primary push target) and `gitea.gbanyan.net` (HTTPS, Gitea web UI). A crontab on the server automatically mirrors `git.gbanyan.net` → `gitea.gbanyan.net`. Push to `main` on `git.gbanyan.net` triggers CI/CD automatically (server-side hook). No Dockerfile or workflow file in this repo.
 
 **Content-only update** (new/edited posts) — both steps are required to trigger deploy:
 1. Commit and push inside `content/` submodule: `git -C content add . && git -C content commit -m "..." && git -C content push`

@@ -12,9 +12,10 @@ import { SectionDivider } from '@/components/section-divider';
 import { JsonLd } from '@/components/json-ld';
 
 export function generateStaticParams() {
-  return allPages.map((page) => ({
+  const params = allPages.map((page) => ({
     slug: page.slug || page.flattenedPath
   }));
+  return params.length > 0 ? params : [{ slug: '__placeholder__' }];
 }
 
 interface Props {
