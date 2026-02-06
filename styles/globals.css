@@ -1,6 +1,50 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+/* Class-based dark mode for next-themes */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* Auto-detect content in the submodule */
+@source "../content";
+
+/* Tailwind v4 CSS-first theme configuration */
+@theme {
+  /* Custom colors (CSS variable references) */
+  --color-accent: var(--color-accent);
+  --color-accent-soft: var(--color-accent-soft);
+  --color-accent-textLight: var(--color-accent-text-light);
+  --color-accent-textDark: var(--color-accent-text-dark);
+
+  /* Custom font families */
+  --font-serif-eng: var(--font-serif-eng), serif;
+  --font-serif-cn: "Songti SC", "Noto Serif TC", "SimSun", serif;
+
+  /* Custom transition timing */
+  --ease-snappy: cubic-bezier(0.32, 0.72, 0, 1);
+
+  /* Custom transition durations */
+  --duration-180: 180ms;
+  --duration-260: 260ms;
+
+  /* Custom box shadows */
+  --shadow-lifted: 0 12px 30px -14px rgba(15, 23, 42, 0.25);
+  --shadow-outline: 0 0 0 1px rgba(59, 130, 246, 0.25);
+
+  /* Custom keyframes */
+  --animate-fade-in-up: fade-in-up 0.6s ease-out both;
+  --animate-float-soft: float-soft 12s ease-in-out infinite;
+}
+
+@keyframes fade-in-up {
+  0% { opacity: 0; transform: translateY(8px) scale(0.98); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes float-soft {
+  0% { transform: translate3d(0,0,0) scale(1); }
+  50% { transform: translate3d(4px,-6px,0) scale(1.03); }
+  100% { transform: translate3d(0,0,0) scale(1); }
+}
 
 :root {
   --motion-duration-short: 180ms;
@@ -129,7 +173,7 @@ body {
 }
 
 .prose blockquote::before {
-  content: '“';
+  content: '\201C';
   position: absolute;
   top: 0.5rem;
   left: 0.8rem;
@@ -147,22 +191,45 @@ body {
   @apply -translate-y-0.5 shadow-md;
 }
 
+/* Typography plugin prose overrides */
 .prose {
   font-size: clamp(1rem, 0.2vw + 0.9rem, 1.2rem);
   line-height: var(--line-height-body);
   color: var(--color-ink-body);
 }
 
+.prose a {
+  color: var(--color-accent-text-light);
+}
+
+.prose a:hover {
+  color: var(--color-accent);
+}
+
+.dark .prose a {
+  color: var(--color-accent-text-dark);
+}
+
+.dark .prose a:hover {
+  color: var(--color-accent);
+}
+
 .prose h1 {
   font-size: clamp(2.2rem, 1.4rem + 2.2vw, 3.4rem);
   line-height: 1.25;
   color: var(--color-ink-strong);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  font-family: var(--font-serif-eng), "Songti SC", serif;
 }
 
 .prose h2 {
   font-size: clamp(1.8rem, 1.1rem + 1.6vw, 2.8rem);
   line-height: 1.3;
   color: var(--color-ink-strong);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  font-family: var(--font-serif-eng), "Songti SC", serif;
 }
 
 .prose h3 {
@@ -181,6 +248,26 @@ body {
 .prose small,
 .prose figcaption {
   font-size: clamp(0.85rem, 0.2vw + 0.8rem, 0.95rem);
+}
+
+/* Dark mode prose overrides (replaces prose-dark) */
+.dark .prose {
+  color: var(--color-ink-body);
+}
+
+.dark .prose strong,
+.dark .prose b {
+  color: #f8fafc;
+  font-weight: 700;
+}
+
+.dark .prose em {
+  color: #f1f5f9;
+}
+
+.dark .prose h1,
+.dark .prose h2 {
+  color: #f8fafc;
 }
 
 .prose h1>a,

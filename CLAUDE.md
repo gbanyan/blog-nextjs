@@ -39,12 +39,13 @@ No test framework is configured.
 
 ## Styling
 
-- Tailwind CSS v3 with `darkMode: 'class'` (toggled by `next-themes`)
+- Tailwind CSS v4 with CSS-first configuration (no `tailwind.config.cjs`)
+- Dark mode via `@custom-variant dark` in `styles/globals.css` (class-based, toggled by `next-themes`)
+- Theme customization via `@theme` block in `styles/globals.css`: colors, fonts, easing, durations, shadows, keyframes, animations
 - Accent color system via CSS variables set in `app/layout.tsx` from env vars: `--color-accent`, `--color-accent-soft`, `--color-accent-text-light`, `--color-accent-text-dark`
-- Tailwind extends these as `accent`, `accent-soft`, `accent-textLight`, `accent-textDark` in `tailwind.config.cjs`
-- Typography plugin (`@tailwindcss/typography`) with custom `prose` / `prose-dark` overrides
+- Typography plugin (`@tailwindcss/typography`) loaded via `@plugin` directive; prose dark mode handled by custom `.dark .prose` CSS overrides
 - English headings use Playfair Display serif (`--font-serif-eng`); body uses Inter + CJK fallback stack
-- Config files use CommonJS (`.cjs`): `tailwind.config.cjs`, `postcss.config.cjs`
+- PostCSS config: `postcss.config.mjs` using `@tailwindcss/postcss`
 
 ## Content Submodule
 
