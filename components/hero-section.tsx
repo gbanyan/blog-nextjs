@@ -89,7 +89,7 @@ export function HeroSection({ title, tagline }: HeroSectionProps) {
   }, [reducedMotion]);
 
   return (
-    <div className="relative min-h-[280px] w-full overflow-hidden rounded-2xl">
+    <div className="relative min-h-[280px] w-full overflow-hidden rounded-2xl sm:min-h-[320px] lg:min-h-[360px] xl:min-h-[400px]">
       {/* Matrix rain - full area, fades out */}
       {!reducedMotion && (
         <div
@@ -101,9 +101,9 @@ export function HeroSection({ title, tagline }: HeroSectionProps) {
         </div>
       )}
 
-      {/* Terminal - fades in over Matrix */}
+      {/* Terminal - fades in over Matrix, responsive width */}
       <div
-        className="relative z-10 mx-auto max-w-2xl px-4 py-6 transition-opacity duration-[600ms] ease-out"
+        className="relative z-10 mx-auto w-full max-w-2xl px-4 py-6 transition-opacity duration-[600ms] ease-out sm:max-w-3xl lg:max-w-4xl xl:max-w-5xl"
         style={{ opacity: reducedMotion ? 1 : terminalOpacity }}
       >
         <TerminalWindow
