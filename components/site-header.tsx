@@ -57,6 +57,7 @@ export function SiteHeader() {
 
   const navItems: NavLinkItem[] = [
     { key: 'home', href: '/', label: '首頁', iconKey: 'home' },
+    { key: 'projects', href: '/projects', label: '作品', iconKey: 'pen' },
     {
       key: 'about',
       href: aboutChildren[0]?.href,
