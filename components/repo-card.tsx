@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import { Link } from 'next-view-transitions';
 import { FiExternalLink } from 'react-icons/fi';
 import type { RepoSummary } from '@/lib/github';
 import { getLanguageColor } from '@/lib/github-lang-colors';

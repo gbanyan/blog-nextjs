@@ -19,7 +19,7 @@ import {
   FiChevronDown,
   FiChevronRight
 } from 'react-icons/fi';
-import Link from 'next/link';
+import { Link } from 'next-view-transitions';
 import { usePathname } from 'next/navigation';
 
 export type IconKey =

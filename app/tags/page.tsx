@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import { Link } from 'next-view-transitions';
 import type { Metadata } from 'next';
 import { FiTag, FiTrendingUp } from 'react-icons/fi';
 import { getAllTagsWithCount } from '@/lib/posts';

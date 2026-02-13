@@ -6,6 +6,8 @@ import { ThemeProvider } from 'next-themes';
 import { Playfair_Display, LXGW_WenKai_TC } from 'next/font/google';
 import { JsonLd } from '@/components/json-ld';
 import { WebVitals } from '@/components/web-vitals';
+import { ViewTransitions } from 'next-view-transitions';
+import NextTopLoader from 'nextjs-toploader';
 
 const playfair = Playfair_Display({
   subsets: ['latin'],
@@ -98,19 +100,27 @@ export default function RootLayout({
   };
 
   return (
-    <html lang={siteConfig.defaultLocale} suppressHydrationWarning className={`${playfair.variable} ${lxgwWenKai.variable}`}>
-      <head>
-        {/* Preconnect to Google Fonts for faster font loading */}
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-      </head>
-      <body>
-        <JsonLd data={websiteSchema} />
-        <JsonLd data={organizationSchema} />
-        <style
-          // Set CSS variables for accent colors (light + dark variants)
-          dangerouslySetInnerHTML={{
-            __html: `
+    <ViewTransitions>
+      <html lang={siteConfig.defaultLocale} suppressHydrationWarning className={`${playfair.variable} ${lxgwWenKai.variable}`}>
+        <head>
+          {/* Preconnect to Google Fonts for faster font loading */}
+          <link rel="preconnect" href="https://fonts.googleapis.com" />
+          <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        </head>
+        <body>
+          <NextTopLoader
+            color={theme.accent}
+            height={3}
+            showSpinner={false}
+            speed={200}
+            shadow={`0 0 10px ${theme.accent}, 0 0 5px ${theme.accent}`}
+          />
+          <JsonLd data={websiteSchema} />
+          <JsonLd data={organizationSchema} />
+          <style
+            // Set CSS variables for accent colors (light + dark variants)
+            dangerouslySetInnerHTML={{
+              __html: `
               :root {
                 --color-accent: ${theme.accent};
                 --color-accent-soft: ${theme.accentSoft};
@@ -118,13 +128,14 @@ export default function RootLayout({
                 --color-accent-text-dark: ${theme.accentTextDark};
               }
             `
-          }}
-        />
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          <LayoutShell>{children}</LayoutShell>
-        </ThemeProvider>
-        <WebVitals />
-      </body>
-    </html>
+            }}
+          />
+          <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+            <LayoutShell>{children}</LayoutShell>
+          </ThemeProvider>
+          <WebVitals />
+        </body>
+      </html>
+    </ViewTransitions>
   );
 }

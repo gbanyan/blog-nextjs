@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import { Link } from 'next-view-transitions';
 import { getAllPostsSorted } from '@/lib/posts';
 import { siteConfig } from '@/lib/config';
 import { PostListItem } from '@/components/post-list-item';
