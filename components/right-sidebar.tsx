@@ -1,13 +1,43 @@
+'use client';
+
 import Link from 'next/link';
 import Image from 'next/image';
+import { useEffect, useRef, useState } from 'react';
 import { FaGithub, FaMastodon, FaLinkedin } from 'react-icons/fa';
 import { FiTrendingUp, FiArrowRight } from 'react-icons/fi';
 import { siteConfig } from '@/lib/config';
 import { getAllTagsWithCount } from '@/lib/posts';
 import { allPages } from 'contentlayer2/generated';
-import { MastodonFeed } from './mastodon-feed';
+import dynamic from 'next/dynamic';
+
+// Lazy load MastodonFeed - only load when sidebar is visible
+const MastodonFeed = dynamic(() => import('./mastodon-feed').then(mod => ({ default: mod.MastodonFeed })), {
+  ssr: false,
+});
 
 export function RightSidebar() {
+  const [shouldLoadFeed, setShouldLoadFeed] = useState(false);
+  const feedRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    // Use Intersection Observer to lazy load MastodonFeed when sidebar is visible
+    if (!feedRef.current) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          setShouldLoadFeed(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin: '100px' } // Start loading 100px before it's visible
+    );
+
+    observer.observe(feedRef.current);
+
+    return () => observer.disconnect();
+  }, []);
+
   const tags = getAllTagsWithCount().slice(0, 5);
 
   const aboutPage =
@@ -91,8 +121,10 @@ export function RightSidebar() {
           </div>
         </section>
 
-        {/* Mastodon Feed */}
-        <MastodonFeed />
+        {/* Mastodon Feed - Lazy loaded when visible */}
+        <div ref={feedRef}>
+          {shouldLoadFeed && <MastodonFeed />}
+        </div>
 
         {tags.length > 0 && (
           <section className="motion-card rounded-xl border bg-white px-4 py-3 shadow-sm dark:border-slate-800 dark:bg-slate-900 dark:text-slate-100">

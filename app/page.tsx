@@ -50,14 +50,15 @@ export default function HomePage() {
             </h2>
             <Link
               href="/blog"
+              prefetch={true}
               className="text-xs text-blue-600 hover:underline dark:text-blue-400"
             >
               所有文章 →
             </Link>
           </div>
           <TimelineWrapper>
-            {posts.map((post) => (
-              <PostListItem key={post._id} post={post} />
+            {posts.map((post, index) => (
+              <PostListItem key={post._id} post={post} priority={index === 0} />
             ))}
           </TimelineWrapper>
         </div>

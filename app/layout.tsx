@@ -5,6 +5,7 @@ import { LayoutShell } from '@/components/layout-shell';
 import { ThemeProvider } from 'next-themes';
 import { Playfair_Display, LXGW_WenKai_TC } from 'next/font/google';
 import { JsonLd } from '@/components/json-ld';
+import { WebVitals } from '@/components/web-vitals';
 
 const playfair = Playfair_Display({
   subsets: ['latin'],
@@ -98,6 +99,11 @@ export default function RootLayout({
 
   return (
     <html lang={siteConfig.defaultLocale} suppressHydrationWarning className={`${playfair.variable} ${lxgwWenKai.variable}`}>
+      <head>
+        {/* Preconnect to Google Fonts for faster font loading */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+      </head>
       <body>
         <JsonLd data={websiteSchema} />
         <JsonLd data={organizationSchema} />
@@ -117,6 +123,7 @@ export default function RootLayout({
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <LayoutShell>{children}</LayoutShell>
         </ThemeProvider>
+        <WebVitals />
       </body>
     </html>
   );

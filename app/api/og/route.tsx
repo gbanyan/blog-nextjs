@@ -10,7 +10,7 @@ export async function GET(request: NextRequest) {
     const description = searchParams.get('description') || '';
     const tags = searchParams.get('tags')?.split(',').slice(0, 3) || [];
 
-    return new ImageResponse(
+    const imageResponse = new ImageResponse(
       (
         <div
           style={{
@@ -157,6 +157,14 @@ export async function GET(request: NextRequest) {
         height: 630,
       }
     );
+
+    // Wrap response with cache headers for OG images (cache for 1 hour)
+    return new Response(imageResponse.body, {
+      headers: {
+        'Content-Type': 'image/png',
+        'Cache-Control': 'public, max-age=3600, s-maxage=3600, stale-while-revalidate=86400',
+      },
+    });
   } catch (e: any) {
     console.error('Error generating OG image:', e);
     return new Response(`Failed to generate image: ${e.message}`, {

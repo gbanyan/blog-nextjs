@@ -7,9 +7,10 @@ import { MetaItem } from './meta-item';
 
 interface Props {
   post: Post;
+  priority?: boolean;
 }
 
-export function PostListItem({ post }: Props) {
+export function PostListItem({ post, priority = false }: Props) {
   const cover =
     post.feature_image && post.feature_image.startsWith('../assets')
       ? post.feature_image.replace('../assets', '/assets')
@@ -29,7 +30,10 @@ export function PostListItem({ post }: Props) {
             width={320}
             height={240}
             sizes="(max-width: 640px) 96px, 160px"
-            loading="lazy"
+            loading={priority ? undefined : 'lazy'}
+            priority={priority}
+            placeholder="blur"
+            blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
             className="h-full w-full object-cover transition-transform duration-300 ease-out group-hover:scale-105"
           />
         </div>

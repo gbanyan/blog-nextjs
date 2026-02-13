@@ -1,4 +1,9 @@
-import { RightSidebar } from './right-sidebar';
+import dynamic from 'next/dynamic';
+
+// Lazy load RightSidebar since it's only visible on lg+ screens
+const RightSidebar = dynamic(() => import('./right-sidebar').then(mod => ({ default: mod.RightSidebar })), {
+  ssr: false,
+});
 
 export function SidebarLayout({ children }: { children: React.ReactNode }) {
     return (

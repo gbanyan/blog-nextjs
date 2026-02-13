@@ -1,6 +1,11 @@
 import { SiteHeader } from './site-header';
 import { SiteFooter } from './site-footer';
-import { BackToTop } from './back-to-top';
+import dynamic from 'next/dynamic';
+
+// Lazy load BackToTop since it's not critical for initial render
+const BackToTop = dynamic(() => import('./back-to-top').then(mod => ({ default: mod.BackToTop })), {
+  ssr: false,
+});
 
 export function LayoutShell({ children }: { children: React.ReactNode }) {
   return (

@@ -3,9 +3,14 @@
 import { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { FiList, FiX } from 'react-icons/fi';
-import { PostToc } from './post-toc';
+import dynamic from 'next/dynamic';
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
+
+// Lazy load PostToc since it's not critical for initial render
+const PostToc = dynamic(() => import('./post-toc').then(mod => ({ default: mod.PostToc })), {
+  ssr: false,
+});
 
 function cn(...inputs: ClassValue[]) {
     return twMerge(clsx(inputs));
