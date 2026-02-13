@@ -77,7 +77,7 @@ export function SidebarLayout({ children }: { children: React.ReactNode }) {
       type="button"
       onClick={() => setMobileSidebarOpen(true)}
       className={clsx(
-        'fixed bottom-6 right-6 z-40 flex h-11 w-11 items-center justify-center rounded-full border border-slate-200 bg-white/90 text-slate-600 shadow-md backdrop-blur-sm transition hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-900/90 dark:text-slate-300 dark:hover:bg-slate-800 lg:hidden',
+        'fixed bottom-6 left-6 z-40 flex h-11 w-11 items-center justify-center rounded-full border border-slate-200 bg-white/90 text-slate-600 shadow-md backdrop-blur-sm transition hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-900/90 dark:text-slate-300 dark:hover:bg-slate-800 lg:hidden',
         mobileSidebarOpen ? 'opacity-0 pointer-events-none' : 'opacity-100'
       )}
       aria-label="開啟側邊欄"
