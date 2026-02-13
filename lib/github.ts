@@ -27,8 +27,8 @@ function getGithubHeaders() {
 
 /**
  * Fetch all public repositories for the configured GitHub user.
- * Returns an empty array on error instead of throwing, so the UI
- * can render a graceful fallback.
+ * Excludes forked repositories. Returns an empty array on error instead of
+ * throwing, so the UI can render a graceful fallback.
  */
 export async function fetchPublicRepos(usernameOverride?: string): Promise<RepoSummary[]> {
   const username = usernameOverride || process.env.GITHUB_USERNAME;
@@ -56,16 +56,18 @@ export async function fetchPublicRepos(usernameOverride?: string): Promise<RepoS
 
     const data = (await res.json()) as any[];
 
-    return data.map((repo) => ({
-      id: repo.id,
-      name: repo.name,
-      fullName: repo.full_name,
-      htmlUrl: repo.html_url,
-      description: repo.description,
-      language: repo.language,
-      stargazersCount: repo.stargazers_count,
-      updatedAt: repo.updated_at,
-    }));
+    return data
+      .filter((repo) => !repo.fork)
+      .map((repo) => ({
+        id: repo.id,
+        name: repo.name,
+        fullName: repo.full_name,
+        htmlUrl: repo.html_url,
+        description: repo.description,
+        language: repo.language,
+        stargazersCount: repo.stargazers_count,
+        updatedAt: repo.updated_at,
+      }));
   } catch (error) {
     console.error('Error while fetching GitHub repositories:', error);
     return [];

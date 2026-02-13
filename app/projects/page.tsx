@@ -1,6 +1,7 @@
-import Link from 'next/link';
+import { FaGithub } from 'react-icons/fa';
 import { fetchPublicRepos } from '@/lib/github';
 import { SidebarLayout } from '@/components/sidebar-layout';
+import { RepoCard } from '@/components/repo-card';
 
 export const revalidate = 3600;
 
@@ -20,53 +21,27 @@ export default async function ProjectsPage() {
           </h1>
           <p className="type-small text-slate-500 dark:text-slate-400">
             從我的 GitHub 帳號自動抓取公開的程式庫與專案。
+            {repos.length > 0 && (
+              <span className="ml-1">共 {repos.length} 個專案</span>
+            )}
           </p>
         </header>
 
         {repos.length === 0 ? (
-          <p className="mt-4 type-small text-slate-500 dark:text-slate-400">
-            目前沒有可顯示的 GitHub 專案，或暫時無法連線到 GitHub。
-          </p>
+          <div className="mt-6 flex flex-col items-center gap-3 rounded-2xl border border-dashed border-slate-200 bg-slate-50/50 p-8 text-center dark:border-slate-700 dark:bg-slate-900/30">
+            <FaGithub className="h-12 w-12 text-slate-400 dark:text-slate-500" />
+            <p className="type-small text-slate-500 dark:text-slate-400">
+              目前沒有可顯示的 GitHub 專案，或暫時無法連線到 GitHub。
+            </p>
+          </div>
         ) : (
           <ul className="mt-4 grid gap-4 sm:grid-cols-2">
-            {repos.map((repo) => (
-              <li
+            {repos.map((repo, index) => (
+              <RepoCard
                 key={repo.id}
-                className="flex h-full flex-col rounded-lg border border-slate-200 bg-white p-4 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md dark:border-slate-800 dark:bg-slate-900"
-              >
-                <div className="flex items-start justify-between gap-2">
-                  <Link
-                    href={repo.htmlUrl}
-                    prefetch={false}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="type-base font-semibold text-slate-900 transition-colors hover:text-accent dark:text-slate-50"
-                  >
-                    {repo.name}
-                  </Link>
-                  {repo.stargazersCount > 0 && (
-                    <span className="inline-flex items-center gap-1 rounded-full bg-amber-50 px-2 py-0.5 text-xs font-medium text-amber-700 dark:bg-amber-900/40 dark:text-amber-300">
-                      ★ {repo.stargazersCount}
-                    </span>
-                  )}
-                </div>
-
-                {repo.description && (
-                  <p className="mt-2 flex-1 type-small text-slate-600 dark:text-slate-300">
-                    {repo.description}
-                  </p>
-                )}
-
-                <div className="mt-3 flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
-                  <span>{repo.language ?? '其他'}</span>
-                  <span suppressHydrationWarning>
-                    更新於{' '}
-                    {repo.updatedAt
-                      ? new Date(repo.updatedAt).toLocaleDateString('zh-TW')
-                      : '未知'}
-                  </span>
-                </div>
-              </li>
+                repo={repo}
+                animationDelay={index * 50}
+              />
             ))}
           </ul>
         )}

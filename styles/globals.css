@@ -40,6 +40,16 @@
   100% { opacity: 1; transform: translateY(0) scale(1); }
 }
 
+.repo-card-enter {
+  animation: fade-in-up 0.6s ease-out both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .repo-card-enter {
+    animation: none;
+  }
+}
+
 @keyframes float-soft {
   0% { transform: translate3d(0,0,0) scale(1); }
   50% { transform: translate3d(4px,-6px,0) scale(1.03); }
