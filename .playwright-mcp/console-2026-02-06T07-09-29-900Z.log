@@ -1,0 +1,2 @@
+[     789ms] [WARNING] Image with src "https://www.gravatar.com/avatar/53f2a6e011d5ececcd0d6e33e8e7329f60efcd23a5b77ba382273d5060a2cffe?s=160&d=identicon" was detected as the Largest Contentful Paint (LCP). Please add the `loading="eager"` property if this image is above the fold.
+Read more: https://nextjs.org/docs/app/api-reference/components/image#loading @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297

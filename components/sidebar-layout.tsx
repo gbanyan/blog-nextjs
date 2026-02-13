@@ -1,3 +1,5 @@
+'use client';
+
 import dynamic from 'next/dynamic';
 
 // Lazy load RightSidebar since it's only visible on lg+ screens
