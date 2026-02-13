@@ -15,12 +15,16 @@ const MastodonFeed = dynamic(() => import('./mastodon-feed').then(mod => ({ defa
   ssr: false,
 });
 
-export function RightSidebar() {
-  const [shouldLoadFeed, setShouldLoadFeed] = useState(false);
+/** Shared sidebar content for desktop aside and mobile drawer */
+export function RightSidebarContent({ forceLoadFeed = false }: { forceLoadFeed?: boolean }) {
+  const [shouldLoadFeed, setShouldLoadFeed] = useState(forceLoadFeed);
   const feedRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // Use Intersection Observer to lazy load MastodonFeed when sidebar is visible
+    if (forceLoadFeed) {
+      setShouldLoadFeed(true);
+      return;
+    }
     if (!feedRef.current) return;
 
     const observer = new IntersectionObserver(
@@ -30,13 +34,12 @@ export function RightSidebar() {
           observer.disconnect();
         }
       },
-      { rootMargin: '100px' } // Start loading 100px before it's visible
+      { rootMargin: '100px' }
     );
 
     observer.observe(feedRef.current);
-
     return () => observer.disconnect();
-  }, []);
+  }, [forceLoadFeed]);
 
   const tags = getAllTagsWithCount().slice(0, 5);
 
@@ -68,9 +71,8 @@ export function RightSidebar() {
   ].filter(Boolean) as { key: string; href: string; icon: any; label: string }[];
 
   return (
-    <aside className="hidden lg:block">
-      <div className="sticky top-20 flex flex-col gap-4">
-        <section className="motion-card group relative overflow-hidden rounded-xl border bg-white px-4 py-4 shadow-sm hover:bg-slate-50 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-100 dark:hover:bg-slate-800/80">
+    <div className="flex flex-col gap-4">
+      <section className="motion-card group relative overflow-hidden rounded-xl border bg-white px-4 py-4 shadow-sm hover:bg-slate-50 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-100 dark:hover:bg-slate-800/80">
           <div className="pointer-events-none absolute -left-10 -top-10 h-24 w-24 rounded-full bg-sky-300/35 blur-3xl mix-blend-soft-light motion-safe:animate-float-soft dark:bg-sky-500/25" />
           <div className="pointer-events-none absolute -bottom-12 right-[-2.5rem] h-28 w-28 rounded-full bg-indigo-300/30 blur-3xl mix-blend-soft-light motion-safe:animate-float-soft dark:bg-indigo-500/20" />
 
@@ -163,6 +165,15 @@ export function RightSidebar() {
             </div>
           </section>
         )}
+    </div>
+  );
+}
+
+export function RightSidebar() {
+  return (
+    <aside className="hidden lg:block">
+      <div className="sticky top-20">
+        <RightSidebarContent />
       </div>
     </aside>
   );
