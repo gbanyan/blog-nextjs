@@ -145,78 +145,78 @@ export function TerminalWindow({
 
   return (
     <div
-      className={`overflow-hidden rounded-xl border border-slate-700/50 bg-slate-900 shadow-xl ${className}`}
+      className={`overflow-hidden rounded-xl border border-slate-300 bg-slate-100 shadow-xl dark:border-slate-700/50 dark:bg-slate-900 ${className}`}
       role="img"
       aria-label={`終端機：${title} - ${tagline}`}
     >
       {/* macOS-style title bar */}
-      <div className="flex items-center gap-2 border-b border-slate-700/50 px-4 py-2.5 sm:px-5 sm:py-3 lg:px-6 lg:py-3.5">
+      <div className="flex items-center gap-2 border-b border-slate-200 px-4 py-2.5 dark:border-slate-700/50 sm:px-5 sm:py-3 lg:px-6 lg:py-3.5">
         <div className="flex gap-1.5 sm:gap-2">
           <span className="h-3 w-3 rounded-full bg-red-500/90 sm:h-3.5 sm:w-3.5 lg:h-4 lg:w-4" />
           <span className="h-3 w-3 rounded-full bg-amber-500/90 sm:h-3.5 sm:w-3.5 lg:h-4 lg:w-4" />
           <span className="h-3 w-3 rounded-full bg-emerald-500/90 sm:h-3.5 sm:w-3.5 lg:h-4 lg:w-4" />
         </div>
-        <span className="ml-4 font-mono text-xs text-slate-400 sm:text-sm lg:text-base">
+        <span className="ml-4 font-mono text-xs text-slate-500 sm:text-sm dark:text-slate-400 lg:text-base">
           gbanyan@blog — zsh
         </span>
       </div>
 
       {/* Terminal content */}
       <div className="px-4 py-4 font-mono text-sm sm:px-5 sm:py-5 sm:text-base lg:px-6 lg:py-6 lg:text-lg">
-        <div className="text-slate-300">
-          <span className="text-emerald-400">~</span>
+        <div className="text-slate-600 dark:text-slate-300">
+          <span className="text-emerald-600 dark:text-emerald-400">~</span>
           <span className="text-slate-500"> $ </span>
           <span>{displayedPrompt}</span>
           {phase === 'prompt' && showCursor && (
-            <span className="ml-0.5 inline-block h-4 w-0.5 animate-pulse bg-emerald-400" />
+            <span className="ml-0.5 inline-block h-4 w-0.5 animate-pulse bg-emerald-600 dark:bg-emerald-400" />
           )}
         </div>
 
         {displayedLine1 && (
-          <div className="mt-2 text-slate-100">
+          <div className="mt-2 text-slate-900 dark:text-slate-100">
             {displayedLine1}
             {phase === 'typing-line1' && showCursor && (
-              <span className="ml-0.5 inline-block h-4 w-0.5 animate-pulse bg-emerald-400" />
+              <span className="ml-0.5 inline-block h-4 w-0.5 animate-pulse bg-emerald-600 dark:bg-emerald-400" />
             )}
           </div>
         )}
 
         {displayedLine2 && (
-          <div className="mt-1 text-slate-300">
+          <div className="mt-1 text-slate-600 dark:text-slate-300">
             {displayedLine2}
             {phase === 'typing-line2' && showCursor && (
-              <span className="ml-0.5 inline-block h-4 w-0.5 animate-pulse bg-emerald-400" />
+              <span className="ml-0.5 inline-block h-4 w-0.5 animate-pulse bg-emerald-600 dark:bg-emerald-400" />
             )}
           </div>
         )}
 
         {(phase === 'prompt2' || phase === 'typing-ascii' || displayedPrompt2 || displayedAscii.length > 0) && (
-          <div className="mt-2 text-slate-300">
-            <span className="text-emerald-400">~</span>
+          <div className="mt-2 text-slate-600 dark:text-slate-300">
+            <span className="text-emerald-600 dark:text-emerald-400">~</span>
             <span className="text-slate-500"> $ </span>
             <span>{displayedPrompt2}</span>
             {phase === 'prompt2' && showCursor && (
-              <span className="ml-0.5 inline-block h-4 w-0.5 animate-pulse bg-emerald-400" />
+              <span className="ml-0.5 inline-block h-4 w-0.5 animate-pulse bg-emerald-600 dark:bg-emerald-400" />
             )}
           </div>
         )}
 
         {displayedAscii.length > 0 && (
-          <div className="mt-2 text-emerald-400/90 whitespace-pre">
+          <div className="mt-2 whitespace-pre text-emerald-600/90 dark:text-emerald-400/90">
             {displayedAscii.map((line, i) => (
               <div key={i}>{line}</div>
             ))}
             {phase === 'typing-ascii' && showCursor && (
-              <span className="inline-block h-4 w-0.5 animate-pulse bg-emerald-400" />
+              <span className="inline-block h-4 w-0.5 animate-pulse bg-emerald-600 dark:bg-emerald-400" />
             )}
           </div>
         )}
 
         {phase === 'done' && (
-          <div className="mt-2 text-slate-300">
-            <span className="text-emerald-400">~</span>
+          <div className="mt-2 text-slate-600 dark:text-slate-300">
+            <span className="text-emerald-600 dark:text-emerald-400">~</span>
             <span className="text-slate-500"> $ </span>
-            <span className="inline-block h-4 w-4 animate-pulse border-l-2 border-emerald-400" />
+            <span className="inline-block h-4 w-4 animate-pulse border-l-2 border-emerald-600 dark:border-emerald-400" />
           </div>
         )}
       </div>
