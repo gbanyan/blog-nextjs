@@ -56,6 +56,47 @@
   100% { transform: translate3d(0,0,0) scale(1); }
 }
 
+@keyframes mastodon-shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.mastodon-skeleton-shimmer {
+  background: linear-gradient(
+    110deg,
+    #e2e8f0 0%,
+    #e2e8f0 35%,
+    rgba(255, 255, 255, 0.6) 50%,
+    #e2e8f0 65%,
+    #e2e8f0 100%
+  );
+  background-size: 200% 100%;
+  background-position: -200% 0;
+  animation: mastodon-shimmer 2.2s ease-in-out infinite;
+}
+
+.dark .mastodon-skeleton-shimmer {
+  background: linear-gradient(
+    110deg,
+    #1e293b 0%,
+    #1e293b 35%,
+    rgba(167, 139, 250, 0.3) 50%,
+    #1e293b 65%,
+    #1e293b 100%
+  );
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mastodon-skeleton-shimmer {
+    animation: none;
+    background-position: 0 0;
+    background: #e2e8f0;
+  }
+  .dark .mastodon-skeleton-shimmer {
+    background: #1e293b;
+  }
+}
+
 :root {
   --motion-duration-short: 180ms;
   --motion-duration-medium: 260ms;

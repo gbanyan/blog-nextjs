@@ -83,10 +83,19 @@ export function MastodonFeed() {
       {loading ? (
         <div className="space-y-3">
           {[...Array(3)].map((_, i) => (
-            <div key={i} className="animate-pulse">
-              <div className="h-3 w-3/4 rounded bg-slate-200 dark:bg-slate-800"></div>
-              <div className="mt-2 h-3 w-full rounded bg-slate-200 dark:bg-slate-800"></div>
-              <div className="mt-2 h-2 w-1/3 rounded bg-slate-200 dark:bg-slate-800"></div>
+            <div key={i}>
+              <div
+                className="mastodon-skeleton-shimmer h-3 w-3/4 rounded"
+                style={{ animationDelay: `${i * 120}ms` }}
+              />
+              <div
+                className="mastodon-skeleton-shimmer mt-2 h-3 w-full rounded"
+                style={{ animationDelay: `${i * 120}ms` }}
+              />
+              <div
+                className="mastodon-skeleton-shimmer mt-2 h-2 w-1/3 rounded"
+                style={{ animationDelay: `${i * 120}ms` }}
+              />
             </div>
           ))}
         </div>
