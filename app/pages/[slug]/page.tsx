@@ -10,6 +10,7 @@ import { PostLayout } from '@/components/post-layout';
 import { ScrollReveal } from '@/components/scroll-reveal';
 import { SectionDivider } from '@/components/section-divider';
 import { JsonLd } from '@/components/json-ld';
+import { DevEnvDeviceHero } from '@/components/dev-env-device-hero';
 
 export function generateStaticParams() {
   const params = allPages.map((page) => ({
@@ -115,18 +116,22 @@ export default async function StaticPage({ params }: Props) {
                 data-toc-content={slug}
                 className="prose prose-lg prose-slate mx-auto max-w-none dark:prose-invert"
               >
-                {page.feature_image && (
-                  <div className="-mx-4 mb-8 transition-all duration-500 sm:-mx-12 lg:-mx-20 group-[.toc-open]:lg:-mx-4">
-                    <Image
-                      src={page.feature_image.replace('../assets', '/assets')}
-                      alt={page.title}
-                      width={1200}
-                      height={600}
-                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 90vw, 1200px"
-                      priority
-                      className="w-full rounded-xl shadow-lg"
-                    />
-                  </div>
+                {slug === 'dev-env' ? (
+                  <DevEnvDeviceHero />
+                ) : (
+                  page.feature_image && (
+                    <div className="-mx-4 mb-8 transition-all duration-500 sm:-mx-12 lg:-mx-20 group-[.toc-open]:lg:-mx-4">
+                      <Image
+                        src={page.feature_image.replace('../assets', '/assets')}
+                        alt={page.title}
+                        width={1200}
+                        height={600}
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 90vw, 1200px"
+                        priority
+                        className="w-full rounded-xl shadow-lg"
+                      />
+                    </div>
+                  )
                 )}
                 <div dangerouslySetInnerHTML={{ __html: page.body.html }} />
               </article>
