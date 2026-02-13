@@ -3,13 +3,21 @@ import type { Metadata } from 'next';
 import { siteConfig } from '@/lib/config';
 import { LayoutShell } from '@/components/layout-shell';
 import { ThemeProvider } from 'next-themes';
-import { Playfair_Display } from 'next/font/google';
+import { Playfair_Display, LXGW_WenKai_TC } from 'next/font/google';
 import { JsonLd } from '@/components/json-ld';
 
 const playfair = Playfair_Display({
   subsets: ['latin'],
   variable: '--font-serif-eng',
   display: 'swap',
+});
+
+const lxgwWenKai = LXGW_WenKai_TC({
+  weight: ['400', '700'], // 只加载 Regular 和 Bold
+  subsets: ['latin'],
+  variable: '--font-serif-cn',
+  display: 'swap',
+  preload: true,
 });
 
 export const metadata: Metadata = {
@@ -88,7 +96,7 @@ export default function RootLayout({
   };
 
   return (
-    <html lang={siteConfig.defaultLocale} suppressHydrationWarning className={playfair.variable}>
+    <html lang={siteConfig.defaultLocale} suppressHydrationWarning className={`${playfair.variable} ${lxgwWenKai.variable}`}>
       <body>
         <JsonLd data={websiteSchema} />
         <JsonLd data={organizationSchema} />
