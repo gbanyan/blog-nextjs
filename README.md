@@ -21,7 +21,6 @@ This blog is optimized for performance using Next.js 16 features and best practi
 
 ### Next.js 16 Features
 
-- **Partial Prerendering (PPR)** enabled via `cacheComponents: true` for faster page loads
 - **Turbopack** enabled in development for 4-5x faster builds
 - **Static site generation** for all blog posts and pages
 - **Loading states** and error boundaries for better UX
@@ -63,7 +62,7 @@ Configuration in `app/blog/[slug]/page.tsx`:
 ### Caching Strategy
 
 - **Static assets** cached for 1 year (`max-age=31536000, immutable`)
-- **PPR** caches static shells while streaming dynamic content
+- **Static site generation** for all pages (build-time prerendering)
 - **Font optimization** with Next.js font loading
 
 ## Project Structure

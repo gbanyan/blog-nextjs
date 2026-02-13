@@ -8,8 +8,6 @@ const nextConfig = {
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
   },
 
-  // Enable Partial Prerendering (PPR) via cacheComponents in Next.js 16
-  cacheComponents: true,
 
   // Compiler optimizations
   compiler: {
