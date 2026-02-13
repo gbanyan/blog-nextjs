@@ -18,6 +18,7 @@ const lxgwWenKai = LXGW_WenKai_TC({
   variable: '--font-serif-cn',
   display: 'swap',
   preload: true,
+  adjustFontFallback: false, // 中文字体不需要 fallback 调整，使用系统字体作为 fallback
 });
 
 export const metadata: Metadata = {

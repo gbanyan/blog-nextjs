@@ -219,7 +219,7 @@ body {
   line-height: 1.25;
   color: var(--color-ink-strong);
   font-weight: 700;
-  letter-spacing: -0.03em;
+  letter-spacing: 0.01em; /* 手写风格字体需要稍微增加字间距 */
   font-family: var(--font-serif-cn), var(--font-serif-eng), "Songti SC", serif;
 }
 
@@ -228,7 +228,7 @@ body {
   line-height: 1.3;
   color: var(--color-ink-strong);
   font-weight: 600;
-  letter-spacing: -0.02em;
+  letter-spacing: 0.015em; /* 手写风格字体需要稍微增加字间距 */
   font-family: var(--font-serif-cn), var(--font-serif-eng), "Songti SC", serif;
 }
 
@@ -410,6 +410,7 @@ body {
     line-height: 1.2;
     font-weight: var(--font-weight-semibold);
     font-family: var(--font-serif-cn), var(--font-serif-eng), "Songti SC", serif;
+    letter-spacing: 0.01em; /* 手写风格字体需要稍微增加字间距 */
   }
 
   .type-title {
@@ -417,7 +418,7 @@ body {
     line-height: 1.3;
     font-weight: var(--font-weight-semibold);
     font-family: var(--font-serif-cn), var(--font-serif-eng), "Songti SC", serif;
-    letter-spacing: 0.02em;
+    letter-spacing: 0.025em; /* 手写风格字体需要稍微增加字间距 */
   }
 
   .type-subtitle {
@@ -425,7 +426,7 @@ body {
     line-height: 1.35;
     font-weight: var(--font-weight-medium);
     font-family: var(--font-serif-cn), var(--font-serif-eng), "Songti SC", serif;
-    letter-spacing: 0.02em;
+    letter-spacing: 0.02em; /* 保持原有字间距 */
   }
 
   .type-body {
@@ -442,13 +443,13 @@ body {
 
   h1 {
     font-weight: 700;
-    letter-spacing: -0.03em;
+    letter-spacing: 0.01em; /* 手写风格字体需要稍微增加字间距 */
     font-family: var(--font-serif-cn), var(--font-serif-eng), "Songti SC", serif;
   }
 
   h2 {
     font-weight: 600;
-    letter-spacing: -0.02em;
+    letter-spacing: 0.015em; /* 手写风格字体需要稍微增加字间距 */
     font-family: var(--font-serif-cn), var(--font-serif-eng), "Songti SC", serif;
   }
 
