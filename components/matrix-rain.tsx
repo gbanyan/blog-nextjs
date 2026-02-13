@@ -58,9 +58,14 @@ export function MatrixRain({
     }));
 
     let animationId: number;
+    let lastTime: number | null = null;
 
-    const draw = () => {
+    const draw = (timestamp: number) => {
       const rect = canvas.getBoundingClientRect();
+      const delta =
+        lastTime !== null ? (timestamp - lastTime) / 1000 : 1 / 60;
+      lastTime = timestamp;
+
       ctx.fillStyle = 'rgba(15, 23, 42, 0.05)';
       ctx.fillRect(0, 0, rect.width, rect.height);
 
@@ -83,7 +88,8 @@ export function MatrixRain({
           );
         }
 
-        drop.y += drop.speed * fontSize;
+        // Frame-rate independent: scale by delta, 60fps as baseline
+        drop.y += drop.speed * fontSize * delta * 60;
         if (drop.y > rect.height + 100) {
           drop.y = -50;
           drop.charIndex = (drop.charIndex + 1) % 20;
@@ -95,7 +101,7 @@ export function MatrixRain({
       animationId = requestAnimationFrame(draw);
     };
 
-    draw();
+    animationId = requestAnimationFrame(draw);
 
     return () => {
       cancelAnimationFrame(animationId);

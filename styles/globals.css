@@ -97,6 +97,17 @@
   }
 }
 
+/* Reading progress bar - Scroll-Driven Animations API (Chrome 115+, Safari 26+, Edge 115+) */
+@keyframes reading-progress-grow {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+
+.reading-progress-bar-scroll-driven {
+  animation: reading-progress-grow auto linear forwards;
+  animation-timeline: scroll(block root);
+}
+
 :root {
   --motion-duration-short: 180ms;
   --motion-duration-medium: 260ms;
