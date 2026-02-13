@@ -1,6 +1,7 @@
 import '../styles/globals.css';
 import type { Metadata } from 'next';
 import { siteConfig } from '@/lib/config';
+import { getAllPostsSorted } from '@/lib/posts';
 import { LayoutShell } from '@/components/layout-shell';
 import { ThemeProvider } from 'next-themes';
 import { Playfair_Display, LXGW_WenKai_TC } from 'next/font/google';
@@ -55,12 +56,15 @@ export const metadata: Metadata = {
   }
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children
 }: {
   children: React.ReactNode;
 }) {
   const theme = siteConfig.theme;
+  const recentPosts = getAllPostsSorted()
+    .slice(0, 5)
+    .map((p) => ({ title: p.title, url: p.url }));
 
   // WebSite Schema
   const websiteSchema = {
@@ -131,7 +135,7 @@ export default function RootLayout({
             }}
           />
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-            <LayoutShell>{children}</LayoutShell>
+            <LayoutShell recentPosts={recentPosts}>{children}</LayoutShell>
           </ThemeProvider>
           <WebVitals />
         </body>

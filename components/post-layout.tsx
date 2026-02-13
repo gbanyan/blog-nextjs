@@ -4,17 +4,12 @@ import { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { FiList, FiX } from 'react-icons/fi';
 import dynamic from 'next/dynamic';
-import { clsx, type ClassValue } from 'clsx';
-import { twMerge } from 'tailwind-merge';
+import { cn } from '@/lib/utils';
 
 // Lazy load PostToc since it's not critical for initial render
 const PostToc = dynamic(() => import('./post-toc').then(mod => ({ default: mod.PostToc })), {
   ssr: false,
 });
-
-function cn(...inputs: ClassValue[]) {
-    return twMerge(clsx(inputs));
-}
 
 export function PostLayout({ children, hasToc = true, contentKey }: { children: React.ReactNode; hasToc?: boolean; contentKey?: string }) {
     const [isTocOpen, setIsTocOpen] = useState(false); // Default closed on mobile

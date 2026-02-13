@@ -9,10 +9,15 @@ const BackToTop = dynamic(() => import('./back-to-top').then(mod => ({ default: 
   ssr: false,
 });
 
-export function LayoutShell({ children }: { children: React.ReactNode }) {
+interface LayoutShellProps {
+  children: React.ReactNode;
+  recentPosts?: { title: string; url: string }[];
+}
+
+export function LayoutShell({ children, recentPosts = [] }: LayoutShellProps) {
   return (
     <div className="flex min-h-screen flex-col">
-      <SiteHeader />
+      <SiteHeader recentPosts={recentPosts} />
       <main className="flex-1 container mx-auto px-4 py-6">
         {children}
       </main>

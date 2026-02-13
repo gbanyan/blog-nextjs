@@ -17,8 +17,10 @@
   "type": "module",
   "dependencies": {
     "@emotion/is-prop-valid": "^1.4.0",
+    "@radix-ui/react-dialog": "^1.1.15",
     "@vercel/og": "^0.8.5",
     "clsx": "^2.1.1",
+    "cmdk": "^1.1.1",
     "contentlayer2": "^0.5.8",
     "gray-matter": "^4.0.3",
     "markdown-wasm": "^1.2.0",

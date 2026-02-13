@@ -15,7 +15,11 @@ const SearchModal = dynamic(
   { ssr: false }
 );
 
-export function SiteHeader() {
+interface SiteHeaderProps {
+  recentPosts?: { title: string; url: string }[];
+}
+
+export function SiteHeader({ recentPosts = [] }: SiteHeaderProps) {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const pages = allPages
     .slice()
@@ -93,6 +97,7 @@ export function SiteHeader() {
         <SearchModal
           isOpen={isSearchOpen}
           onClose={() => setIsSearchOpen(false)}
+          recentPosts={recentPosts}
         />
       </div>
     </header>

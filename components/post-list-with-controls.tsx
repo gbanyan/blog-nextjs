@@ -113,10 +113,10 @@ export function PostListWithControls({ posts, pageSize }: Props) {
             <input
               id="post-search"
               type="search"
-              placeholder="標題、標籤、摘要關鍵字"
+              placeholder="搜尋文章…"
               value={searchTerm}
               onChange={(event) => setSearchTerm(event.target.value)}
-              className="w-full rounded-full border border-slate-200 bg-white py-1.5 pl-9 pr-3 text-sm text-slate-700 shadow-sm transition duration-180 ease-snappy focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:focus:ring-blue-500"
+              className="w-full rounded-full border border-slate-200 bg-white py-1.5 pl-9 pr-3 text-sm text-slate-700 shadow-sm transition duration-180 ease-snappy focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:focus:border-accent dark:focus:ring-accent/30"
             />
           </div>
         </div>
