@@ -229,7 +229,7 @@ body {
   color: var(--color-ink-strong);
   font-weight: 600;
   letter-spacing: -0.02em;
-  font-family: var(--font-serif-eng), "Songti SC", serif;
+  font-family: var(--font-serif-cn), var(--font-serif-eng), "Songti SC", serif;
 }
 
 .prose h3 {
