@@ -103,7 +103,7 @@ export default makeSource({
       [rehypeAutolinkHeadings, { behavior: 'wrap' }],
       /**
        * Rewrite markdown image src from relative "../assets/..." to
-       * absolute "/assets/..." so they are served from Next.js public/.
+       * absolute "/assets/..." and add lazy loading for cross-browser performance.
        */
       () => (tree: any) => {
         visit(tree, 'element', (node: any) => {
@@ -118,6 +118,9 @@ export default makeSource({
             } else if (src.startsWith('assets/')) {
               node.properties.src = '/' + src.replace(/^\/?/, '');
             }
+            // Lazy load images for better LCP and bandwidth (Chrome, Firefox, Safari, Edge)
+            node.properties.loading = 'lazy';
+            node.properties.decoding = 'async';
           }
         });
       }

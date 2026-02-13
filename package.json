@@ -15,6 +15,7 @@
   "author": "",
   "license": "ISC",
   "type": "module",
+  "browserslist": ["chrome 111", "edge 111", "firefox 111", "safari 16.4"],
   "dependencies": {
     "@emotion/is-prop-valid": "^1.4.0",
     "@radix-ui/react-dialog": "^1.1.15",
