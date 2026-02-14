@@ -73,6 +73,24 @@
   min-height: 320px;
 }
 
+@media (min-width: 1024px) {
+  .dev-env-device-hero {
+    min-height: 400px;
+  }
+}
+
+@media (min-width: 1280px) {
+  .dev-env-device-hero {
+    min-height: 460px;
+  }
+}
+
+@media (min-width: 1536px) {
+  .dev-env-device-hero {
+    min-height: 520px;
+  }
+}
+
 .dev-env-device-scene {
   display: flex;
   flex-direction: column;
@@ -93,6 +111,34 @@
   margin-top: 40px;
 }
 
+/* Large screen: scale up proportionally */
+@media (min-width: 1024px) {
+  .dev-env-monitor {
+    width: min(420px, 32vw);
+  }
+  .dev-env-monitor + .dev-env-desk {
+    margin-top: 48px;
+  }
+}
+
+@media (min-width: 1280px) {
+  .dev-env-monitor {
+    width: min(480px, 28vw);
+  }
+  .dev-env-monitor + .dev-env-desk {
+    margin-top: 56px;
+  }
+}
+
+@media (min-width: 1536px) {
+  .dev-env-monitor {
+    width: min(540px, 26vw);
+  }
+  .dev-env-monitor + .dev-env-desk {
+    margin-top: 64px;
+  }
+}
+
 .dev-env-bezel {
   position: absolute;
   inset: 0;
@@ -103,6 +149,27 @@
     0 25px 50px -12px rgba(0, 0, 0, 0.4),
     0 0 0 1px rgba(255, 255, 255, 0.05) inset,
     -2px -2px 8px rgba(0, 0, 0, 0.3);
+}
+
+@media (min-width: 1024px) {
+  .dev-env-bezel {
+    border-radius: 14px;
+    padding: 10px;
+  }
+}
+
+@media (min-width: 1280px) {
+  .dev-env-bezel {
+    border-radius: 16px;
+    padding: 12px;
+  }
+}
+
+@media (min-width: 1536px) {
+  .dev-env-bezel {
+    border-radius: 18px;
+    padding: 14px;
+  }
 }
 
 .dark .dev-env-bezel {
@@ -116,6 +183,27 @@
   overflow: hidden;
   background: linear-gradient(165deg, #e8ecf0 0%, #dde2e8 50%, #e2e6ec 100%);
   box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.4) inset;
+}
+
+@media (min-width: 1024px) {
+  .dev-env-screen {
+    inset: 10px;
+    border-radius: 8px;
+  }
+}
+
+@media (min-width: 1280px) {
+  .dev-env-screen {
+    inset: 12px;
+    border-radius: 9px;
+  }
+}
+
+@media (min-width: 1536px) {
+  .dev-env-screen {
+    inset: 14px;
+    border-radius: 10px;
+  }
 }
 
 .dark .dev-env-screen {
@@ -202,6 +290,27 @@
   flex-direction: column;
 }
 
+@media (min-width: 1024px) {
+  .dev-env-window {
+    margin: 14px 20px;
+    min-height: 90px;
+  }
+}
+
+@media (min-width: 1280px) {
+  .dev-env-window {
+    margin: 16px 24px;
+    min-height: 100px;
+  }
+}
+
+@media (min-width: 1536px) {
+  .dev-env-window {
+    margin: 18px 28px;
+    min-height: 110px;
+  }
+}
+
 .dark .dev-env-window {
   background: rgba(30, 30, 30, 0.98);
   border-color: rgba(255, 255, 255, 0.06);
@@ -257,6 +366,30 @@
   flex-direction: column;
 }
 
+@media (min-width: 1024px) {
+  .dev-env-window-content {
+    padding: 12px 18px;
+    font-size: 10px;
+    min-height: 58px;
+  }
+}
+
+@media (min-width: 1280px) {
+  .dev-env-window-content {
+    padding: 14px 20px;
+    font-size: 11px;
+    min-height: 64px;
+  }
+}
+
+@media (min-width: 1536px) {
+  .dev-env-window-content {
+    padding: 16px 24px;
+    font-size: 12px;
+    min-height: 72px;
+  }
+}
+
 .dev-env-terminal-prompt {
   margin-bottom: 8px;
   white-space: nowrap;
@@ -284,8 +417,31 @@
 }
 
 .dev-env-logo-svg svg {
+  width: 36px;
+  height: 36px;
   flex-shrink: 0;
   display: block;
+}
+
+@media (min-width: 1024px) {
+  .dev-env-logo-svg svg {
+    width: 42px;
+    height: 42px;
+  }
+}
+
+@media (min-width: 1280px) {
+  .dev-env-logo-svg svg {
+    width: 48px;
+    height: 48px;
+  }
+}
+
+@media (min-width: 1536px) {
+  .dev-env-logo-svg svg {
+    width: 54px;
+    height: 54px;
+  }
 }
 
 .dev-env-svg-arch {
@@ -347,6 +503,33 @@
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
+@media (min-width: 1024px) {
+  .dev-env-stand {
+    width: 72px;
+    height: 28px;
+    bottom: -14px;
+    border-radius: 14px 14px 0 0;
+  }
+}
+
+@media (min-width: 1280px) {
+  .dev-env-stand {
+    width: 84px;
+    height: 32px;
+    bottom: -16px;
+    border-radius: 16px 16px 0 0;
+  }
+}
+
+@media (min-width: 1536px) {
+  .dev-env-stand {
+    width: 96px;
+    height: 36px;
+    bottom: -18px;
+    border-radius: 18px 18px 0 0;
+  }
+}
+
 .dark .dev-env-stand {
   background: linear-gradient(180deg, #2d2d2d 0%, #1a1a1a 100%);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
@@ -354,7 +537,7 @@
 
 .dev-env-desk {
   position: relative;
-  width: min(360px, 90vw);
+  width: min(380px, 92vw);
   height: 56px;
   margin: 0 auto;
   padding: 0 12px;
@@ -365,6 +548,33 @@
   background: linear-gradient(180deg, #b8b8b8 0%, #9a9a9a 50%, #888888 100%);
   border-radius: 4px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+}
+
+@media (min-width: 1024px) {
+  .dev-env-desk {
+    width: min(460px, 34vw);
+    height: 66px;
+    padding: 0 16px;
+    gap: 16px;
+  }
+}
+
+@media (min-width: 1280px) {
+  .dev-env-desk {
+    width: min(520px, 30vw);
+    height: 76px;
+    padding: 0 20px;
+    gap: 20px;
+  }
+}
+
+@media (min-width: 1536px) {
+  .dev-env-desk {
+    width: min(600px, 28vw);
+    height: 86px;
+    padding: 0 24px;
+    gap: 24px;
+  }
 }
 
 .dark .dev-env-desk {
@@ -379,6 +589,27 @@
   display: flex;
   align-items: flex-end;
   justify-content: center;
+}
+
+@media (min-width: 1024px) {
+  .dev-env-keyboard {
+    width: 130px;
+    height: 42px;
+  }
+}
+
+@media (min-width: 1280px) {
+  .dev-env-keyboard {
+    width: 150px;
+    height: 48px;
+  }
+}
+
+@media (min-width: 1536px) {
+  .dev-env-keyboard {
+    width: 170px;
+    height: 54px;
+  }
 }
 
 .dev-env-keyboard-body {
@@ -460,6 +691,36 @@
   align-items: flex-end;
   justify-content: center;
   height: 44px;
+}
+
+@media (min-width: 1024px) {
+  .dev-env-macmini {
+    height: 52px;
+  }
+  .dev-env-macmini-top {
+    width: 76px;
+    height: 76px;
+  }
+}
+
+@media (min-width: 1280px) {
+  .dev-env-macmini {
+    height: 60px;
+  }
+  .dev-env-macmini-top {
+    width: 88px;
+    height: 88px;
+  }
+}
+
+@media (min-width: 1536px) {
+  .dev-env-macmini {
+    height: 68px;
+  }
+  .dev-env-macmini-top {
+    width: 100px;
+    height: 100px;
+  }
 }
 
 .dev-env-macmini-top {
