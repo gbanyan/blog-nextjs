@@ -76,11 +76,11 @@ export default async function StaticPage({ params }: Props) {
     <>
       <JsonLd data={webPageSchema} />
       <ReadingProgress />
-      <PostLayout hasToc={hasToc} contentKey={slug}>
-        <div className="space-y-8">
+      <PostLayout hasToc={hasToc} contentKey={slug} wide={slug === 'dev-env'}>
+        <div className={slug === 'dev-env' ? 'space-y-4' : 'space-y-8'}>
           <SectionDivider>
             <ScrollReveal>
-              <header className="mb-6 space-y-4 text-center">
+              <header className={slug === 'dev-env' ? 'mb-4 space-y-3 text-center' : 'mb-6 space-y-4 text-center'}>
                 {page.published_at && (
                   <p className="type-small text-slate-500 dark:text-slate-500">
                     {new Date(page.published_at).toLocaleDateString(

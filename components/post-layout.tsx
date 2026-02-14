@@ -11,7 +11,7 @@ const PostToc = dynamic(() => import('./post-toc').then(mod => ({ default: mod.P
   ssr: false,
 });
 
-export function PostLayout({ children, hasToc = true, contentKey }: { children: React.ReactNode; hasToc?: boolean; contentKey?: string }) {
+export function PostLayout({ children, hasToc = true, contentKey, wide }: { children: React.ReactNode; hasToc?: boolean; contentKey?: string; wide?: boolean }) {
     const [isTocOpen, setIsTocOpen] = useState(false); // Default closed on mobile
     const [isDesktopTocOpen, setIsDesktopTocOpen] = useState(hasToc); // Separate state for desktop
     const [mounted, setMounted] = useState(false);
@@ -116,7 +116,7 @@ export function PostLayout({ children, hasToc = true, contentKey }: { children: 
             )}>
                 {/* Main Content Area */}
                 <div className="min-w-0">
-                    <div className={cn("mx-auto transition-all duration-500 ease-snappy", isDesktopTocOpen && hasToc ? "max-w-3xl" : "max-w-4xl")}>
+                    <div className={cn("mx-auto transition-all duration-500 ease-snappy", isDesktopTocOpen && hasToc ? "max-w-3xl" : wide ? "max-w-5xl" : "max-w-4xl")}>
                         {children}
                     </div>
                 </div>

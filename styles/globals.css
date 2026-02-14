@@ -111,10 +111,10 @@
   margin-top: 40px;
 }
 
-/* Large screen: scale up proportionally */
+/* Large screen: scale up proportionally to fill space */
 @media (min-width: 1024px) {
   .dev-env-monitor {
-    width: min(420px, 32vw);
+    width: min(520px, 42vw);
   }
   .dev-env-monitor + .dev-env-desk {
     margin-top: 48px;
@@ -123,7 +123,7 @@
 
 @media (min-width: 1280px) {
   .dev-env-monitor {
-    width: min(480px, 28vw);
+    width: min(600px, 40vw);
   }
   .dev-env-monitor + .dev-env-desk {
     margin-top: 56px;
@@ -132,7 +132,7 @@
 
 @media (min-width: 1536px) {
   .dev-env-monitor {
-    width: min(540px, 26vw);
+    width: min(700px, 42vw);
   }
   .dev-env-monitor + .dev-env-desk {
     margin-top: 64px;
@@ -552,7 +552,7 @@
 
 @media (min-width: 1024px) {
   .dev-env-desk {
-    width: min(460px, 34vw);
+    width: min(560px, 45vw);
     height: 66px;
     padding: 0 16px;
     gap: 16px;
@@ -561,7 +561,7 @@
 
 @media (min-width: 1280px) {
   .dev-env-desk {
-    width: min(520px, 30vw);
+    width: min(640px, 43vw);
     height: 76px;
     padding: 0 20px;
     gap: 20px;
@@ -570,7 +570,7 @@
 
 @media (min-width: 1536px) {
   .dev-env-desk {
-    width: min(600px, 28vw);
+    width: min(760px, 46vw);
     height: 86px;
     padding: 0 24px;
     gap: 24px;

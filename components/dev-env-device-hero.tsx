@@ -9,7 +9,7 @@ import { SiArchlinux, SiUbuntu, SiLinux } from 'react-icons/si';
 export function DevEnvDeviceHero() {
   return (
     <div
-      className="dev-env-device-hero -mx-4 mb-8 flex justify-center py-8 sm:-mx-12 sm:py-12 lg:-mx-20 group-[.toc-open]:lg:-mx-4"
+      className="dev-env-device-hero -mx-4 mb-6 flex justify-center py-4 sm:-mx-12 sm:py-6 lg:-mx-20 lg:py-8 group-[.toc-open]:lg:-mx-4"
       role="img"
       aria-label="Mac mini、鍵盤與外接螢幕的 3D 裝置展示"
     >
