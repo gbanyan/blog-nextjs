@@ -131,8 +131,8 @@ export function NavMenu({ items }: NavMenuProps) {
         className="motion-link inline-flex items-center gap-2 rounded-xl px-3 py-2 text-sm text-slate-600 hover:bg-slate-100 hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40 dark:text-slate-200 dark:hover:bg-slate-800"
         onClick={close}
       >
-        <Icon className="h-4 w-4 text-slate-400" />
-        <span>{item.label}</span>
+        <Icon className="h-4 w-4 shrink-0 text-slate-400" />
+        <span className="whitespace-nowrap">{item.label}</span>
       </Link>
     ) : null;
   };
@@ -150,8 +150,8 @@ export function NavMenu({ items }: NavMenuProps) {
             className="flex w-full items-center justify-between rounded-xl px-4 py-3 text-base font-medium text-slate-700 transition-colors active:bg-slate-100 dark:text-slate-200 dark:active:bg-slate-800"
           >
             <div className="flex items-center gap-3">
-              <Icon className="h-5 w-5 text-slate-400" />
-              <span>{item.label}</span>
+              <Icon className="h-5 w-5 shrink-0 text-slate-400" />
+              <span className="whitespace-nowrap">{item.label}</span>
             </div>
             <FiChevronRight
               className={`h-5 w-5 text-slate-400 transition-transform duration-200 ${isExpanded ? 'rotate-90' : ''}`}
@@ -178,8 +178,8 @@ export function NavMenu({ items }: NavMenuProps) {
         className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-base font-medium text-slate-700 transition-colors active:bg-slate-100 dark:text-slate-200 dark:active:bg-slate-800"
         onClick={close}
       >
-        <Icon className="h-5 w-5 text-slate-400" />
-        <span>{item.label}</span>
+        <Icon className="h-5 w-5 shrink-0 text-slate-400" />
+        <span className="whitespace-nowrap">{item.label}</span>
       </Link>
     ) : null;
   };
@@ -261,13 +261,13 @@ export function NavMenu({ items }: NavMenuProps) {
               >
                 <button
                   type="button"
-                  className="motion-link type-nav inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-slate-600 hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40 dark:text-slate-200"
+                  className="motion-link type-nav inline-flex shrink-0 items-center gap-1.5 rounded-full px-3 py-1 text-slate-600 hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40 dark:text-slate-200"
                   aria-haspopup="menu"
                   aria-expanded={isOpen}
                 >
-                  <Icon className="h-3.5 w-3.5 text-slate-400 transition group-hover:text-accent" />
-                  <span>{item.label}</span>
-                  <FiChevronDown className="h-3 w-3 text-slate-400 transition group-hover:text-accent" />
+                  <Icon className="h-3.5 w-3.5 shrink-0 text-slate-400 transition group-hover:text-accent" />
+                  <span className="whitespace-nowrap">{item.label}</span>
+                  <FiChevronDown className="h-3 w-3 shrink-0 text-slate-400 transition group-hover:text-accent" />
                 </button>
 
                 <div
@@ -290,11 +290,11 @@ export function NavMenu({ items }: NavMenuProps) {
             <Link
               key={item.key}
               href={item.href}
-              className="motion-link type-nav group relative inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-slate-600 hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40 dark:text-slate-200"
+              className="motion-link type-nav group relative inline-flex shrink-0 items-center gap-1.5 rounded-full px-3 py-1 text-slate-600 hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40 dark:text-slate-200"
               onClick={close}
             >
-              <Icon className="h-3.5 w-3.5 text-slate-400 transition group-hover:text-accent" />
-              <span>{item.label}</span>
+              <Icon className="h-3.5 w-3.5 shrink-0 text-slate-400 transition group-hover:text-accent" />
+              <span className="whitespace-nowrap">{item.label}</span>
               <span className="absolute inset-x-3 -bottom-0.5 h-px origin-left scale-x-0 bg-accent transition duration-180 ease-snappy group-hover:scale-x-100" aria-hidden="true" />
             </Link>
           ) : null;

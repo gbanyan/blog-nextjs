@@ -14,9 +14,12 @@ export interface MastodonStatus {
     avatar: string;
   };
   media_attachments: Array<{
-    type: string;
-    url: string;
-    preview_url: string;
+    id: string;
+    type: 'image' | 'video' | 'gifv' | 'audio' | 'unknown';
+    url: string | null;
+    preview_url: string | null;
+    description: string | null;
+    blurhash?: string | null;
   }>;
 }
 

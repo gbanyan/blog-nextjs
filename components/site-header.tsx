@@ -27,21 +27,26 @@ export function SiteHeader({ recentPosts = [] }: SiteHeaderProps) {
 
   const findPage = (title: string) => pages.find((page) => page.title === title);
 
-  const aboutChildren = [
-    { title: '關於作者', label: '作者' },
-    { title: '關於本站', label: '本站' }
-  ]
-    .map(({ title, label }) => {
-      const page = findPage(title);
-      if (!page) return null;
-      return {
-        key: page._id,
-        href: page.url,
-        label,
-        iconKey: getIconForPage(page.title, page.slug)
-      } satisfies NavLinkItem;
-    })
-    .filter(Boolean) as NavLinkItem[];
+  const aboutChildren: NavLinkItem[] = [
+    ...(
+      [
+        { title: '關於作者', label: '作者' },
+        { title: '關於本站', label: '本站' }
+      ]
+        .map(({ title, label }) => {
+          const page = findPage(title);
+          if (!page) return null;
+          return {
+            key: page._id,
+            href: page.url,
+            label,
+            iconKey: getIconForPage(page.title, page.slug)
+          } satisfies NavLinkItem;
+        })
+        .filter(Boolean) as NavLinkItem[]
+    ),
+    { key: 'projects', href: '/projects', label: '作品', iconKey: 'pen' }
+  ];
 
   const deviceChildren = [
     { title: '開發工作環境', label: '開發環境' },
@@ -61,7 +66,6 @@ export function SiteHeader({ recentPosts = [] }: SiteHeaderProps) {
 
   const navItems: NavLinkItem[] = [
     { key: 'home', href: '/', label: '首頁', iconKey: 'home' },
-    { key: 'projects', href: '/projects', label: '作品', iconKey: 'pen' },
     {
       key: 'about',
       href: aboutChildren[0]?.href,
@@ -84,7 +88,7 @@ export function SiteHeader({ recentPosts = [] }: SiteHeaderProps) {
         <Link
           href="/"
           prefetch={true}
-          className="motion-link group relative type-title text-slate-900 hover:text-accent focus-visible:outline-none focus-visible:text-accent dark:text-slate-100"
+          className="motion-link group relative type-title whitespace-nowrap text-slate-900 hover:text-accent focus-visible:outline-none focus-visible:text-accent dark:text-slate-100"
         >
           <span className="absolute -bottom-0.5 left-0 h-[2px] w-0 bg-accent transition-all duration-180 ease-snappy group-hover:w-full" aria-hidden="true" />
           {siteConfig.title}

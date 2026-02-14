@@ -263,11 +263,11 @@ export function SearchButton({ onClick }: { onClick: () => void }) {
   return (
     <button
       onClick={onClick}
-      className="motion-link inline-flex h-9 items-center gap-2 rounded-full bg-slate-100 px-3 py-1.5 text-sm text-slate-600 transition hover:bg-slate-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700"
+      className="motion-link inline-flex h-9 shrink-0 items-center gap-2 rounded-full bg-slate-100 px-3 py-1.5 text-sm text-slate-600 transition hover:bg-slate-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700"
       aria-label="搜尋 (Cmd+K)"
     >
-      <FiSearch className="h-3.5 w-3.5" />
-      <span className="hidden sm:inline">搜尋</span>
+      <FiSearch className="h-3.5 w-3.5 shrink-0" />
+      <span className="hidden shrink-0 whitespace-nowrap sm:inline">搜尋</span>
       <kbd className="hidden rounded bg-white px-1.5 py-0.5 text-xs font-semibold text-slate-500 shadow-sm dark:bg-slate-900 dark:text-slate-400 sm:inline-block">
         ⌘K
       </kbd>

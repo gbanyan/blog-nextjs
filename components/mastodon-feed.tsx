@@ -134,10 +134,83 @@ export function MastodonFeed() {
                     {truncated}
                   </p>
 
-                  {/* Media indicator */}
+                  {/* Media attachments - render images/videos from remote URLs */}
                   {hasMedia && (
-                    <div className="type-small text-slate-400 dark:text-slate-500">
-                      📎 包含 {displayStatus.media_attachments.length} 個媒體
+                    <div
+                      className={`mt-1.5 grid gap-1 ${
+                        displayStatus.media_attachments.length === 1
+                          ? 'grid-cols-1'
+                          : 'grid-cols-2'
+                      }`}
+                    >
+                      {displayStatus.media_attachments.map((att) => {
+                        const src = att.preview_url ?? att.url;
+                        if (!src) return null;
+
+                        if (att.type === 'image') {
+                          return (
+                            <img
+                              key={att.id}
+                              src={src}
+                              alt={att.description ?? ''}
+                              loading="lazy"
+                              className="aspect-video w-full rounded-md object-cover"
+                            />
+                          );
+                        }
+                        if (att.type === 'gifv' && att.url) {
+                          return (
+                            <div
+                              key={att.id}
+                              className="overflow-hidden rounded-md"
+                              onClick={(e) => e.stopPropagation()}
+                            >
+                              <video
+                                src={att.url}
+                                poster={att.preview_url ?? undefined}
+                                autoPlay
+                                loop
+                                muted
+                                playsInline
+                                className="aspect-video w-full object-cover"
+                              />
+                            </div>
+                          );
+                        }
+                        if (att.type === 'video' && att.url) {
+                          return (
+                            <div
+                              key={att.id}
+                              className="overflow-hidden rounded-md"
+                              onClick={(e) => e.stopPropagation()}
+                            >
+                              <video
+                                src={att.url}
+                                poster={att.preview_url ?? undefined}
+                                controls
+                                playsInline
+                                className="aspect-video w-full object-cover"
+                              />
+                            </div>
+                          );
+                        }
+                        if (att.type === 'audio' && att.preview_url) {
+                          return (
+                            <div
+                              key={att.id}
+                              className="flex aspect-video w-full items-center justify-center rounded-md bg-slate-200 dark:bg-slate-700"
+                            >
+                              <img
+                                src={att.preview_url}
+                                alt={att.description ?? '音訊'}
+                                loading="lazy"
+                                className="h-full w-full object-cover opacity-80"
+                              />
+                            </div>
+                          );
+                        }
+                        return null;
+                      })}
                     </div>
                   )}
 

@@ -89,7 +89,7 @@ export function HeroSection({ title, tagline }: HeroSectionProps) {
   }, [reducedMotion]);
 
   return (
-    <div className="relative min-h-[280px] w-full overflow-hidden rounded-2xl sm:min-h-[320px] lg:min-h-[360px] xl:min-h-[400px]">
+    <div className="relative h-[360px] w-full overflow-hidden rounded-2xl sm:h-[400px] lg:h-[440px] xl:h-[480px]">
       {/* Matrix rain - full area, fades out */}
       {!reducedMotion && (
         <div
