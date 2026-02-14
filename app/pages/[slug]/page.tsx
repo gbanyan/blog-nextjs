@@ -11,6 +11,7 @@ import { ScrollReveal } from '@/components/scroll-reveal';
 import { SectionDivider } from '@/components/section-divider';
 import { JsonLd } from '@/components/json-ld';
 import { DevEnvDeviceHero } from '@/components/dev-env-device-hero';
+import { HomeLabDeviceHero } from '@/components/homelab-device-hero';
 
 export function generateStaticParams() {
   const params = allPages.map((page) => ({
@@ -76,11 +77,11 @@ export default async function StaticPage({ params }: Props) {
     <>
       <JsonLd data={webPageSchema} />
       <ReadingProgress />
-      <PostLayout hasToc={hasToc} contentKey={slug} wide={slug === 'dev-env'}>
-        <div className={slug === 'dev-env' ? 'space-y-4' : 'space-y-8'}>
+      <PostLayout hasToc={hasToc} contentKey={slug} wide={slug === 'dev-env' || slug === 'homelab'}>
+        <div className={slug === 'dev-env' || slug === 'homelab' ? 'space-y-4' : 'space-y-8'}>
           <SectionDivider>
             <ScrollReveal>
-              <header className={slug === 'dev-env' ? 'mb-4 space-y-3 text-center' : 'mb-6 space-y-4 text-center'}>
+              <header className={slug === 'dev-env' || slug === 'homelab' ? 'mb-4 space-y-3 text-center' : 'mb-6 space-y-4 text-center'}>
                 {page.published_at && (
                   <p className="type-small text-slate-500 dark:text-slate-500">
                     {new Date(page.published_at).toLocaleDateString(
@@ -118,6 +119,8 @@ export default async function StaticPage({ params }: Props) {
               >
                 {slug === 'dev-env' ? (
                   <DevEnvDeviceHero />
+                ) : slug === 'homelab' ? (
+                  <HomeLabDeviceHero />
                 ) : (
                   page.feature_image && (
                     <div className="-mx-4 mb-8 transition-all duration-500 sm:-mx-12 lg:-mx-20 group-[.toc-open]:lg:-mx-4">
