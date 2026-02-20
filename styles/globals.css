@@ -1936,3 +1936,143 @@ body {
   --callout-title-color: #fca5a5;
   @apply border-red-400;
 }
+
+/* Mermaid diagram viewer */
+.mermaid-diagram {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  margin: 1.5rem 0;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.75rem;
+  background: #fafbfc;
+  opacity: 0;
+  transition: opacity 0.3s ease-in;
+}
+
+.dark .mermaid-diagram {
+  border-color: #334155;
+  background: #0f172a;
+}
+
+.mermaid-diagram.mermaid-rendered {
+  opacity: 1;
+}
+
+/* Fullscreen overrides */
+.mermaid-diagram:fullscreen {
+  border-radius: 0;
+  border: none;
+}
+
+.mermaid-diagram:fullscreen .mermaid-canvas {
+  height: calc(100vh - 40px);
+}
+
+/* Canvas — the pannable/zoomable area */
+.mermaid-canvas {
+  position: relative;
+  z-index: 0;
+  overflow: hidden;
+  width: 100%;
+  height: 360px;
+  cursor: grab;
+  touch-action: none;
+}
+
+@media (min-width: 768px) {
+  .mermaid-canvas {
+    height: 420px;
+  }
+}
+
+.mermaid-grabbing .mermaid-canvas {
+  cursor: grabbing;
+}
+
+.mermaid-viewport {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  min-width: 100%;
+  min-height: 100%;
+  transform-origin: 0 0;
+  pointer-events: none;
+}
+
+/* Toolbar */
+.mermaid-zoom-bar {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 4px 8px;
+  border-top: 1px solid #e2e8f0;
+  background: #f1f5f9;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.dark .mermaid-zoom-bar {
+  border-top-color: #334155;
+  background: #1e293b;
+}
+
+.mermaid-zoom-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 32px;
+  height: 28px;
+  padding: 0 8px;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: #475569;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+  user-select: none;
+}
+
+.mermaid-zoom-btn:hover {
+  background: #e2e8f0;
+  color: #0f172a;
+}
+
+.mermaid-zoom-btn:active {
+  background: #cbd5e1;
+}
+
+.dark .mermaid-zoom-btn {
+  color: #94a3b8;
+}
+
+.dark .mermaid-zoom-btn:hover {
+  background: #334155;
+  color: #e2e8f0;
+}
+
+.dark .mermaid-zoom-btn:active {
+  background: #475569;
+}
+
+.mermaid-zoom-level {
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+  min-width: 48px;
+}
+
+.mermaid-sep {
+  width: 1px;
+  height: 16px;
+  margin: 0 4px;
+  background: #cbd5e1;
+}
+
+.dark .mermaid-sep {
+  background: #475569;
+}

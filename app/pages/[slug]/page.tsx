@@ -12,6 +12,7 @@ import { SectionDivider } from '@/components/section-divider';
 import { JsonLd } from '@/components/json-ld';
 import { DevEnvDeviceHero } from '@/components/dev-env-device-hero';
 import { HomeLabDeviceHero } from '@/components/homelab-device-hero';
+import { MermaidRenderer } from '@/components/mermaid-renderer';
 
 export function generateStaticParams() {
   const params = allPages.map((page) => ({
@@ -137,6 +138,7 @@ export default async function StaticPage({ params }: Props) {
                   )
                 )}
                 <div dangerouslySetInnerHTML={{ __html: page.body.html }} />
+                <MermaidRenderer />
               </article>
             </ScrollReveal>
           </SectionDivider>

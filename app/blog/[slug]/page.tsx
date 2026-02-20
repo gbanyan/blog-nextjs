@@ -13,6 +13,7 @@ import { PostStorylineNav } from '@/components/post-storyline-nav';
 import { SectionDivider } from '@/components/section-divider';
 import { FooterCue } from '@/components/footer-cue';
 import { JsonLd } from '@/components/json-ld';
+import { MermaidRenderer } from '@/components/mermaid-renderer';
 
 export function generateStaticParams() {
   const params = allPosts.map((post) => ({
@@ -217,6 +218,7 @@ export default async function BlogPostPage({ params }: Props) {
                   </div>
                 )}
                 <div dangerouslySetInnerHTML={{ __html: post.body.html }} />
+                <MermaidRenderer />
               </article>
             </ScrollReveal>
           </SectionDivider>
