@@ -1,5 +1,6 @@
 import { FaGithub } from 'react-icons/fa';
 import { fetchPublicRepos } from '@/lib/github';
+import { siteConfig } from '@/lib/config';
 import { SidebarLayout } from '@/components/sidebar-layout';
 import { RepoCard } from '@/components/repo-card';
 
@@ -7,6 +8,16 @@ export const revalidate = 3600;
 
 export const metadata = {
   title: 'GitHub 專案',
+  description: `瀏覽 ${siteConfig.name} 的 GitHub 開源專案與程式庫`,
+  alternates: {
+    canonical: `${siteConfig.url}/projects`,
+  },
+  openGraph: {
+    title: 'GitHub 專案',
+    description: `瀏覽 ${siteConfig.name} 的 GitHub 開源專案與程式庫`,
+    type: 'website',
+    url: `${siteConfig.url}/projects`,
+  },
 };
 
 export default async function ProjectsPage() {
