@@ -32,28 +32,71 @@ export const metadata: Metadata = {
   },
   description: siteConfig.description,
   metadataBase: new URL(siteConfig.url),
+  // SEO: Author information
+  authors: [{ name: siteConfig.author, url: siteConfig.url }],
+  creator: siteConfig.author,
+  publisher: siteConfig.name,
+  // SEO: Canonical and language alternates
+  alternates: {
+    canonical: siteConfig.url,
+    languages: {
+      [siteConfig.defaultLocale]: siteConfig.url,
+    },
+    types: {
+      'application/rss+xml': `${siteConfig.url}/feed.xml`
+    }
+  },
+  // SEO: Open Graph
   openGraph: {
     title: siteConfig.title,
     description: siteConfig.description,
     url: siteConfig.url,
     siteName: siteConfig.title,
-    images: [siteConfig.ogImage]
+    locale: siteConfig.defaultLocale,
+    type: 'website',
+    images: [
+      {
+        url: siteConfig.ogImage,
+        width: 1200,
+        height: 630,
+        alt: siteConfig.title,
+      }
+    ]
   },
+  // SEO: Twitter Card
   twitter: {
     card: siteConfig.twitterCard,
     site: siteConfig.social.twitter || undefined,
+    creator: siteConfig.social.twitter || undefined,
     title: siteConfig.title,
     description: siteConfig.description,
     images: [siteConfig.ogImage]
   },
+  // SEO: Icons
   icons: {
-    icon: '/favicon.png'
+    icon: '/favicon.png',
+    apple: '/favicon.png',
   },
-  alternates: {
-    types: {
-      'application/rss+xml': `${siteConfig.url}/feed.xml`
-    }
-  }
+  // SEO: Robots directives
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
+  // SEO: Verification (can be configured via env)
+  ...(process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION && {
+    verification: {
+      google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION,
+    },
+  }),
+  // SEO: Category
+  category: 'technology',
 };
 
 export default async function RootLayout({

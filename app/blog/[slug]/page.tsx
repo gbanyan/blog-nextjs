@@ -40,16 +40,30 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     ogImageUrl.searchParams.set('tags', post.tags.slice(0, 3).join(','));
   }
 
+  const postUrl = `${siteConfig.url}${post.url}`;
+
   return {
     title: post.title,
-    description: post.description || post.title,
+    description: post.description || post.custom_excerpt || post.title,
+    // SEO: Author and keywords
+    authors: post.authors?.map(author => ({ name: author })) || [{ name: siteConfig.author }],
+    keywords: post.tags,
+    // SEO: Canonical URL
+    alternates: {
+      canonical: postUrl,
+    },
+    // SEO: OpenGraph for articles
     openGraph: {
       title: post.title,
-      description: post.description || post.title,
+      description: post.description || post.custom_excerpt || post.title,
       type: 'article',
+      url: postUrl,
       publishedTime: post.published_at,
-      authors: post.authors,
+      modifiedTime: post.updated_at || post.published_at,
+      authors: post.authors || [siteConfig.author],
       tags: post.tags,
+      locale: siteConfig.defaultLocale,
+      siteName: siteConfig.title,
       images: [
         {
           url: ogImageUrl.toString(),
@@ -59,11 +73,18 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         },
       ],
     },
+    // SEO: Twitter Card
     twitter: {
       card: 'summary_large_image',
       title: post.title,
-      description: post.description || post.title,
+      description: post.description || post.custom_excerpt || post.title,
       images: [ogImageUrl.toString()],
+      creator: siteConfig.social.twitter || undefined,
+    },
+    // SEO: Robots
+    robots: {
+      index: true,
+      follow: true,
     },
   };
 }
@@ -97,11 +118,17 @@ export default async function BlogPostPage({ params }: Props) {
     ? `${siteConfig.url}${post.feature_image.replace('../assets', '/assets')}`
     : ogImageUrl.toString();
 
-  // BlogPosting Schema
+  // AEO: Calculate word count and reading time for structured data
+  const plainText = post.body.html.replace(/<[^>]*>/g, '');
+  const wordCount = plainText.split(/\s+/).filter(Boolean).length;
+  const readingTimeMinutes = Math.ceil(wordCount / 200); // ~200 words per minute
+
+  // BlogPosting Schema - Enhanced for AEO
   const blogPostingSchema = {
     '@context': 'https://schema.org',
     '@type': 'BlogPosting',
     headline: post.title,
+    alternativeHeadline: post.custom_excerpt || post.description,
     description: post.description || post.custom_excerpt || post.title,
     image: imageUrl,
     datePublished: post.published_at,
@@ -110,6 +137,7 @@ export default async function BlogPostPage({ params }: Props) {
       '@type': 'Person',
       name: post.authors?.[0] || siteConfig.author,
       url: siteConfig.url,
+      ...(siteConfig.aboutShort && { description: siteConfig.aboutShort }),
     },
     publisher: {
       '@type': 'Organization',
@@ -123,12 +151,25 @@ export default async function BlogPostPage({ params }: Props) {
       '@type': 'WebPage',
       '@id': postUrl,
     },
+    // AEO: Enhanced metadata for answer engines
+    wordCount: wordCount,
+    timeRequired: `PT${readingTimeMinutes}M`,
     ...(post.tags && post.tags.length > 0 && {
       keywords: post.tags.join(', '),
       articleSection: post.tags[0],
+      about: post.tags.map(tag => ({
+        '@type': 'Thing',
+        name: tag,
+      })),
     }),
     inLanguage: siteConfig.defaultLocale,
     url: postUrl,
+    isAccessibleForFree: true,
+    // AEO: Speakable content for voice assistants
+    speakable: {
+      '@type': 'SpeakableSpecification',
+      cssSelector: ['article h1', 'article h2', 'article p:first-of-type'],
+    },
   };
 
   // BreadcrumbList Schema

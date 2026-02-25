@@ -2,12 +2,23 @@ import { Link } from 'next-view-transitions';
 import type { Metadata } from 'next';
 import { FiTag, FiTrendingUp } from 'react-icons/fi';
 import { getAllTagsWithCount } from '@/lib/posts';
+import { siteConfig } from '@/lib/config';
 import { SectionDivider } from '@/components/section-divider';
 import { ScrollReveal } from '@/components/scroll-reveal';
 import { SidebarLayout } from '@/components/sidebar-layout';
+import { JsonLd } from '@/components/json-ld';
 
 export const metadata: Metadata = {
-  title: '標籤索引'
+  title: '標籤索引',
+  description: '瀏覽所有文章分類與標籤，探索不同主題的內容',
+  alternates: {
+    canonical: `${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/tags`,
+  },
+  openGraph: {
+    title: '標籤索引',
+    description: '瀏覽所有文章分類與標籤，探索不同主題的內容',
+    type: 'website',
+  },
 };
 
 export default function TagIndexPage() {
@@ -22,8 +33,35 @@ export default function TagIndexPage() {
     'from-violet-400/70 to-violet-200/40'
   ];
 
+  // CollectionPage Schema for tags index
+  const tagsIndexSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'CollectionPage',
+    name: '標籤索引',
+    description: '瀏覽所有文章分類與標籤，探索不同主題的內容',
+    url: `${siteConfig.url}/tags`,
+    inLanguage: siteConfig.defaultLocale,
+    isPartOf: {
+      '@type': 'WebSite',
+      name: siteConfig.title,
+      url: siteConfig.url,
+    },
+    numberOfItems: tags.length,
+    mainEntity: {
+      '@type': 'ItemList',
+      itemListElement: tags.slice(0, 20).map((t, index) => ({
+        '@type': 'ListItem',
+        position: index + 1,
+        name: t.tag,
+        url: `${siteConfig.url}/tags/${t.slug}`,
+      })),
+    },
+  };
+
   return (
-    <section className="space-y-6">
+    <>
+      <JsonLd data={tagsIndexSchema} />
+      <section className="space-y-6">
       <SidebarLayout>
         <SectionDivider>
           <ScrollReveal>
@@ -73,5 +111,6 @@ export default function TagIndexPage() {
         </div>
       </SidebarLayout>
     </section>
+    </>
   );
 }

@@ -30,9 +30,27 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const page = getPageBySlug(slug);
   if (!page) return {};
 
+  const pageUrl = `${siteConfig.url}${page.url}`;
+
   return {
     title: page.title,
-    description: page.description || page.title
+    description: page.description || page.title,
+    alternates: {
+      canonical: pageUrl,
+    },
+    openGraph: {
+      title: page.title,
+      description: page.description || page.title,
+      url: pageUrl,
+      type: 'website',
+      siteName: siteConfig.title,
+      locale: siteConfig.defaultLocale,
+    },
+    twitter: {
+      card: 'summary',
+      title: page.title,
+      description: page.description || page.title,
+    },
   };
 }
 
