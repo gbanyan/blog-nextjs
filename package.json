@@ -9,7 +9,9 @@
     "build": "npm run sync-assets && contentlayer2 build && next build && npx pagefind --site .next && rm -rf public/_pagefind && cp -r .next/pagefind public/_pagefind",
     "start": "next start",
     "lint": "next lint",
-    "contentlayer": "contentlayer build"
+    "contentlayer": "contentlayer build",
+    "dev:vinext": "concurrently \"contentlayer2 dev\" \"vite dev --port 3001\"",
+    "build:vinext": "npm run sync-assets && contentlayer2 build && vite build"
   },
   "keywords": [],
   "author": "",
@@ -54,12 +56,16 @@
     "@types/node": "^24.10.1",
     "@types/react": "^19.2.5",
     "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-rsc": "^0.5.21",
     "concurrently": "^9.2.1",
     "eslint": "^9.39.1",
     "eslint-config-next": "^16.0.3",
     "pagefind": "^1.4.0",
     "postcss": "^8.5.6",
+    "react-server-dom-webpack": "^19.2.4",
     "tailwindcss": "^4.1.18",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "vinext": "^0.0.12",
+    "vite": "^7.3.1"
   }
 }

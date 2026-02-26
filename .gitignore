@@ -5,6 +5,9 @@
 /.next
 /out
 
+# Vite/vinext build output
+/dist
+
 # Production env files
 .env
 .env.local
