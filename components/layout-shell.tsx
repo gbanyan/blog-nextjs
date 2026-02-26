@@ -10,9 +10,10 @@ interface LayoutShellProps {
   recentPosts?: { title: string; url: string }[];
 }
 
-export function LayoutShell({ children, recentPosts = [] }: LayoutShellProps) {
-  const navItems = buildNavItems();
+// Pre-compute at module level – allPages and siteConfig are static build-time data
+const navItems = buildNavItems();
 
+export function LayoutShell({ children, recentPosts = [] }: LayoutShellProps) {
   return (
     <div className="flex min-h-screen flex-col">
       <SiteHeader recentPosts={recentPosts} navItems={navItems} />
