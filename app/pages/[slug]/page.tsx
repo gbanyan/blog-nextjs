@@ -30,9 +30,41 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const page = getPageBySlug(slug);
   if (!page) return {};
 
+  const pageUrl = `${siteConfig.url}${page.url}`;
+
   return {
     title: page.title,
-    description: page.description || page.title
+    description: page.description || page.title,
+    alternates: {
+      canonical: pageUrl
+    },
+    openGraph: {
+      title: page.title,
+      description: page.description || page.title,
+      url: pageUrl,
+      type: 'website',
+      images: [
+        page.feature_image
+          ? {
+              url: `${siteConfig.url}${page.feature_image.replace('../assets', '/assets')}`,
+              alt: page.title
+            }
+          : {
+              url: `${siteConfig.url}${siteConfig.ogImage}`,
+              alt: page.title
+            }
+      ]
+    },
+    twitter: {
+      card: siteConfig.twitterCard,
+      title: page.title,
+      description: page.description || page.title,
+      images: [
+        page.feature_image
+          ? page.feature_image.replace('../assets', '/assets')
+          : siteConfig.ogImage
+      ]
+    }
   };
 }
 

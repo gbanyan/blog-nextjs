@@ -6,6 +6,8 @@ import { SidebarLayout } from '@/components/sidebar-layout';
 import { SectionDivider } from '@/components/section-divider';
 import { ScrollReveal } from '@/components/scroll-reveal';
 import { FiTag } from 'react-icons/fi';
+import { siteConfig } from '@/lib/config';
+import { JsonLd } from '@/components/json-ld';
 
 export function generateStaticParams() {
   const slugs = new Set<string>();
@@ -27,21 +29,30 @@ interface Props {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { tag: slug } = await params;
-  // Decode the slug since Next.js encodes non-ASCII characters in URLs
   const decodedSlug = decodeURIComponent(slug);
-  // Find original tag label by slug
   const tag = allPosts
     .flatMap((post) => post.tags ?? [])
     .find((t) => getTagSlug(t) === decodedSlug);
 
+  const tagUrl = `${siteConfig.url}/tags/${slug}`;
+
   return {
-    title: tag ? `標籤：${tag}` : '標籤'
+    title: tag ? `標籤：${tag}` : '標籤',
+    description: tag ? `查看標籤為「${tag}」的所有文章` : '標籤索引',
+    alternates: {
+      canonical: tagUrl
+    },
+    openGraph: {
+      title: tag ? `標籤：${tag}` : '標籤',
+      description: tag ? `查看標籤為「${tag}」的所有文章` : '標籤索引',
+      url: tagUrl,
+      type: 'website'
+    }
   };
 }
 
 export default async function TagPage({ params }: Props) {
   const { tag: slug } = await params;
-  // Decode the slug since Next.js encodes non-ASCII characters in URLs
   const decodedSlug = decodeURIComponent(slug);
 
   const posts = allPosts.filter(
@@ -51,8 +62,37 @@ export default async function TagPage({ params }: Props) {
   const tagLabel =
     posts[0]?.tags?.find((t) => getTagSlug(t) === decodedSlug) ?? decodedSlug;
 
+  // CollectionPage schema
+  const collectionPageSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'CollectionPage',
+    name: `標籤：${tagLabel}`,
+    description: `查看標籤為「${tagLabel}」的所有文章`,
+    url: `${siteConfig.url}/tags/${slug}`,
+    inLanguage: siteConfig.defaultLocale,
+    about: {
+      '@type': 'Thing',
+      name: tagLabel
+    },
+    mainEntity: {
+      '@type': 'Blog',
+      blogPost: posts.slice(0, 10).map((post) => ({
+        '@type': 'BlogPosting',
+        headline: post.title,
+        url: `${siteConfig.url}${post.url}`,
+        datePublished: post.published_at,
+        dateModified: post.updated_at || post.published_at,
+        author: {
+          '@type': 'Person',
+          name: siteConfig.author
+        }
+      }))
+    }
+  };
+
   return (
     <SidebarLayout>
+      <JsonLd data={collectionPageSchema} />
       <SectionDivider>
         <ScrollReveal>
           <div className="motion-card mb-8 rounded-2xl border border-white/40 bg-white/60 p-8 text-center shadow-lg backdrop-blur-md dark:border-white/10 dark:bg-slate-900/60">

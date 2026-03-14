@@ -3,10 +3,34 @@ import { fetchPublicRepos } from '@/lib/github';
 import { SidebarLayout } from '@/components/sidebar-layout';
 import { RepoCard } from '@/components/repo-card';
 
+import { siteConfig } from '@/lib/config';
+
 export const revalidate = 3600;
 
 export const metadata = {
   title: 'GitHub 專案',
+  description: '從我的 GitHub 帳號自動抓取公開的程式庫與專案。',
+  alternates: {
+    canonical: `${siteConfig.url}/projects`
+  },
+  openGraph: {
+    title: 'GitHub 專案',
+    description: '從我的 GitHub 帳號自動抓取公開的程式庫與專案。',
+    url: `${siteConfig.url}/projects`,
+    type: 'website',
+    images: [
+      {
+        url: `${siteConfig.url}${siteConfig.ogImage}`,
+        alt: 'GitHub 專案'
+      }
+    ]
+  },
+  twitter: {
+    card: siteConfig.twitterCard,
+    title: 'GitHub 專案',
+    description: '從我的 GitHub 帳號自動抓取公開的程式庫與專案。',
+    images: [siteConfig.ogImage]
+  }
 };
 
 export default async function ProjectsPage() {

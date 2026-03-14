@@ -32,22 +32,44 @@ export const metadata: Metadata = {
   },
   description: siteConfig.description,
   metadataBase: new URL(siteConfig.url),
+  creator: siteConfig.author,
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1
+    }
+  },
   openGraph: {
+    type: 'website',
     title: siteConfig.title,
     description: siteConfig.description,
     url: siteConfig.url,
     siteName: siteConfig.title,
-    images: [siteConfig.ogImage]
+    locale: siteConfig.defaultLocale,
+    images: [
+      {
+        url: siteConfig.ogImage,
+        width: 1200,
+        height: 630,
+        alt: siteConfig.title
+      }
+    ]
   },
   twitter: {
     card: siteConfig.twitterCard,
-    site: siteConfig.social.twitter || undefined,
+    creator: siteConfig.social.twitter || undefined,
     title: siteConfig.title,
     description: siteConfig.description,
     images: [siteConfig.ogImage]
   },
   icons: {
-    icon: '/favicon.png'
+    icon: '/favicon.png',
+    apple: '/favicon.png'
   },
   alternates: {
     types: {

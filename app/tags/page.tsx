@@ -5,9 +5,15 @@ import { getAllTagsWithCount } from '@/lib/posts';
 import { SectionDivider } from '@/components/section-divider';
 import { ScrollReveal } from '@/components/scroll-reveal';
 import { SidebarLayout } from '@/components/sidebar-layout';
+import { siteConfig } from '@/lib/config';
+import { JsonLd } from '@/components/json-ld';
 
 export const metadata: Metadata = {
-  title: '標籤索引'
+  title: '標籤索引',
+  description: '瀏覽所有標籤，探索不同主題的文章。',
+  alternates: {
+    canonical: `${siteConfig.url}/tags`
+  }
 };
 
 export default function TagIndexPage() {
@@ -22,8 +28,33 @@ export default function TagIndexPage() {
     'from-violet-400/70 to-violet-200/40'
   ];
 
+  // CollectionPage schema with ItemList
+  const collectionPageSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'CollectionPage',
+    name: '標籤索引',
+    description: '瀏覽所有標籤，探索不同主題的文章。',
+    url: `${siteConfig.url}/tags`,
+    inLanguage: siteConfig.defaultLocale,
+    mainEntity: {
+      '@type': 'ItemList',
+      itemListElement: tags.map((tag, index) => ({
+        '@type': 'ListItem',
+        position: index + 1,
+        name: tag.tag,
+        url: `${siteConfig.url}/tags/${tag.slug}`,
+        item: {
+          '@type': 'Thing',
+          name: tag.tag,
+          description: `${tag.count} 篇文章`
+        }
+      }))
+    }
+  };
+
   return (
     <section className="space-y-6">
+      <JsonLd data={collectionPageSchema} />
       <SidebarLayout>
         <SectionDivider>
           <ScrollReveal>

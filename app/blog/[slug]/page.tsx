@@ -43,12 +43,21 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: post.title,
     description: post.description || post.title,
+    authors: post.authors?.length ? post.authors.map(author => ({ name: author })) : [{ name: siteConfig.author }],
+    robots: {
+      index: true,
+      follow: true,
+      googleBot: {
+        index: true,
+        follow: true,
+      },
+    },
     openGraph: {
       title: post.title,
       description: post.description || post.title,
       type: 'article',
       publishedTime: post.published_at,
-      authors: post.authors,
+      authors: post.authors?.length ? post.authors : [siteConfig.author],
       tags: post.tags,
       images: [
         {
@@ -97,6 +106,11 @@ export default async function BlogPostPage({ params }: Props) {
     ? `${siteConfig.url}${post.feature_image.replace('../assets', '/assets')}`
     : ogImageUrl.toString();
 
+  // Estimate word count and reading time
+  const textContent = post.body?.raw || '';
+  const wordCount = textContent.split(/\s+/).filter(Boolean).length;
+  const readingTime = Math.ceil(wordCount / 200);
+
   // BlogPosting Schema
   const blogPostingSchema = {
     '@context': 'https://schema.org',
@@ -127,8 +141,28 @@ export default async function BlogPostPage({ params }: Props) {
       keywords: post.tags.join(', '),
       articleSection: post.tags[0],
     }),
+    ...(wordCount > 0 && {
+      wordCount: wordCount,
+      readingTime: `${readingTime} min read`,
+    }),
+    articleBody: textContent.slice(0, 5000),
     inLanguage: siteConfig.defaultLocale,
     url: postUrl,
+  };
+
+  // Speakable Schema for AEO
+  const speakableSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'SpeakableSpecification',
+    speakable: {
+      '@type': 'CSSSelector',
+      selector: [
+        'article[data-toc-content]',
+        '.prose h2',
+        '.prose h3',
+        '.prose p',
+      ],
+    },
   };
 
   // BreadcrumbList Schema
@@ -161,6 +195,7 @@ export default async function BlogPostPage({ params }: Props) {
     <>
       <JsonLd data={blogPostingSchema} />
       <JsonLd data={breadcrumbSchema} />
+      <JsonLd data={speakableSchema} />
       <ReadingProgress />
       <PostLayout hasToc={hasToc} contentKey={slug}>
         <div className="space-y-8">
