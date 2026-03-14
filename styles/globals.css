@@ -27,8 +27,8 @@
   --duration-260: 260ms;
 
   /* Custom box shadows */
-  --shadow-lifted: 0 12px 30px -14px rgba(15, 23, 42, 0.25);
-  --shadow-outline: 0 0 0 1px rgba(59, 130, 246, 0.25);
+  --shadow-lifted: 0 12px 30px -14px rgba(0, 0, 0, 0.35);
+  --shadow-outline: 0 0 0 1px rgba(139, 92, 246, 0.25);
 
   /* Custom keyframes */
   --animate-fade-in-up: fade-in-up 0.6s ease-out both;
@@ -1384,28 +1384,6 @@ body {
   }
 }
 
-@keyframes pageEnter {
-  from {
-    opacity: 0;
-    transform: translateY(16px) scale(0.99);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
-.page-transition {
-  opacity: 0;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .page-transition {
-    opacity: 1;
-    transform: none;
-  }
-}
-
 /* Scroll reveal animations - CSS only */
 .scroll-reveal {
   opacity: 0;
@@ -1765,14 +1743,14 @@ body {
 
 /* Code Syntax Highlighting Styles (rehype-pretty-code) */
 .prose pre {
-  @apply overflow-x-auto rounded-lg border border-slate-200 dark:border-slate-700;
+  @apply overflow-x-auto rounded-lg border border-slate-700 dark:border-slate-700;
   padding: 1rem 1.2rem;
   margin: 1.5rem 0;
-  background-color: #f8fafc;
+  background-color: #0f172a;
 }
 
 .dark .prose pre {
-  background-color: #0f172a;
+  background-color: #020617;
 }
 
 .prose pre > code {
@@ -1794,34 +1772,34 @@ body {
   width: 1.5rem;
   margin-right: 1.5rem;
   text-align: right;
-  color: #94a3b8;
+  color: #475569;
   user-select: none;
 }
 
 .dark .prose pre > code > [data-line]::before {
-  color: #475569;
+  color: #64748b;
 }
 
 /* Highlighted lines */
 .prose pre > code > [data-highlighted-line] {
-  background-color: rgba(59, 130, 246, 0.1);
-  border-left-color: rgb(59, 130, 246);
+  background-color: rgba(139, 92, 246, 0.15);
+  border-left-color: rgb(139, 92, 246);
 }
 
 .dark .prose pre > code > [data-highlighted-line] {
-  background-color: rgba(96, 165, 250, 0.15);
-  border-left-color: rgb(96, 165, 250);
+  background-color: rgba(196, 181, 253, 0.15);
+  border-left-color: rgb(196, 181, 253);
 }
 
 /* Inline code */
 .prose :not(pre) > code {
-  @apply rounded bg-slate-100 px-1.5 py-0.5 text-sm font-semibold text-slate-800 dark:bg-slate-800 dark:text-slate-200;
+  @apply rounded bg-slate-800 px-1.5 py-0.5 text-sm font-semibold text-slate-100 dark:bg-slate-700 dark:text-slate-100;
   white-space: nowrap;
 }
 
 /* Code title (if specified in markdown: ```js title="example.js") */
 .prose [data-rehype-pretty-code-title] {
-  @apply rounded-t-lg border border-b-0 border-slate-200 bg-slate-100 px-4 py-2 text-sm font-semibold text-slate-700 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300;
+  @apply rounded-t-lg border border-b-0 border-slate-700 bg-slate-800 px-4 py-2 text-sm font-semibold text-slate-100 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100;
   margin-bottom: 0;
 }
 

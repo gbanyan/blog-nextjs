@@ -70,3 +70,53 @@ Pushing only to `content/` (personal-blog) does NOT trigger deployment. The main
 ## Language
 
 The site's default locale is `zh-TW`. UI text, labels, and timestamps are in Traditional Chinese.
+
+## Design Context
+
+### Users
+
+- **Medical professionals & students**: Seek clinical insights, case studies, and medical education content
+- **General public**: Interested inpersonal reflections, medicine explainedaccessibly, and lifestyle content
+- **Tech enthusiasts & developers**: Drawn to HomeLab, technical tutorials, and developer environment content
+- **Patients & advocates**: Those with similar conditions (Usher syndrome, hearing/vision impairments) seeking understanding and community
+
+**Context**: Readers visit for deep, reflective content—often in quiet environments, seeking to learn, reflect, or connect with personal experiences. They value clarity, authenticity, and quality over speed.
+
+**Job to be done**: Gain meaningful knowledge, find resonance with personal experiences, understand complex topics (medical/technical) in approachable terms.
+
+### Brand Personality
+
+- **Voice**: Reflective, professional, and thoughtful—like a trusted physician who also happens to be a developer
+- **3-word personality**: Professional & refined, Thoughtful & reflective, Technical & practical, Approachable & human
+- **Emotional goals**: Calm & contemplative, Inspired & curious
+
+**Not**: Corporate, salesy, alarmist (like news sites), or overly technical/clinical.
+
+### Aesthetic Direction
+
+**Visual tone**: Warm & organic with academic & scholarly sensibility, combined with modern technical clarity
+
+**References**:
+- Medium (medium.com): Readability-focused, minimal distractions, clean typography
+- Personal tech blogs: Individual personality, character, and hands-on authenticity
+- Library aesthetic: Quiet, thoughtful, knowledge-rich environment
+
+**Anti-references** (explicitly avoid):
+- News sites: Cluttered, headline-focused, clickbait design
+- Social media feeds: Infinite scroll, attention-grabbing tactics, dopamine-driven design
+- Corporate/SaaS: Too polished, salesy, or uniform corporate branding
+- Dry technical docs: Lacking personality, purely functional
+
+**Theme**: Both light and dark modes equally important—light for daytime readability, dark for late-night focused reading. Accent colors should be warm (avoid reds/yellows which feel urgent/alerting).
+
+### Design Principles
+
+1. **Calm-first design**: Space, breathing room, and typography hierarchy should prioritize relaxed reading over visual stimulation. Avoid jarring transitions or animation that distracts from content.
+
+2. **Warm technicality**: Blend technical precision with human warmth—clean, efficient interfaces that don't feel cold or sterile. The HomeLab/developer content should feel hands-on, not just theoretical.
+
+3. **Academic elegance**: Typography and layout should honor the scholarly nature of medical writing and technical explanations—clear hierarchy, proper spacing, and readability first.
+
+4. **Inclusive accessibility**: Consider hearing/vision impairments (user has Usher syndrome): high contrast, readable text, motion sensitivity support, clear navigation, and no time-based content hiding.
+
+5. **Consistent rhythm**: Maintain consistent spacing, sizing, and interaction patterns across pages to create a predictable, trustworthy experience. Subtle interactions > flashy animations.

@@ -171,10 +171,10 @@ export function SearchModal({
                   key={action.id}
                   value={`${action.title} ${action.url}`}
                   onSelect={() => handleSelect(action.url)}
-                  className={cn(
+                   className={cn(
                     'flex cursor-pointer items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-slate-700 outline-none transition-colors',
                     'data-[selected=true]:bg-slate-100 data-[selected=true]:text-slate-900',
-                    'dark:text-slate-300 dark:data-[selected=true]:bg-slate-800 dark:data-[selected=true]:text-slate-100'
+                    'dark:text-slate-300 dark:data-[selected=true]:bg-slate-800 dark:data-[selected=true]:text-slate-100 dark:hover:text-accent'
                   )}
                 >
                   <span className="flex size-8 shrink-0 items-center justify-center rounded-md bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400">
@@ -191,11 +191,11 @@ export function SearchModal({
                     key={action.id}
                     value={`${action.title} ${action.url}`}
                     onSelect={() => handleSelect(action.url)}
-                    className={cn(
-                      'flex cursor-pointer items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-slate-700 outline-none transition-colors',
-                      'data-[selected=true]:bg-slate-100 data-[selected=true]:text-slate-900',
-                      'dark:text-slate-300 dark:data-[selected=true]:bg-slate-800 dark:data-[selected=true]:text-slate-100'
-                    )}
+                      className={cn(
+                        'flex cursor-pointer items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-slate-700 outline-none transition-colors',
+                        'data-[selected=true]:bg-slate-100 data-[selected=true]:text-slate-900',
+                        'dark:text-slate-300 dark:data-[selected=true]:bg-slate-800 dark:data-[selected=true]:text-slate-100 dark:hover:text-accent'
+                      )}
                   >
                     <span className="flex size-8 shrink-0 items-center justify-center rounded-md bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400">
                       {action.icon}
@@ -215,10 +215,10 @@ export function SearchModal({
                 key={`${result.url}-${i}`}
                 value={`${result.meta?.title ?? ''} ${result.url}`}
                 onSelect={() => handleSelect(result.url)}
-                className={cn(
+                  className={cn(
                   'flex cursor-pointer flex-col gap-0.5 rounded-lg px-3 py-2.5 outline-none transition-colors',
-                  'data-[selected=true]:bg-slate-100 dark:data-[selected=true]:bg-slate-800'
-                )}
+                  'data-[selected=true]:bg-slate-100 dark:data-[selected=true]:bg-slate-800 dark:hover:text-accent'
+                  )}
               >
                 <span className="truncate text-sm font-medium text-slate-900 dark:text-slate-100">
                   {result.meta?.title ?? result.url}
@@ -263,7 +263,7 @@ export function SearchButton({ onClick }: { onClick: () => void }) {
   return (
     <button
       onClick={onClick}
-      className="motion-link inline-flex h-9 shrink-0 items-center gap-2 rounded-full bg-slate-100 px-3 py-1.5 text-sm text-slate-600 transition hover:bg-slate-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700"
+              className="motion-link inline-flex h-9 shrink-0 items-center gap-2 rounded-full bg-slate-100 px-3 py-1.5 text-sm text-slate-600 transition-all duration-260 ease-snappy hover:-translate-y-0.5 hover:bg-slate-200 hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700 dark:hover:text-accent"
       aria-label="搜尋 (Cmd+K)"
     >
       <FiSearch className="h-3.5 w-3.5 shrink-0" />

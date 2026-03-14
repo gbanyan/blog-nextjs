@@ -7,7 +7,7 @@ import { ThemeProvider } from 'next-themes';
 import { Playfair_Display, LXGW_WenKai_TC } from 'next/font/google';
 import { JsonLd } from '@/components/json-ld';
 import { WebVitals } from '@/components/web-vitals';
-import { ViewTransitions } from 'next-view-transitions';
+import { ViewTransitionProvider } from '@/components/view-transition-provider';
 import NextTopLoader from 'nextjs-toploader';
 
 const playfair = Playfair_Display({
@@ -17,12 +17,12 @@ const playfair = Playfair_Display({
 });
 
 const lxgwWenKai = LXGW_WenKai_TC({
-  weight: ['400', '700'], // 只加载 Regular 和 Bold
+  weight: ['400', '700'],
   subsets: ['latin'],
   variable: '--font-serif-cn',
   display: 'swap',
   preload: true,
-  adjustFontFallback: false, // 中文字体不需要 fallback 调整，使用系统字体作为 fallback
+  adjustFontFallback: false,
 });
 
 export const metadata: Metadata = {
@@ -88,7 +88,6 @@ export default async function RootLayout({
     .slice(0, 5)
     .map((p) => ({ title: p.title, url: p.url }));
 
-  // WebSite Schema
   const websiteSchema = {
     '@context': 'https://schema.org',
     '@type': 'WebSite',
@@ -111,7 +110,6 @@ export default async function RootLayout({
     },
   };
 
-  // Organization Schema
   const organizationSchema = {
     '@context': 'https://schema.org',
     '@type': 'Organization',
@@ -125,28 +123,27 @@ export default async function RootLayout({
     ].filter(Boolean),
   };
 
+
+
   return (
-    <ViewTransitions>
-      <html lang={siteConfig.defaultLocale} suppressHydrationWarning className={`${playfair.variable} ${lxgwWenKai.variable}`}>
-        <head>
-          {/* Preconnect to Google Fonts for faster font loading */}
-          <link rel="preconnect" href="https://fonts.googleapis.com" />
-          <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        </head>
-        <body>
-          <NextTopLoader
-            color={theme.accent}
-            height={3}
-            showSpinner={false}
-            speed={200}
-            shadow={`0 0 10px ${theme.accent}, 0 0 5px ${theme.accent}`}
-          />
-          <JsonLd data={websiteSchema} />
-          <JsonLd data={organizationSchema} />
-          <style
-            // Set CSS variables for accent colors (light + dark variants)
-            dangerouslySetInnerHTML={{
-              __html: `
+    <html lang={siteConfig.defaultLocale} suppressHydrationWarning className={`${playfair.variable} ${lxgwWenKai.variable}`}>
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+      </head>
+      <body>
+        <NextTopLoader
+          color={theme.accent}
+          height={3}
+          showSpinner={false}
+          speed={200}
+          shadow={`0 0 10px ${theme.accent}, 0 0 5px ${theme.accent}`}
+        />
+        <JsonLd data={websiteSchema} />
+        <JsonLd data={organizationSchema} />
+        <style
+          dangerouslySetInnerHTML={{
+            __html: `
               :root {
                 --color-accent: ${theme.accent};
                 --color-accent-soft: ${theme.accentSoft};
@@ -155,13 +152,14 @@ export default async function RootLayout({
               }
             `
             }}
-          />
+           />
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-            <LayoutShell recentPosts={recentPosts}>{children}</LayoutShell>
+            <ViewTransitionProvider>
+              <LayoutShell recentPosts={recentPosts}>{children}</LayoutShell>
+            </ViewTransitionProvider>
           </ThemeProvider>
-          <WebVitals />
-        </body>
-      </html>
-    </ViewTransitions>
+        <WebVitals />
+      </body>
+    </html>
   );
 }

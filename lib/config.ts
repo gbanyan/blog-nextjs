@@ -27,12 +27,12 @@ export const siteConfig = {
     gitea: process.env.NEXT_PUBLIC_GITEA_URL || ''
   },
   theme: {
-    accent: process.env.NEXT_PUBLIC_COLOR_ACCENT || '#2563eb',
-    accentSoft: process.env.NEXT_PUBLIC_COLOR_ACCENT_SOFT || '#dbeafe',
+    accent: process.env.NEXT_PUBLIC_COLOR_ACCENT || '#7c3aed',
+    accentSoft: process.env.NEXT_PUBLIC_COLOR_ACCENT_SOFT || '#f3e8ff',
     accentTextLight:
-      process.env.NEXT_PUBLIC_COLOR_ACCENT_TEXT_LIGHT || '#1d4ed8',
+      process.env.NEXT_PUBLIC_COLOR_ACCENT_TEXT_LIGHT || '#6d28d9',
     accentTextDark:
-      process.env.NEXT_PUBLIC_COLOR_ACCENT_TEXT_DARK || '#93c5fd'
+      process.env.NEXT_PUBLIC_COLOR_ACCENT_TEXT_DARK || '#c4b5fd'
   },
   navIconOverrides: {
     titles: {

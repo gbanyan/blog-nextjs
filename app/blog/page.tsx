@@ -1,4 +1,4 @@
-import { Link } from 'next-view-transitions';
+import Link from 'next/link';
 import { getAllPostsSorted } from '@/lib/posts';
 import { PostListWithControls } from '@/components/post-list-with-controls';
 import { TimelineWrapper } from '@/components/timeline-wrapper';

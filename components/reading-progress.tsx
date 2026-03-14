@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { createPortal } from 'react-dom';
 
 function supportsScrollDrivenAnimations(): boolean {
@@ -29,24 +29,26 @@ export function ReadingProgress() {
     return () => mq.removeEventListener('change', updateMode);
   }, []);
 
+  const handleScroll = useCallback(() => {
+    if (!mounted || useScrollDriven) return;
+    
+    const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
+    const total = scrollHeight - clientHeight;
+    if (total <= 0) {
+      setProgress(0);
+      return;
+    }
+    const value = Math.min(100, Math.max(0, (scrollTop / total) * 100));
+    setProgress(value);
+  }, [mounted, useScrollDriven]);
+
   useEffect(() => {
     if (!mounted || useScrollDriven) return;
 
-    const handleScroll = () => {
-      const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
-      const total = scrollHeight - clientHeight;
-      if (total <= 0) {
-        setProgress(0);
-        return;
-      }
-      const value = Math.min(100, Math.max(0, (scrollTop / total) * 100));
-      setProgress(value);
-    };
-
     handleScroll();
-    window.addEventListener('scroll', handleScroll, { passive: true });
+    window.addEventListener('scroll', handleScroll, { passive: true, signal: AbortSignal.timeout(60000) });
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [mounted, useScrollDriven]);
+  }, [mounted, useScrollDriven, handleScroll]);
 
   if (!mounted) return null;
 
@@ -54,7 +56,7 @@ export function ReadingProgress() {
     <div className="pointer-events-none fixed inset-x-0 top-0 z-[1200] h-1.5 bg-transparent">
       <div className="relative h-1.5 w-full overflow-visible">
         {useScrollDriven ? (
-          <div className="reading-progress-bar-scroll-driven absolute inset-y-0 left-0 w-full origin-left rounded-full bg-gradient-to-r from-[rgba(124,58,237,0.9)] via-[rgba(167,139,250,0.9)] to-[rgba(14,165,233,0.8)] shadow-[0_0_12px_rgba(124,58,237,0.5)]">
+          <div aria-hidden="true" className="reading-progress-bar-scroll-driven absolute inset-y-0 left-0 w-full origin-left rounded-full bg-gradient-to-r from-[rgba(124,58,237,0.9)] via-[rgba(167,139,250,0.9)] to-[rgba(14,165,233,0.8)] shadow-[0_0_12px_rgba(124,58,237,0.5)]">
             <span
               className="absolute -right-2 top-1/2 h-3 w-3 -translate-y-1/2 rounded-full bg-white/80 blur-[1px] dark:bg-slate-900/80"
               aria-hidden="true"
@@ -62,11 +64,12 @@ export function ReadingProgress() {
           </div>
         ) : (
           <div
-            className="absolute inset-y-0 left-0 w-full origin-left rounded-full bg-gradient-to-r from-[rgba(124,58,237,0.9)] via-[rgba(167,139,250,0.9)] to-[rgba(14,165,233,0.8)] shadow-[0_0_12px_rgba(124,58,237,0.5)] transition-[transform,opacity] duration-300 ease-out"
+            className="absolute inset-y-0 left-0 w-full origin-left rounded-full bg-gradient-to-r from-[rgba(124,58,237,0.9)] via-[rgba(167,139,250,0.9)] to-[rgba(14,165,233,0.8)] shadow-[0_0_12px_rgba(124,58,237,0.5)] will-change-transform transition-[transform,opacity] duration-300 ease-out"
             style={{
               transform: `scaleX(${progress / 100})`,
               opacity: progress > 0 ? 1 : 0
             }}
+            aria-hidden="true"
           >
             <span
               className="absolute -right-2 top-1/2 h-3 w-3 -translate-y-1/2 rounded-full bg-white/80 blur-[1px] dark:bg-slate-900/80"

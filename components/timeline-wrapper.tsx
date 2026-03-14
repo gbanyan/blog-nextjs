@@ -1,4 +1,6 @@
-import { Children, ReactNode } from 'react';
+'use client';
+
+import {Children, ReactNode, useEffect, useState} from 'react';
 import clsx from 'clsx';
 
 interface TimelineWrapperProps {
@@ -7,7 +9,23 @@ interface TimelineWrapperProps {
 }
 
 export function TimelineWrapper({ children, className }: TimelineWrapperProps) {
+  const [mounted, setMounted] = useState(false);
+  
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   const items = Children.toArray(children);
+  
+  // Only render decorative elements after mount to prevent layout shift
+  if (!mounted) {
+    return (
+      <div className={clsx('relative pl-6 md:pl-8', className)}>
+        <div className="space-y-4">{items.map((child, index) => <div key={index} className="relative pl-5 sm:pl-8">{child}</div>)}</div>
+      </div>
+    );
+  }
+
   return (
     <div className={clsx('relative pl-6 md:pl-8', className)}>
       <span

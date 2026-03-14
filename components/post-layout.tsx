@@ -84,10 +84,10 @@ export function PostLayout({ children, hasToc = true, contentKey, wide }: { chil
     const tocButton = hasToc && mounted ? (
         <button
             onClick={() => setIsTocOpen(true)}
-            className={cn(
-                "fixed bottom-6 right-16 z-40 flex h-9 items-center gap-2 rounded-full border border-slate-200 bg-white/90 px-3 text-sm font-medium text-slate-600 shadow-md backdrop-blur-sm transition hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-900/90 dark:text-slate-300 dark:hover:bg-slate-800 lg:hidden",
+             className={cn(
+                "fixed bottom-6 right-16 z-40 flex h-9 items-center gap-2 rounded-full border border-slate-200 bg-white/90 px-3 text-sm font-medium text-slate-600 shadow-md backdrop-blur-sm transition hover:bg-slate-50 hover:text-accent dark:border-slate-700 dark:bg-slate-900/90 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-accent lg:hidden",
                 isTocOpen ? "opacity-0 pointer-events-none" : "opacity-100"
-            )}
+              )}
             aria-label="Open Table of Contents"
         >
             <FiList className="h-4 w-4" />
@@ -98,9 +98,9 @@ export function PostLayout({ children, hasToc = true, contentKey, wide }: { chil
     const desktopTocButton = hasToc && mounted ? (
         <button
             onClick={() => setIsDesktopTocOpen(!isDesktopTocOpen)}
-            className={cn(
-                "fixed bottom-6 right-16 z-40 hidden h-9 items-center gap-2 rounded-full border border-slate-200 bg-white/90 px-3 text-sm font-medium text-slate-600 shadow-md backdrop-blur-sm transition hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-900/90 dark:text-slate-300 dark:hover:bg-slate-800 lg:flex",
-            )}
+             className={cn(
+                "fixed bottom-6 right-16 z-40 hidden h-9 items-center gap-2 rounded-full border border-slate-200 bg-white/90 px-3 text-sm font-medium text-slate-600 shadow-md backdrop-blur-sm transition hover:bg-slate-50 hover:text-accent dark:border-slate-700 dark:bg-slate-900/90 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-accent lg:flex",
+              )}
             aria-label={isDesktopTocOpen ? "Close Table of Contents" : "Open Table of Contents"}
         >
             <FiList className="h-4 w-4" />

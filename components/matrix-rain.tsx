@@ -33,8 +33,11 @@ export function MatrixRain({
     if (!ctx) return;
 
     const resize = () => {
-      const dpr = Math.min(window.devicePixelRatio ?? 1, 2);
       const rect = canvas.getBoundingClientRect();
+      // Calculate DPR safely - use 1 as fallback
+      const dpr = (typeof window !== 'undefined' && 'devicePixelRatio' in window) 
+        ? Math.min(window.devicePixelRatio ?? 1, 2) 
+        : 1;
       canvas.width = rect.width * dpr;
       canvas.height = rect.height * dpr;
       ctx.scale(dpr, dpr);
@@ -42,8 +45,27 @@ export function MatrixRain({
       canvas.style.height = `${rect.height}px`;
     };
 
-    resize();
-    window.addEventListener('resize', resize);
+      const handleResize = () => {
+        // Use requestAnimationFrame for smoother resizing
+        requestAnimationFrame(() => {
+          const rect = canvasRef.current?.getBoundingClientRect();
+          if (rect) {
+            const dpr = (typeof window !== 'undefined' && 'devicePixelRatio' in window) 
+              ? Math.min(window.devicePixelRatio ?? 1, 2) 
+              : 1;
+            canvasRef.current!.width = rect.width * dpr;
+            canvasRef.current!.height = rect.height * dpr;
+            if (ctx) {
+              ctx.scale(dpr, dpr);
+            }
+            canvasRef.current!.style.width = `${rect.width}px`;
+            canvasRef.current!.style.height = `${rect.height}px`;
+          }
+        });
+      };
+
+      resize();
+      window.addEventListener('resize', handleResize, { passive: true, signal: AbortSignal.timeout(60000) });
 
     const fontSize = 14;
     const columns = Math.floor(canvas.getBoundingClientRect().width / fontSize);
@@ -105,7 +127,7 @@ export function MatrixRain({
 
     return () => {
       cancelAnimationFrame(animationId);
-      window.removeEventListener('resize', resize);
+      window.removeEventListener('resize', handleResize);
     };
   }, []);
 
@@ -119,6 +141,7 @@ export function MatrixRain({
         background: 'rgb(15, 23, 42)',
       }}
       aria-hidden="true"
+      role="img"
     />
   );
 }

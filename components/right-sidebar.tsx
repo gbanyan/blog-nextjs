@@ -1,6 +1,6 @@
 'use client';
 
-import { Link } from 'next-view-transitions';
+import Link from 'next/link';
 import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
 import { FaGithub, FaMastodon, FaLinkedin } from 'react-icons/fa';
@@ -13,6 +13,7 @@ import dynamic from 'next/dynamic';
 // Lazy load MastodonFeed - only load when sidebar is visible
 const MastodonFeed = dynamic(() => import('./mastodon-feed').then(mod => ({ default: mod.MastodonFeed })), {
   ssr: false,
+  loading: () => <div className="h-32 w-full animate-pulse rounded-xl bg-slate-100 dark:bg-slate-800" />,
 });
 
 /** Shared sidebar content for desktop aside and mobile drawer */
@@ -25,20 +26,42 @@ export function RightSidebarContent({ forceLoadFeed = false }: { forceLoadFeed?:
       setShouldLoadFeed(true);
       return;
     }
+    
     if (!feedRef.current) return;
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting) {
-          setShouldLoadFeed(true);
-          observer.disconnect();
-        }
-      },
-      { rootMargin: '100px' }
-    );
+    let observer: IntersectionObserver | null = null;
+    let cleanupRequested = false;
 
-    observer.observe(feedRef.current);
-    return () => observer.disconnect();
+    const setupObserver = () => {
+      if (cleanupRequested) return;
+      
+      const el = feedRef.current;
+      if (!el) return;
+      
+      observer = new IntersectionObserver(
+        (entries) => {
+          if (entries[0].isIntersecting) {
+            setShouldLoadFeed(true);
+            observer?.disconnect();
+          }
+        },
+        { rootMargin: '100px' }
+      );
+      
+      observer.observe(el);
+    };
+
+    // Defer observer setup for better initial performance
+    requestAnimationFrame(() => {
+      if (!cleanupRequested && feedRef.current) {
+        setupObserver();
+      }
+    });
+
+    return () => {
+      cleanupRequested = true;
+      observer?.disconnect();
+    };
   }, [forceLoadFeed]);
 
   const tags = getAllTagsWithCount().slice(0, 5);
@@ -106,7 +129,7 @@ export function RightSidebarContent({ forceLoadFeed = false }: { forceLoadFeed?:
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label={item.label}
-                    className="motion-link inline-flex h-8 w-8 items-center justify-center rounded-full bg-slate-100 text-slate-600 hover:-translate-y-0.5 hover:bg-accent-soft hover:text-accent dark:bg-slate-800 dark:text-slate-200"
+                    className="motion-link inline-flex h-8 w-8 items-center justify-center rounded-full bg-slate-100 text-slate-600 hover:-translate-y-0.5 hover:bg-accent-soft hover:text-accent dark:bg-slate-800 dark:text-slate-200 dark:hover:text-accent"
                   >
                     <item.icon className="h-4 w-4" />
                   </a>
@@ -144,7 +167,7 @@ export function RightSidebarContent({ forceLoadFeed = false }: { forceLoadFeed?:
                   <Link
                     key={tag}
                     href={`/tags/${slug}`}
-                    className={`${sizeClass} tag-chip rounded-full bg-accent-soft px-2 py-0.5 text-accent-textLight transition hover:bg-accent hover:text-white dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700`}
+                    className={`${sizeClass} tag-chip rounded-full bg-accent-soft px-2 py-0.5 text-accent-textLight transition hover:bg-accent hover:text-white dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700 dark:hover:text-white`}
                   >
                     {tag}
                   </Link>
@@ -158,7 +181,7 @@ export function RightSidebarContent({ forceLoadFeed = false }: { forceLoadFeed?:
               </span>
               <Link
                 href="/tags"
-                className="motion-link text-accent-textLight hover:text-accent dark:text-accent-textDark"
+                className="motion-link text-accent-textLight hover:text-accent dark:text-accent-textDark dark:hover:text-accent"
               >
                 前往
               </Link>

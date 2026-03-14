@@ -1,4 +1,4 @@
-import { Link } from 'next-view-transitions';
+import Link from 'next/link';
 import Image from 'next/image';
 import type { Post } from 'contentlayer2/generated';
 import { siteConfig } from '@/lib/config';
@@ -17,10 +17,10 @@ export function PostCard({ post, showTags = true }: PostCardProps) {
       : undefined;
 
   return (
-    <article className="motion-card group relative overflow-hidden rounded-xl border bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900">
-      <div className="pointer-events-none absolute inset-x-0 top-0 h-1 origin-left scale-x-0 bg-gradient-to-r from-blue-500 via-sky-400 to-indigo-500 opacity-80 transition-transform duration-300 ease-out group-hover:scale-x-100 dark:from-blue-400 dark:via-sky-300 dark:to-indigo-400" />
+    <article className="motion-card group relative overflow-hidden rounded-xl border bg-white shadow-sm transition-all duration-300 ease-snappy hover:-translate-y-1 hover:shadow-lg dark:border-slate-800 dark:bg-slate-900">
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-1 origin-left scale-x-0 bg-gradient-to-r from-[rgba(124,58,237,0.9)] via-[rgba(167,139,250,0.9)] to-[rgba(14,165,233,0.8)] opacity-80 transition-transform duration-300 ease-out group-hover:scale-x-100" />
       {cover && (
-        <div className="relative w-full bg-slate-100 dark:bg-slate-800">
+        <div className="relative w-full bg-slate-100 dark:bg-slate-800 overflow-hidden">
           <Image
             src={cover}
             alt={post.title}
@@ -30,7 +30,7 @@ export function PostCard({ post, showTags = true }: PostCardProps) {
             loading="lazy"
             placeholder="blur"
             blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
-            className="mx-auto max-h-60 w-full object-contain transition-transform duration-300 ease-out group-hover:scale-105"
+            className="mx-auto w-full object-cover transition-transform duration-300 ease-out group-hover:scale-105"
           />
         </div>
       )}
@@ -50,15 +50,15 @@ export function PostCard({ post, showTags = true }: PostCardProps) {
           )}
         </div>
         <h2 className="text-lg font-semibold leading-snug">
-          <Link
+           <Link
             href={post.url}
-            className="hover:text-blue-600 dark:hover:text-blue-400"
+            className="hover:text-accent dark:hover:text-accent"
           >
             {post.title}
           </Link>
         </h2>
         {post.description && (
-          <p className="line-clamp-3 text-sm text-slate-700 dark:text-slate-100">
+          <p className="line-clamp-3 text-sm text-slate-600 dark:text-slate-300">
             {post.description}
           </p>
         )}

@@ -1,4 +1,4 @@
-import { Link } from 'next-view-transitions';
+import Link from 'next/link';
 import { Post } from 'contentlayer2/generated';
 import { FiArrowLeft, FiArrowRight } from 'react-icons/fi';
 

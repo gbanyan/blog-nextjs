@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useCallback } from 'react';
 import clsx from 'clsx';
 
 interface ScrollRevealProps {
@@ -15,6 +15,20 @@ export function ScrollReveal({
   once = true
 }: ScrollRevealProps) {
   const ref = useRef<HTMLDivElement | null>(null);
+  const observerRef = useRef<IntersectionObserver | null>(null);
+
+  const handleObserver = useCallback((entries: IntersectionObserverEntry[]) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('is-visible');
+        if (once && observerRef.current) {
+          observerRef.current.unobserve(entry.target);
+        }
+      } else if (!once) {
+        entry.target.classList.remove('is-visible');
+      }
+    });
+  }, [once]);
 
   useEffect(() => {
     const el = ref.current;
@@ -26,35 +40,26 @@ export function ScrollReveal({
       return;
     }
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('is-visible');
-            if (once) observer.unobserve(entry.target);
-          } else if (!once) {
-            entry.target.classList.remove('is-visible');
-          }
-        });
-      },
+    observerRef.current = new IntersectionObserver(
+      handleObserver,
       {
         threshold: 0.05,
         rootMargin: '0px 0px -20% 0px'
       }
     );
 
-    observer.observe(el);
+    observerRef.current.observe(el);
 
-    // Fallback timeout for slow connections
-    const fallback = window.setTimeout(() => {
+    // Fallback timeout for slow connections - reduce to 300ms
+    const fallback = setTimeout(() => {
       el.classList.add('is-visible');
-    }, 500);
+    }, 300);
 
     return () => {
-      observer.disconnect();
-      window.clearTimeout(fallback);
+      observerRef.current?.disconnect();
+      clearTimeout(fallback);
     };
-  }, [once]);
+  }, [handleObserver, once]);
 
   return (
     <div

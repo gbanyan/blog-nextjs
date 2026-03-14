@@ -1,4 +1,4 @@
-import { Link } from 'next-view-transitions';
+import Link from 'next/link';
 import type { Metadata } from 'next';
 import { FiTag, FiTrendingUp } from 'react-icons/fi';
 import { getAllTagsWithCount } from '@/lib/posts';
@@ -87,7 +87,7 @@ export default function TagIndexPage() {
               >
                 <span className={`mb-3 block h-1.5 w-16 rounded-full bg-gradient-to-r ${color}`} aria-hidden="true" />
                 <div className="flex items-center justify-between">
-                  <h2 className="type-subtitle font-semibold text-slate-900 group-hover:text-blue-600 dark:text-slate-50 dark:group-hover:text-blue-400">
+                     <h2 className="type-subtitle font-semibold text-slate-900 group-hover:text-accent dark:text-slate-50 dark:group-hover:text-accent">
                     {tag}
                   </h2>
                   <span className="type-small text-slate-600 dark:text-slate-300">

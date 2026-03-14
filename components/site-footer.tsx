@@ -66,7 +66,7 @@ export function SiteFooter() {
               target="_blank"
               rel="noopener noreferrer"
               aria-label={item.label}
-              className="text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-100"
+               className="text-slate-500 hover:text-accent dark:text-slate-400 dark:hover:text-accent"
             >
               <item.icon className="h-4 w-4" />
             </a>

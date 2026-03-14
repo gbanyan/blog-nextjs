@@ -19,7 +19,7 @@ import {
   FiChevronDown,
   FiChevronRight
 } from 'react-icons/fi';
-import { Link } from 'next-view-transitions';
+import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
 export type IconKey =
@@ -125,10 +125,10 @@ export function NavMenu({ items }: NavMenuProps) {
   const renderDesktopChild = (item: NavLinkItem) => {
     const Icon = ICON_MAP[item.iconKey] ?? FiFile;
     return item.href ? (
-      <Link
+        <Link
         key={item.key}
         href={item.href}
-        className="motion-link inline-flex items-center gap-2 rounded-xl px-3 py-2 text-sm text-slate-600 hover:bg-slate-100 hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40 dark:text-slate-200 dark:hover:bg-slate-800"
+        className="motion-link inline-flex items-center gap-2 rounded-xl px-3 py-2 text-sm text-slate-600 hover:bg-slate-100 hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40 dark:text-slate-200 dark:hover:bg-slate-800 dark:hover:text-accent"
         onClick={close}
       >
         <Icon className="h-4 w-4 shrink-0 text-slate-400" />
@@ -147,7 +147,7 @@ export function NavMenu({ items }: NavMenuProps) {
         <div key={item.key} className="flex flex-col">
           <button
             onClick={() => toggleMobileItem(item.key)}
-            className="flex w-full items-center justify-between rounded-xl px-4 py-3 text-base font-medium text-slate-700 transition-colors active:bg-slate-100 dark:text-slate-200 dark:active:bg-slate-800"
+            className="flex w-full items-center justify-between rounded-xl px-4 py-3 text-base font-medium text-slate-700 transition-colors active:bg-slate-100 dark:text-slate-200 dark:active:bg-slate-800 dark:hover:text-accent"
           >
             <div className="flex items-center gap-3">
               <Icon className="h-5 w-5 shrink-0 text-slate-400" />
@@ -172,10 +172,10 @@ export function NavMenu({ items }: NavMenuProps) {
     }
 
     return item.href ? (
-      <Link
+        <Link
         key={item.key}
         href={item.href}
-        className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-base font-medium text-slate-700 transition-colors active:bg-slate-100 dark:text-slate-200 dark:active:bg-slate-800"
+        className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-base font-medium text-slate-700 transition-colors active:bg-slate-100 dark:text-slate-200 dark:active:bg-slate-800 dark:hover:text-accent"
         onClick={close}
       >
         <Icon className="h-5 w-5 shrink-0 text-slate-400" />
@@ -189,7 +189,7 @@ export function NavMenu({ items }: NavMenuProps) {
       {/* Mobile Menu Trigger */}
       <button
         type="button"
-        className="relative z-50 inline-flex h-10 w-10 items-center justify-center rounded-full text-slate-600 transition-colors hover:bg-slate-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40 dark:text-slate-200 dark:hover:bg-slate-800 sm:hidden"
+          className="relative z-50 inline-flex h-10 w-10 items-center justify-center rounded-full text-slate-600 transition-colors hover:bg-slate-100 hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40 dark:text-slate-200 dark:hover:bg-slate-800 dark:hover:text-accent sm:hidden"
         aria-label={open ? '關閉選單' : '開啟選單'}
         aria-expanded={open}
         onClick={toggle}
@@ -220,7 +220,7 @@ export function NavMenu({ items }: NavMenuProps) {
           <div className="flex items-center justify-end px-4 py-3">
             <button
               type="button"
-              className="inline-flex h-10 w-10 items-center justify-center rounded-full text-slate-600 transition-colors hover:bg-slate-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40 dark:text-slate-200 dark:hover:bg-slate-800"
+              className="inline-flex h-10 w-10 items-center justify-center rounded-full text-slate-600 transition-colors hover:bg-slate-100 hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40 dark:text-slate-200 dark:hover:bg-slate-800 dark:hover:text-accent"
               onClick={close}
               aria-label="Close menu"
             >
@@ -259,15 +259,15 @@ export function NavMenu({ items }: NavMenuProps) {
                 onFocus={() => openDropdown(item.key)}
                 onBlur={handleBlur}
               >
-                <button
+                  <button
                   type="button"
-                  className="motion-link type-nav inline-flex shrink-0 items-center gap-1.5 rounded-full px-3 py-1 text-slate-600 hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40 dark:text-slate-200"
-                  aria-haspopup="menu"
+                  className="motion-link type-nav inline-flex shrink-0 items-center gap-1.5 rounded-full px-3 py-1 text-slate-600 hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40 dark:text-slate-200 dark:hover:text-accent"
+                   aria-haspopup="menu"
                   aria-expanded={isOpen}
                 >
-                  <Icon className="h-3.5 w-3.5 shrink-0 text-slate-400 transition group-hover:text-accent" />
+                  <Icon className="h-3.5 w-3.5 shrink-0 text-slate-400 transition group-hover:text-accent dark:group-hover:text-accent" />
                   <span className="whitespace-nowrap">{item.label}</span>
-                  <FiChevronDown className="h-3 w-3 shrink-0 text-slate-400 transition group-hover:text-accent" />
+                  <FiChevronDown className="h-3 w-3 shrink-0 text-slate-400 transition group-hover:text-accent dark:group-hover:text-accent" />
                 </button>
 
                 <div
@@ -290,7 +290,7 @@ export function NavMenu({ items }: NavMenuProps) {
             <Link
               key={item.key}
               href={item.href}
-              className="motion-link type-nav group relative inline-flex shrink-0 items-center gap-1.5 rounded-full px-3 py-1 text-slate-600 hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40 dark:text-slate-200"
+               className="motion-link type-nav group relative inline-flex shrink-0 items-center gap-1.5 rounded-full px-3 py-1 text-slate-600 hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40 dark:text-slate-200 dark:hover:text-accent"
               onClick={close}
             >
               <Icon className="h-3.5 w-3.5 shrink-0 text-slate-400 transition group-hover:text-accent" />

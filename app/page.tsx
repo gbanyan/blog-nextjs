@@ -1,4 +1,4 @@
-import { Link } from 'next-view-transitions';
+import Link from 'next/link';
 import { getAllPostsSorted } from '@/lib/posts';
 import { siteConfig } from '@/lib/config';
 import { PostListItem } from '@/components/post-list-item';
@@ -51,7 +51,7 @@ export default function HomePage() {
             <Link
               href="/blog"
               prefetch={true}
-              className="text-xs text-blue-600 hover:underline dark:text-blue-400"
+              className="text-xs text-accent hover:underline"
             >
               所有文章 →
             </Link>

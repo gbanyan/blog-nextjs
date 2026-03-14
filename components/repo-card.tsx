@@ -1,4 +1,4 @@
-import { Link } from 'next-view-transitions';
+import Link from 'next/link';
 import { FiExternalLink } from 'react-icons/fi';
 import type { RepoSummary } from '@/lib/github';
 import { getLanguageColor } from '@/lib/github-lang-colors';
@@ -18,7 +18,7 @@ export function RepoCard({ repo, animationDelay = 0 }: RepoCardProps) {
         animationDelay > 0 ? { animationDelay: `${animationDelay}ms` } : undefined
       }
     >
-      <div className="pointer-events-none absolute inset-x-0 top-0 h-0.5 origin-left scale-x-0 bg-gradient-to-r from-blue-500 via-sky-400 to-indigo-500 opacity-80 transition-transform duration-300 ease-out group-hover:scale-x-100 dark:from-blue-400 dark:via-sky-300 dark:to-indigo-400" />
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-0.5 origin-left scale-x-0 bg-gradient-to-r from-[rgba(124,58,237,0.9)] via-[rgba(167,139,250,0.9)] to-[rgba(14,165,233,0.8)] opacity-80 transition-transform duration-300 ease-out group-hover:scale-x-100" />
       <div className="flex items-start justify-between gap-2">
         <Link
           href={repo.htmlUrl}
@@ -38,9 +38,9 @@ export function RepoCard({ repo, animationDelay = 0 }: RepoCardProps) {
       </div>
 
       {repo.description && (
-        <p className="mt-2 flex-1 line-clamp-2 text-sm text-slate-600 group-hover:text-slate-800 dark:text-slate-300 dark:group-hover:text-slate-100">
-          {repo.description}
-        </p>
+           <p className="mt-2 flex-1 line-clamp-2 text-sm text-slate-600 dark:text-slate-300">
+             {repo.description}
+           </p>
       )}
 
       <div className="mt-3 flex items-center justify-between gap-2 text-xs text-slate-500 dark:text-slate-400">
