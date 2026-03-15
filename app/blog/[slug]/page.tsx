@@ -145,8 +145,6 @@ export default async function BlogPostPage({ params }: Props) {
       wordCount: wordCount,
       readingTime: `${readingTime} min read`,
     }),
-    articleBody: textContent.slice(0, 5000),
-    inLanguage: siteConfig.defaultLocale,
     url: postUrl,
   };
 
