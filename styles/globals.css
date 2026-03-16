@@ -28,7 +28,7 @@
 
   /* Custom box shadows */
   --shadow-lifted: 0 12px 30px -14px rgba(0, 0, 0, 0.35);
-  --shadow-outline: 0 0 0 1px rgba(139, 92, 246, 0.25);
+  --shadow-outline: 0 0 0 1px color-mix(in oklch, var(--color-accent) 25%, transparent);
 
   /* Custom keyframes */
   --animate-fade-in-up: fade-in-up 0.6s ease-out both;
@@ -1332,22 +1332,19 @@
   --font-weight-semibold: 600;
   --font-system-sans: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'SF Pro Display', 'PingFang TC', 'PingFang SC', 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Segoe UI Variable Text', 'Segoe UI', 'Microsoft JhengHei', 'Microsoft YaHei', 'Noto Sans TC', 'Noto Sans SC', 'Noto Sans CJK TC', 'Noto Sans CJK SC', 'Source Han Sans TC', 'Source Han Sans SC', 'Roboto', 'Ubuntu', 'Cantarell', 'Inter', 'Helvetica Neue', Arial, sans-serif;
 
-  /* Ink + accent palette */
-  --color-ink-strong: #0f172a;
-  --color-ink-body: #1f2937;
-  --color-ink-muted: #475569;
-  --color-accent: #7c3aed;
-  --color-accent-soft: #f4f0ff;
+  /* Ink palette — warm-tinted neutrals */
+  --color-ink-strong: #1c1917;
+  --color-ink-body: #292524;
+  --color-ink-muted: #57534e;
 
   font-size: clamp(15px, 0.65vw + 11px, 19px);
 }
 
 .dark {
-  --color-ink-strong: #e2e8f0;
-  --color-ink-body: #cbd5e1;
-  --color-ink-muted: #94a3b8;
-  --color-accent: #a78bfa;
-  --color-accent-soft: #1f1a3d;
+  /* Ink palette — warm-tinted neutrals (dark) */
+  --color-ink-strong: #e7e5e4;
+  --color-ink-body: #d6d3d1;
+  --color-ink-muted: #a8a29e;
 }
 
 @media (min-width: 2560px) {
@@ -1357,7 +1354,7 @@
 }
 
 body {
-  @apply bg-white text-gray-900 transition-colors duration-200 ease-snappy dark:bg-gray-950 dark:text-gray-100;
+  @apply bg-stone-50 text-stone-900 transition-colors duration-200 ease-snappy dark:bg-stone-950 dark:text-stone-100;
   font-size: 1rem;
   line-height: var(--line-height-body);
   font-family: var(--font-system-sans);

@@ -18,7 +18,7 @@ export function RepoCard({ repo, animationDelay = 0 }: RepoCardProps) {
         animationDelay > 0 ? { animationDelay: `${animationDelay}ms` } : undefined
       }
     >
-      <div className="pointer-events-none absolute inset-x-0 top-0 h-0.5 origin-left scale-x-0 bg-gradient-to-r from-[rgba(124,58,237,0.9)] via-[rgba(167,139,250,0.9)] to-[rgba(14,165,233,0.8)] opacity-80 transition-transform duration-300 ease-out group-hover:scale-x-100" />
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-0.5 origin-left scale-x-0 bg-accent opacity-80 transition-transform duration-300 ease-out group-hover:scale-x-100" />
       <div className="flex items-start justify-between gap-2">
         <Link
           href={repo.htmlUrl}

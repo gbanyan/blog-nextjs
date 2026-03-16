@@ -18,7 +18,7 @@ export function PostCard({ post, showTags = true }: PostCardProps) {
 
   return (
     <article className="motion-card group relative overflow-hidden rounded-xl border bg-white shadow-sm transition-all duration-300 ease-snappy hover:-translate-y-1 hover:shadow-lg dark:border-slate-800 dark:bg-slate-900">
-      <div className="pointer-events-none absolute inset-x-0 top-0 h-1 origin-left scale-x-0 bg-gradient-to-r from-[rgba(124,58,237,0.9)] via-[rgba(167,139,250,0.9)] to-[rgba(14,165,233,0.8)] opacity-80 transition-transform duration-300 ease-out group-hover:scale-x-100" />
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-1 origin-left scale-x-0 bg-accent opacity-80 transition-transform duration-300 ease-out group-hover:scale-x-100" />
       {cover && (
         <div className="relative w-full bg-slate-100 dark:bg-slate-800 overflow-hidden">
           <Image

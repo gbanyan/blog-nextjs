@@ -21,11 +21,9 @@ export default function TagIndexPage() {
   const topTags = tags.slice(0, 3);
 
   const colorClasses = [
-    'from-rose-400/70 to-rose-200/40',
-    'from-emerald-400/70 to-emerald-200/40',
-    'from-sky-400/70 to-sky-200/40',
-    'from-amber-400/70 to-amber-200/40',
-    'from-violet-400/70 to-violet-200/40'
+    'from-accent/60 to-accent/20',
+    'from-accent/50 to-accent/15',
+    'from-accent/40 to-accent/10',
   ];
 
   // CollectionPage schema with ItemList
