@@ -3,7 +3,7 @@ import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
 import { allPosts } from 'contentlayer2/generated';
-import { getPostBySlug, getRelatedPosts, getPostNeighbors } from '@/lib/posts';
+import { getPostBySlug, getRelatedPosts, getPostNeighbors, getTagSlug } from '@/lib/posts';
 import { siteConfig } from '@/lib/config';
 import { ReadingProgress } from '@/components/reading-progress';
 import { ScrollReveal } from '@/components/scroll-reveal';
@@ -217,9 +217,7 @@ export default async function BlogPostPage({ params }: Props) {
                     {post.tags.map((t) => (
                       <Link
                         key={t}
-                        href={`/tags/${encodeURIComponent(
-                          t.toLowerCase().replace(/\s+/g, '-')
-                        )}`}
+                        href={`/tags/${encodeURIComponent(getTagSlug(t))}`}
                         className="tag-chip rounded-full bg-accent-soft px-3 py-1 text-sm text-accent-textLight dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700 dark:hover:text-white"
                       >
                         #{t}

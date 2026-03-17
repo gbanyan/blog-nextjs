@@ -50,14 +50,19 @@ Ask the user if they want to preview with `npm run dev` before publishing.
 
 ## Step 5: Publish
 
-Execute the two-step deployment:
+**IMPORTANT**: The `.gitmodules` URL for `content/` points to GitHub. The CI/CD server clones the submodule from that URL, so the content submodule **must be pushed to GitHub first** before pushing the main repo. Otherwise the server will check out stale content and posts will disappear from the site.
+
+Execute the deployment in order:
 
 ```bash
-# 1. Commit and push content submodule
-git -C content add . && git -C content commit -m "Add new post: <title>" && git -C content push
+# 1. Commit content submodule
+git -C content add . && git -C content commit -m "Add new post: <title>"
 
-# 2. Update main repo submodule pointer and push (triggers CI/CD)
-git add content && git commit -m "Update content submodule" && git push
+# 2. Push content submodule to ALL remotes (GitHub first — CI/CD depends on it)
+git -C content push github main && git -C content push origin main
+
+# 3. Update main repo submodule pointer, commit, and push to both remotes
+git add content && git commit -m "Update content submodule" && git push origin main && git push github main
 ```
 
-Confirm both pushes succeeded. The CI/CD pipeline on git.gbanyan.net will handle deployment automatically (and crontab mirrors to gitea.gbanyan.net).
+Confirm all pushes succeeded. The CI/CD pipeline on git.gbanyan.net will handle deployment automatically (and crontab mirrors to gitea.gbanyan.net).

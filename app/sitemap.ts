@@ -1,5 +1,6 @@
 import { MetadataRoute } from 'next';
 import { allPosts, allPages } from 'contentlayer2/generated';
+import { getTagSlug } from '@/lib/posts';
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
@@ -58,7 +59,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   );
 
   const tagPages = allTags.map((tag) => ({
-    url: `${siteUrl}/tags/${encodeURIComponent(tag.toLowerCase().replace(/\s+/g, '-'))}`,
+    url: `${siteUrl}/tags/${encodeURIComponent(getTagSlug(tag))}`,
     lastModified: new Date(),
     changeFrequency: 'weekly' as const,
     priority: 0.5,

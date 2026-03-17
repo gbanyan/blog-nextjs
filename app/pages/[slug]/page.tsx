@@ -3,7 +3,7 @@ import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
 import { allPages } from 'contentlayer2/generated';
-import { getPageBySlug } from '@/lib/posts';
+import { getPageBySlug, getTagSlug } from '@/lib/posts';
 import { siteConfig } from '@/lib/config';
 import { ReadingProgress } from '@/components/reading-progress';
 import { PostLayout } from '@/components/post-layout';
@@ -130,9 +130,7 @@ export default async function StaticPage({ params }: Props) {
                     {page.tags.map((t) => (
                       <Link
                         key={t}
-                        href={`/tags/${encodeURIComponent(
-                          t.toLowerCase().replace(/\s+/g, '-')
-                        )}`}
+                        href={`/tags/${encodeURIComponent(getTagSlug(t))}`}
                         className="tag-chip rounded-full bg-accent-soft px-3 py-1 text-sm text-accent-textLight dark:bg-slate-800 dark:text-slate-100"
                       >
                         #{t}
