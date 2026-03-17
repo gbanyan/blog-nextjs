@@ -1,6 +1,17 @@
 import { ImageResponse } from '@vercel/og';
 import { NextRequest } from 'next/server';
 
+const fontCache = new Map<string, ArrayBuffer>();
+
+async function loadFont(url: string): Promise<ArrayBuffer> {
+  const cached = fontCache.get(url);
+  if (cached) return cached;
+  const res = await fetch(url);
+  const data = await res.arrayBuffer();
+  fontCache.set(url, data);
+  return data;
+}
+
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
@@ -9,6 +20,14 @@ export async function GET(request: NextRequest) {
     const title = searchParams.get('title') || 'Blog Post';
     const description = searchParams.get('description') || '';
     const tags = searchParams.get('tags')?.split(',').slice(0, 3) || [];
+
+    // Load CJK font for Chinese text rendering
+    const fontData = await loadFont(
+      'https://cdn.jsdelivr.net/fontsource/fonts/noto-sans-tc@latest/chinese-traditional-400-normal.woff'
+    );
+    const fontBoldData = await loadFont(
+      'https://cdn.jsdelivr.net/fontsource/fonts/noto-sans-tc@latest/chinese-traditional-700-normal.woff'
+    );
 
     const imageResponse = new ImageResponse(
       (
@@ -20,6 +39,7 @@ export async function GET(request: NextRequest) {
             flexDirection: 'column',
             alignItems: 'flex-start',
             justifyContent: 'space-between',
+            fontFamily: '"Noto Sans TC", sans-serif',
             backgroundColor: '#0f172a',
             backgroundImage: 'radial-gradient(circle at 25px 25px, #1e293b 2%, transparent 0%), radial-gradient(circle at 75px 75px, #1e293b 2%, transparent 0%)',
             backgroundSize: '100px 100px',
@@ -155,6 +175,10 @@ export async function GET(request: NextRequest) {
       {
         width: 1200,
         height: 630,
+        fonts: [
+          { name: 'Noto Sans TC', data: fontData, weight: 400 as const, style: 'normal' as const },
+          { name: 'Noto Sans TC', data: fontBoldData, weight: 700 as const, style: 'normal' as const },
+        ],
       }
     );
 

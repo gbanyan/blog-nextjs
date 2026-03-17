@@ -40,6 +40,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     ogImageUrl.searchParams.set('tags', post.tags.slice(0, 3).join(','));
   }
 
+  // Prefer post's feature_image for social cards; fall back to dynamic OG
+  const imageUrl = post.feature_image
+    ? `${siteConfig.url}${post.feature_image.replace('../assets', '/assets')}`
+    : ogImageUrl.toString();
+
   return {
     title: post.title,
     description: post.description || post.title,
@@ -61,7 +66,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       tags: post.tags,
       images: [
         {
-          url: ogImageUrl.toString(),
+          url: imageUrl,
           width: 1200,
           height: 630,
           alt: post.title,
@@ -72,7 +77,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       card: 'summary_large_image',
       title: post.title,
       description: post.description || post.title,
-      images: [ogImageUrl.toString()],
+      images: [imageUrl],
     },
   };
 }
