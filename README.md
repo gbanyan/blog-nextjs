@@ -241,6 +241,15 @@ Configuration in `app/blog/[slug]/page.tsx`:
    NEXT_PUBLIC_EMAIL_CONTACT="you@example.com"
    NEXT_PUBLIC_MASTODON_URL="https://your.instance/@yourhandle"
    NEXT_PUBLIC_GITEA_URL="https://gitea.example/yourname"
+
+   # Giscus comments (optional)
+   NEXT_PUBLIC_GISCUS_REPO="owner/repo"
+   NEXT_PUBLIC_GISCUS_REPO_ID="R_kgDOxxxxxx"
+   NEXT_PUBLIC_GISCUS_CATEGORY="General"
+   NEXT_PUBLIC_GISCUS_CATEGORY_ID="DIC_kwDOxxxxxx4Cxxxx"
+   NEXT_PUBLIC_GISCUS_MAPPING="pathname"
+   NEXT_PUBLIC_GISCUS_THEME_LIGHT="light"
+   NEXT_PUBLIC_GISCUS_THEME_DARK="dark_dimmed"
    ```
 
    Notes:
@@ -250,8 +259,10 @@ Configuration in `app/blog/[slug]/page.tsx`:
      ```bash
      echo -n 'your-email@example.com' | md5    # macOS
      # or
-     echo -n 'your-email@example.com' | md5sum | cut -d' ' -f1    # Linux
-```
+      echo -n 'your-email@example.com' | md5sum | cut -d' ' -f1    # Linux
+      ```
+
+   - For Giscus values (`repoId`, `categoryId`), use the configuration wizard at <https://giscus.app/>.
 
 5. **Mirror markdown assets**
 

@@ -14,6 +14,7 @@ import { SectionDivider } from '@/components/section-divider';
 import { FooterCue } from '@/components/footer-cue';
 import { JsonLd } from '@/components/json-ld';
 import { MermaidRenderer } from '@/components/mermaid-renderer';
+import { GiscusComments } from '@/components/giscus-comments';
 
 export function generateStaticParams() {
   const params = allPosts.map((post) => ({
@@ -295,6 +296,12 @@ export default async function BlogPostPage({ params }: Props) {
               </ScrollReveal>
             </SectionDivider>
             )}
+
+            <SectionDivider>
+              <ScrollReveal>
+                <GiscusComments />
+              </ScrollReveal>
+            </SectionDivider>
           </div>
         </div>
       </PostLayout>
