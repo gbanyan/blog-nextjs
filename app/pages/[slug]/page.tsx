@@ -13,6 +13,7 @@ import { JsonLd } from '@/components/json-ld';
 import { DevEnvDeviceHero } from '@/components/dev-env-device-hero';
 import { HomeLabDeviceHero } from '@/components/homelab-device-hero';
 import { MermaidRenderer } from '@/components/mermaid-renderer';
+import { MarkdownBody } from '@/components/markdown-body';
 
 export function generateStaticParams() {
   const params = allPages.map((page) => ({
@@ -169,7 +170,9 @@ export default async function StaticPage({ params }: Props) {
                       </div>
                     )
                   )}
-                  <div dangerouslySetInnerHTML={{ __html: page.body.html }} />
+                  <div>
+                    <MarkdownBody html={page.body.html} />
+                  </div>
                   <MermaidRenderer />
                 </article>
               </ScrollReveal>

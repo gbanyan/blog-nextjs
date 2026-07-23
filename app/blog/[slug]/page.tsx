@@ -14,6 +14,7 @@ import { SectionDivider } from '@/components/section-divider';
 import { FooterCue } from '@/components/footer-cue';
 import { JsonLd } from '@/components/json-ld';
 import { MermaidRenderer } from '@/components/mermaid-renderer';
+import { MarkdownBody } from '@/components/markdown-body';
 import { GiscusComments } from '@/components/giscus-comments';
 
 export function generateStaticParams() {
@@ -254,7 +255,9 @@ export default async function BlogPostPage({ params }: Props) {
                     />
                   </div>
                 )}
-                <div dangerouslySetInnerHTML={{ __html: post.body.html }} />
+                <div>
+                  <MarkdownBody html={post.body.html} />
+                </div>
                 <MermaidRenderer />
               </article>
             </ScrollReveal>

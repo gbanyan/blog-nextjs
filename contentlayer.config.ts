@@ -1,10 +1,10 @@
 import { defineDocumentType, makeSource } from 'contentlayer2/source-files';
-import { visit } from 'unist-util-visit';
 import rehypeSlug from 'rehype-slug';
 import rehypeAutolinkHeadings from 'rehype-autolink-headings';
 import remarkGfm from 'remark-gfm';
 import rehypePrettyCode from 'rehype-pretty-code';
 import { rehypeCallouts } from './lib/rehype-callouts';
+import { rehypeOptimizeImages } from './lib/rehype-optimize-images';
 
 export const Post = defineDocumentType(() => ({
   name: 'Post',
@@ -101,29 +101,7 @@ export default makeSource({
       ],
       rehypeSlug,
       [rehypeAutolinkHeadings, { behavior: 'wrap' }],
-      /**
-       * Rewrite markdown image src from relative "../assets/..." to
-       * absolute "/assets/..." and add lazy loading for cross-browser performance.
-       */
-      () => (tree: any) => {
-        visit(tree, 'element', (node: any) => {
-          if (
-            node.tagName === 'img' &&
-            node.properties &&
-            typeof node.properties.src === 'string'
-          ) {
-            const src: string = node.properties.src;
-            if (src.startsWith('../assets/')) {
-              node.properties.src = src.replace('../assets', '/assets');
-            } else if (src.startsWith('assets/')) {
-              node.properties.src = '/' + src.replace(/^\/?/, '');
-            }
-            // Lazy load images for better LCP and bandwidth (Chrome, Firefox, Safari, Edge)
-            node.properties.loading = 'lazy';
-            node.properties.decoding = 'async';
-          }
-        });
-      }
+      rehypeOptimizeImages,
     ]
   },
   // we've configured TS paths; also silence noisy warning
