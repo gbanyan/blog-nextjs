@@ -35,6 +35,60 @@
   --animate-float-soft: float-soft 12s ease-in-out infinite;
 }
 
+/* Calm App Router view transitions (experimental.viewTransition) */
+@keyframes vt-fade-out {
+  to { opacity: 0; }
+}
+@keyframes vt-fade-in {
+  from { opacity: 0; }
+}
+@keyframes vt-slide-out-left {
+  to { opacity: 0; transform: translateX(-12px); }
+}
+@keyframes vt-slide-in-right {
+  from { opacity: 0; transform: translateX(12px); }
+}
+@keyframes vt-slide-out-right {
+  to { opacity: 0; transform: translateX(12px); }
+}
+@keyframes vt-slide-in-left {
+  from { opacity: 0; transform: translateX(-12px); }
+}
+
+::view-transition-old(root) {
+  animation: vt-fade-out 180ms ease-out both;
+}
+::view-transition-new(root) {
+  animation: vt-fade-in 180ms ease-out both;
+}
+
+:active-view-transition-type(nav-forward) {
+  &::view-transition-old(root) {
+    animation: vt-slide-out-left 180ms ease-out both;
+  }
+  &::view-transition-new(root) {
+    animation: vt-slide-in-right 180ms ease-out both;
+  }
+}
+
+:active-view-transition-type(nav-back) {
+  &::view-transition-old(root) {
+    animation: vt-slide-out-right 180ms ease-out both;
+  }
+  &::view-transition-new(root) {
+    animation: vt-slide-in-left 180ms ease-out both;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(root),
+  ::view-transition-new(root),
+  ::view-transition-group(*) {
+    animation-duration: 0s !important;
+    animation-delay: 0s !important;
+  }
+}
+
 @keyframes fade-in-up {
   0% { opacity: 0; transform: translateY(8px) scale(0.98); }
   100% { opacity: 1; transform: translateY(0) scale(1); }

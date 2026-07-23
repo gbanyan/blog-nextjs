@@ -21,6 +21,7 @@ import {
 } from 'react-icons/fi';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { NAV_TRANSITION } from '@/lib/navigation';
 
 export type IconKey =
   | 'home'
@@ -128,6 +129,7 @@ export function NavMenu({ items }: NavMenuProps) {
         <Link
         key={item.key}
         href={item.href}
+        transitionTypes={[...NAV_TRANSITION]}
         className="motion-link inline-flex items-center gap-2 rounded-xl px-3 py-2 text-sm text-slate-600 hover:bg-slate-100 hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40 dark:text-slate-200 dark:hover:bg-slate-800 dark:hover:text-accent"
         onClick={close}
       >
@@ -175,6 +177,7 @@ export function NavMenu({ items }: NavMenuProps) {
         <Link
         key={item.key}
         href={item.href}
+        transitionTypes={[...NAV_TRANSITION]}
         className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-base font-medium text-slate-700 transition-colors active:bg-slate-100 dark:text-slate-200 dark:active:bg-slate-800 dark:hover:text-accent"
         onClick={close}
       >
@@ -290,6 +293,7 @@ export function NavMenu({ items }: NavMenuProps) {
             <Link
               key={item.key}
               href={item.href}
+              transitionTypes={[...NAV_TRANSITION]}
                className="motion-link type-nav group relative inline-flex shrink-0 items-center gap-1.5 rounded-full px-3 py-1 text-slate-600 hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40 dark:text-slate-200 dark:hover:text-accent"
               onClick={close}
             >

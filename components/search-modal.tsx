@@ -11,6 +11,7 @@ import {
   FiBook
 } from 'react-icons/fi';
 import { cn } from '@/lib/utils';
+import { NAV_TRANSITION } from '@/lib/navigation';
 
 interface PagefindResult {
   url: string;
@@ -167,7 +168,7 @@ export function SearchModal({
   const handleSelect = useCallback(
     (url: string) => {
       onClose();
-      router.push(url);
+      router.push(url, { transitionTypes: [...NAV_TRANSITION] });
     },
     [onClose, router]
   );

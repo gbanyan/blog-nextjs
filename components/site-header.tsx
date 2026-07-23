@@ -8,6 +8,7 @@ import { SearchButton } from './search-modal';
 import { siteConfig } from '@/lib/config';
 import { allPages } from 'contentlayer2/generated';
 import Link from 'next/link';
+import { NAV_TRANSITION } from '@/lib/navigation';
 
 // Dynamically import SearchModal to reduce initial bundle size
 const SearchModal = dynamic(
@@ -88,6 +89,7 @@ export function SiteHeader({ recentPosts = [] }: SiteHeaderProps) {
         <Link
           href="/"
           prefetch={true}
+          transitionTypes={[...NAV_TRANSITION]}
            className="motion-link group relative type-title whitespace-nowrap text-slate-900 hover:text-accent focus-visible:outline-none focus-visible:text-accent dark:text-slate-100 dark:hover:text-accent"
         >
           <span className="absolute -bottom-0.5 left-0 h-[2px] w-0 bg-accent transition-all duration-180 ease-snappy group-hover:w-full" aria-hidden="true" />

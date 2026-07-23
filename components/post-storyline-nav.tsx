@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { Post } from 'contentlayer2/generated';
 import { FiArrowLeft, FiArrowRight } from 'react-icons/fi';
+import { NAV_BACK, NAV_FORWARD } from '@/lib/navigation';
 
 interface Props {
   current: Post;
@@ -80,6 +81,7 @@ function Station({ station }: { station: StationConfig }) {
     <Link
       href={post.url}
       rel={rel}
+      transitionTypes={align === 'end' ? [...NAV_BACK] : [...NAV_FORWARD]}
       className={`group flex flex-col gap-1 text-center transition duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 dark:focus-visible:ring-blue-300 ${alignClass}`}
     >
       <p className="text-[11px] uppercase tracking-[0.4em] text-slate-400 transition group-hover:text-blue-500 dark:text-slate-500">

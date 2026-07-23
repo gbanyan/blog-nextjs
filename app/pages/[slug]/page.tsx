@@ -112,66 +112,69 @@ export default async function StaticPage({ params }: Props) {
       <ReadingProgress />
       <PostLayout hasToc={hasToc} contentKey={slug} wide={slug === 'dev-env' || slug === 'homelab'}>
         <div className={slug === 'dev-env' || slug === 'homelab' ? 'space-y-4' : 'space-y-8'}>
-          <SectionDivider>
-            <ScrollReveal>
-              <header className={slug === 'dev-env' || slug === 'homelab' ? 'mb-4 space-y-3 text-center' : 'mb-6 space-y-4 text-center'}>
-                {page.published_at && (
-                  <p className="type-small text-slate-500 dark:text-slate-500">
-                    {new Date(page.published_at).toLocaleDateString(
-                      siteConfig.defaultLocale
-                    )}
-                  </p>
-                )}
-                <h1 className="type-display font-bold leading-tight text-slate-900 dark:text-slate-50">
-                  {page.title}
-                </h1>
-                {page.tags && (
-                  <div className="flex flex-wrap justify-center gap-2 pt-2">
-                    {page.tags.map((t) => (
-                      <Link
-                        key={t}
-                        href={`/tags/${encodeURIComponent(getTagSlug(t))}`}
-                        className="tag-chip rounded-full bg-accent-soft px-3 py-1 text-sm text-accent-textLight dark:bg-slate-800 dark:text-slate-100"
-                      >
-                        #{t}
-                      </Link>
-                    ))}
-                  </div>
-                )}
-              </header>
-            </ScrollReveal>
-          </SectionDivider>
-
-          <SectionDivider>
-            <ScrollReveal>
-              <article
-                data-toc-content={slug}
-                className="prose prose-lg prose-slate mx-auto max-w-none dark:prose-invert"
-              >
-                {slug === 'dev-env' ? (
-                  <DevEnvDeviceHero />
-                ) : slug === 'homelab' ? (
-                  <HomeLabDeviceHero />
-                ) : (
-                  page.feature_image && (
-                    <div className="-mx-4 mb-8 transition-all duration-500 sm:-mx-12 lg:-mx-20 group-[.toc-open]:lg:-mx-4">
-                      <Image
-                        src={page.feature_image.replace('../assets', '/assets')}
-                        alt={page.title}
-                        width={1200}
-                        height={600}
-                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 90vw, 1200px"
-                        priority
-                        className="w-full rounded-xl shadow-lg"
-                      />
+          {/* Main content area for Pagefind indexing */}
+          <div data-pagefind-body>
+            <SectionDivider>
+              <ScrollReveal>
+                <header className={slug === 'dev-env' || slug === 'homelab' ? 'mb-4 space-y-3 text-center' : 'mb-6 space-y-4 text-center'}>
+                  {page.published_at && (
+                    <p className="type-small text-slate-500 dark:text-slate-500">
+                      {new Date(page.published_at).toLocaleDateString(
+                        siteConfig.defaultLocale
+                      )}
+                    </p>
+                  )}
+                  <h1 className="type-display font-bold leading-tight text-slate-900 dark:text-slate-50">
+                    {page.title}
+                  </h1>
+                  {page.tags && (
+                    <div className="flex flex-wrap justify-center gap-2 pt-2" data-pagefind-meta="tags">
+                      {page.tags.map((t) => (
+                        <Link
+                          key={t}
+                          href={`/tags/${encodeURIComponent(getTagSlug(t))}`}
+                          className="tag-chip rounded-full bg-accent-soft px-3 py-1 text-sm text-accent-textLight dark:bg-slate-800 dark:text-slate-100"
+                        >
+                          #{t}
+                        </Link>
+                      ))}
                     </div>
-                  )
-                )}
-                <div dangerouslySetInnerHTML={{ __html: page.body.html }} />
-                <MermaidRenderer />
-              </article>
-            </ScrollReveal>
-          </SectionDivider>
+                  )}
+                </header>
+              </ScrollReveal>
+            </SectionDivider>
+
+            <SectionDivider>
+              <ScrollReveal>
+                <article
+                  data-toc-content={slug}
+                  className="prose prose-lg prose-slate mx-auto max-w-none dark:prose-invert"
+                >
+                  {slug === 'dev-env' ? (
+                    <DevEnvDeviceHero />
+                  ) : slug === 'homelab' ? (
+                    <HomeLabDeviceHero />
+                  ) : (
+                    page.feature_image && (
+                      <div className="-mx-4 mb-8 transition-all duration-500 sm:-mx-12 lg:-mx-20 group-[.toc-open]:lg:-mx-4">
+                        <Image
+                          src={page.feature_image.replace('../assets', '/assets')}
+                          alt={page.title}
+                          width={1200}
+                          height={600}
+                          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 90vw, 1200px"
+                          priority
+                          className="w-full rounded-xl shadow-lg"
+                        />
+                      </div>
+                    )
+                  )}
+                  <div dangerouslySetInnerHTML={{ __html: page.body.html }} />
+                  <MermaidRenderer />
+                </article>
+              </ScrollReveal>
+            </SectionDivider>
+          </div>
         </div>
       </PostLayout>
     </>

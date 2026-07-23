@@ -4,6 +4,7 @@ import type { Post } from 'contentlayer2/generated';
 import { siteConfig } from '@/lib/config';
 import { FiCalendar, FiTag } from 'react-icons/fi';
 import { MetaItem } from './meta-item';
+import { NAV_TRANSITION } from '@/lib/navigation';
 
 interface PostCardProps {
   post: Post;
@@ -52,6 +53,7 @@ export function PostCard({ post, showTags = true }: PostCardProps) {
         <h2 className="text-lg font-semibold leading-snug">
            <Link
             href={post.url}
+            transitionTypes={[...NAV_TRANSITION]}
             className="hover:text-accent dark:hover:text-accent"
           >
             {post.title}

@@ -4,6 +4,7 @@ import { Post } from 'contentlayer2/generated';
 import { siteConfig } from '@/lib/config';
 import { FiCalendar, FiTag } from 'react-icons/fi';
 import { MetaItem } from './meta-item';
+import { NAV_TRANSITION } from '@/lib/navigation';
 
 interface Props {
   post: Post;
@@ -54,7 +55,9 @@ export function PostListItem({ post, priority = false }: Props) {
           )}
         </div>
         <h2 className="type-body font-semibold leading-snug hover:text-accent sm:type-title">
-          <Link href={post.url}>{post.title}</Link>
+          <Link href={post.url} transitionTypes={[...NAV_TRANSITION]}>
+            {post.title}
+          </Link>
         </h2>
         {excerpt && (
           <p className="line-clamp-2 text-sm text-slate-600 dark:text-slate-300">

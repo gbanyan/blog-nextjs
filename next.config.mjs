@@ -1,5 +1,10 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  experimental: {
+    // Enable React View Transitions for App Router navigations (Next.js 16.2+)
+    viewTransition: true,
+  },
+
   // Image optimization configuration
   images: {
     remotePatterns: [],

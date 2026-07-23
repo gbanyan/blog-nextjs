@@ -7,7 +7,6 @@ import { ThemeProvider } from 'next-themes';
 import { Playfair_Display, LXGW_WenKai_TC } from 'next/font/google';
 import { JsonLd } from '@/components/json-ld';
 import { WebVitals } from '@/components/web-vitals';
-import { ViewTransitionProvider } from '@/components/view-transition-provider';
 import NextTopLoader from 'nextjs-toploader';
 
 const playfair = Playfair_Display({
@@ -156,9 +155,7 @@ export default async function RootLayout({
             }}
            />
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-            <ViewTransitionProvider>
               <LayoutShell recentPosts={recentPosts}>{children}</LayoutShell>
-            </ViewTransitionProvider>
           </ThemeProvider>
         <WebVitals />
       </body>
