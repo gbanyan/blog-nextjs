@@ -67,7 +67,7 @@ export function PostLayout({ children, hasToc = true, contentKey, wide }: { chil
                     </div>
 
                     {/* Content */}
-                    <div className="flex-1 overflow-y-auto px-6 py-6">
+                    <div className="scroll-panel flex-1 px-6 py-6">
                         <PostToc
                             contentKey={contentKey}
                             onLinkClick={() => setIsTocOpen(false)}
@@ -125,7 +125,7 @@ export function PostLayout({ children, hasToc = true, contentKey, wide }: { chil
                 <aside className="hidden lg:block">
                     <div className="sticky top-24 h-[calc(100vh-6rem)] overflow-hidden">
                         {isDesktopTocOpen && hasToc && (
-                            <div className="toc-sidebar h-full overflow-y-auto pr-2">
+                            <div className="toc-sidebar scroll-panel h-full pr-2">
                                 <PostToc contentKey={contentKey} />
                             </div>
                         )}

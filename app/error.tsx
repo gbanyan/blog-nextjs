@@ -3,13 +3,16 @@
 import { useEffect } from 'react';
 import { FiAlertTriangle } from 'react-icons/fi';
 
-export default function Error({
-  error,
-  reset,
-}: {
+type AppErrorProps = {
   error: Error & { digest?: string };
   reset: () => void;
-}) {
+  unstable_retry: () => void;
+};
+
+export default function Error({
+  error,
+  unstable_retry,
+}: AppErrorProps) {
   useEffect(() => {
     // Log the error to an error reporting service
     console.error('Application error:', error);
@@ -22,17 +25,17 @@ export default function Error({
           <FiAlertTriangle className="h-8 w-8 text-red-600 dark:text-red-400" />
         </div>
 
-        <h2 className="mb-2 text-2xl font-semibold text-slate-900 dark:text-slate-100">
+        <h2 className="mb-2 text-2xl font-semibold text-balance text-slate-900 dark:text-slate-100">
           發生錯誤
         </h2>
 
-        <p className="mb-6 text-slate-600 dark:text-slate-400">
+        <p className="mb-6 text-pretty text-slate-600 dark:text-slate-400">
           {error.message || '頁面載入時發生問題，請稍後再試。'}
         </p>
 
         <div className="flex flex-col gap-3 sm:flex-row sm:justify-center">
           <button
-            onClick={reset}
+            onClick={() => unstable_retry()}
             className="inline-flex items-center justify-center rounded-lg bg-blue-600 px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:bg-blue-500 dark:hover:bg-blue-600"
           >
             重試

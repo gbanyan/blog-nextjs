@@ -14,8 +14,12 @@ import { cn } from '@/lib/utils';
 
 interface PagefindResult {
   url: string;
-  meta: { title?: string };
+  meta: { title?: string; tags?: string };
   excerpt?: string;
+  /** Pagefind 1.5+: excerpt without <mark> tags */
+  plain_excerpt?: string;
+  /** Pagefind 1.5+: which meta fields matched the query */
+  matchedMetaFields?: string[];
 }
 
 interface QuickAction {
@@ -29,6 +33,32 @@ interface SearchModalProps {
   isOpen: boolean;
   onClose: () => void;
   recentPosts?: { title: string; url: string }[];
+}
+
+const META_LABELS: Record<string, string> = {
+  title: '標題相符',
+  tags: '標籤相符',
+};
+
+function escapeHtml(text: string): string {
+  return text
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
+/** Highlight query terms in plain text; returns safe HTML. */
+function highlightPlain(text: string, query: string): string {
+  const escaped = escapeHtml(text);
+  const terms = query
+    .trim()
+    .split(/\s+/)
+    .filter(Boolean)
+    .map((t) => t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
+  if (terms.length === 0) return escaped;
+  const re = new RegExp(`(${terms.join('|')})`, 'gi');
+  return escaped.replace(re, '<mark>$1</mark>');
 }
 
 export function SearchModal({
@@ -52,7 +82,7 @@ export function SearchModal({
     ) => Promise<{ results: { data: () => Promise<PagefindResult> }[] } | null>;
   } | null>(null);
 
-  // Initialize Pagefind when modal opens
+  // Initialize Pagefind when modal opens (read-only consumer — does not alter index)
   useEffect(() => {
     if (!isOpen) return;
 
@@ -60,7 +90,8 @@ export function SearchModal({
       try {
         const pagefindUrl = `${window.location.origin}/_pagefind/pagefind.js`;
         const pagefind = await import(/* webpackIgnore: true */ pagefindUrl);
-        await pagefind.options({ basePath: '/_pagefind/' });
+        // bundlePath must match public/_pagefind copy from build script
+        await pagefind.options({ bundlePath: '/_pagefind/' });
         pagefind.init();
         pagefindRef.current = pagefind;
         setPagefindReady(true);
@@ -156,7 +187,7 @@ export function SearchModal({
         />
       </div>
 
-      <Command.List className="max-h-[min(60vh,400px)] overflow-y-auto p-2">
+      <Command.List className="scroll-panel max-h-[min(60vh,400px)] p-2">
         {loading && (
           <Command.Loading className="flex items-center justify-center py-8 text-sm text-slate-500 dark:text-slate-400">
             搜尋中…
@@ -210,27 +241,53 @@ export function SearchModal({
 
         {!loading && search.trim() && results.length > 0 && (
           <Command.Group heading="搜尋結果" className="[&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:py-1.5 [&_[cmdk-group-heading]]:text-xs [&_[cmdk-group-heading]]:font-medium [&_[cmdk-group-heading]]:text-slate-500 [&_[cmdk-group-heading]]:dark:text-slate-400">
-            {results.map((result, i) => (
-              <Command.Item
-                key={`${result.url}-${i}`}
-                value={`${result.meta?.title ?? ''} ${result.url}`}
-                onSelect={() => handleSelect(result.url)}
+            {results.map((result, i) => {
+              const title = result.meta?.title ?? result.url;
+              const matchedMeta = result.matchedMetaFields ?? [];
+              const titleMatched = matchedMeta.includes('title');
+              const metaBadges = matchedMeta
+                .map((field) => META_LABELS[field])
+                .filter(Boolean);
+              const excerptHtml = result.excerpt
+                ? result.excerpt
+                : result.plain_excerpt
+                  ? highlightPlain(result.plain_excerpt, search)
+                  : null;
+
+              return (
+                <Command.Item
+                  key={`${result.url}-${i}`}
+                  value={`${title} ${result.url}`}
+                  onSelect={() => handleSelect(result.url)}
                   className={cn(
-                  'flex cursor-pointer flex-col gap-0.5 rounded-lg px-3 py-2.5 outline-none transition-colors',
-                  'data-[selected=true]:bg-slate-100 dark:data-[selected=true]:bg-slate-800 dark:hover:text-accent'
+                    'flex cursor-pointer flex-col gap-0.5 rounded-lg px-3 py-2.5 outline-none transition-colors',
+                    'data-[selected=true]:bg-slate-100 dark:data-[selected=true]:bg-slate-800 dark:hover:text-accent'
                   )}
-              >
-                <span className="truncate text-sm font-medium text-slate-900 dark:text-slate-100">
-                  {result.meta?.title ?? result.url}
-                </span>
-                {result.excerpt && (
-                  <span
-                    className="line-clamp-2 text-xs text-slate-500 dark:text-slate-400 [&_mark]:bg-yellow-200 [&_mark]:font-semibold [&_mark]:text-slate-900 dark:[&_mark]:bg-yellow-600 dark:[&_mark]:text-slate-100"
-                    dangerouslySetInnerHTML={{ __html: result.excerpt }}
-                  />
-                )}
-              </Command.Item>
-            ))}
+                >
+                  <span className="flex items-center gap-2">
+                    <span
+                      className="truncate text-sm font-medium text-slate-900 dark:text-slate-100 [&_mark]:bg-yellow-200 [&_mark]:font-semibold [&_mark]:text-slate-900 dark:[&_mark]:bg-yellow-600 dark:[&_mark]:text-slate-100"
+                      dangerouslySetInnerHTML={{
+                        __html: titleMatched
+                          ? highlightPlain(title, search)
+                          : escapeHtml(title),
+                      }}
+                    />
+                    {metaBadges.length > 0 && (
+                      <span className="shrink-0 rounded bg-accent-soft px-1.5 py-0.5 text-[10px] font-medium text-accent-textLight dark:bg-slate-700 dark:text-slate-300">
+                        {metaBadges[0]}
+                      </span>
+                    )}
+                  </span>
+                  {excerptHtml && (
+                    <span
+                      className="line-clamp-2 text-xs text-slate-500 dark:text-slate-400 [&_mark]:bg-yellow-200 [&_mark]:font-semibold [&_mark]:text-slate-900 dark:[&_mark]:bg-yellow-600 dark:[&_mark]:text-slate-100"
+                      dangerouslySetInnerHTML={{ __html: excerptHtml }}
+                    />
+                  )}
+                </Command.Item>
+              );
+            })}
           </Command.Group>
         )}
 

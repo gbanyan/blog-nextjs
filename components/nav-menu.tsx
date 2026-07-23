@@ -232,7 +232,7 @@ export function NavMenu({ items }: NavMenuProps) {
           </div>
 
           <div className="container mx-auto flex flex-1 flex-col px-4 pb-8">
-            <div className="flex flex-1 flex-col gap-2 overflow-y-auto pt-4">
+            <div className="scroll-panel flex flex-1 flex-col gap-2 pt-4">
               {items.map(item => renderMobileItem(item))}
             </div>
 

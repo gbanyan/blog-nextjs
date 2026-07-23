@@ -64,7 +64,7 @@ export function SidebarLayout({ children }: { children: React.ReactNode }) {
           </button>
         </div>
 
-        <div className="flex-1 overflow-y-auto px-6 py-6">
+        <div className="scroll-panel flex-1 px-6 py-6">
           <RightSidebarContent forceLoadFeed={mobileSidebarOpen} />
         </div>
       </div>
