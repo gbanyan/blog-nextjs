@@ -60,7 +60,7 @@ export function SearchModal({
       try {
         const pagefindUrl = `${window.location.origin}/_pagefind/pagefind.js`;
         const pagefind = await import(/* webpackIgnore: true */ pagefindUrl);
-        await pagefind.options({ bundlePath: '/_pagefind/' });
+        await pagefind.options({ basePath: '/_pagefind/' });
         pagefind.init();
         pagefindRef.current = pagefind;
         setPagefindReady(true);
