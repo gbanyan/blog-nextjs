@@ -61,6 +61,27 @@ function highlightPlain(text: string, query: string): string {
   return escaped.replace(re, '<mark>$1</mark>');
 }
 
+/**
+ * Map Pagefind's filesystem URLs from Next.js `.next/server/app` HTML
+ * onto App Router paths. Handles both the correct index root and a
+ * legacy `/server/app/...` prefix from older `--site .next` builds.
+ */
+function normalizePagefindUrl(url: string): string {
+  let path = url.split(/[?#]/)[0] || '/';
+
+  if (path.startsWith('/server/app')) {
+    path = path.slice('/server/app'.length) || '/';
+  }
+
+  if (path.endsWith('/index.html')) {
+    path = path.slice(0, -'/index.html'.length) || '/';
+  } else if (path.endsWith('.html')) {
+    path = path.slice(0, -'.html'.length);
+  }
+
+  return path.startsWith('/') ? path : `/${path}`;
+}
+
 export function SearchModal({
   isOpen,
   onClose,
@@ -131,7 +152,12 @@ export function SearchModal({
 
       const dataPromises = searchResult.results.slice(0, 10).map((r) => r.data());
       const items = await Promise.all(dataPromises);
-      setResults(items);
+      setResults(
+        items.map((item) => ({
+          ...item,
+          url: normalizePagefindUrl(item.url),
+        }))
+      );
       setLoading(false);
     }, 300);
 
