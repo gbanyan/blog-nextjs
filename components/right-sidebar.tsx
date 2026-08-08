@@ -6,10 +6,8 @@ import { useEffect, useRef, useState } from 'react';
 import { FaGithub, FaMastodon, FaLinkedin } from 'react-icons/fa';
 import { FiTrendingUp, FiArrowRight } from 'react-icons/fi';
 import { siteConfig } from '@/lib/config';
-import { getAllTagsWithCount } from '@/lib/tags';
-import { allPages } from 'contentlayer2/generated';
 import { MastodonFeed } from './mastodon-feed';
-import type { TagItem } from '@/lib/sidebar-data';
+type TagItem = { tag: string; slug: string; count: number };
 
 /** Shared sidebar content for desktop aside and mobile drawer */
 export function RightSidebarContent({

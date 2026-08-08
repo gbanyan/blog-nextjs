@@ -1,12 +1,14 @@
+'use client';
 import dynamic from 'next/dynamic';
 import { FiLayout } from 'react-icons/fi';
 import { clsx } from 'clsx';
 import { MobileDrawer } from './mobile-drawer';
 import { useDrawer } from '@/lib/use-drawer';
-import type { TagItem } from '@/lib/sidebar-data';
 
 const RightSidebar = dynamic(() => import('./right-sidebar').then(mod => mod.RightSidebar), { ssr: false });
 const RightSidebarContent = dynamic(() => import('./right-sidebar').then(mod => mod.RightSidebarContent), { ssr: false });
+
+type TagItem = { tag: string; slug: string; count: number };
 
 export function SidebarLayout({ children, tags, aboutUrl, avatarSrc }: { children: React.ReactNode; tags: TagItem[]; aboutUrl: string; avatarSrc: string }) {
   const { open, setOpen, mounted } = useDrawer();
