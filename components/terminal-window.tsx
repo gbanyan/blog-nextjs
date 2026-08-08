@@ -1,4 +1,5 @@
 'use client';
+import { MatrixRain } from './matrix-rain';
 
 import { useState, useEffect, useCallback } from 'react';
 
@@ -148,12 +149,15 @@ export function TerminalWindow({
 
   return (
     <div
-      className={`overflow-hidden rounded-xl border border-slate-300 bg-slate-100 shadow-xl dark:border-slate-700/50 dark:bg-slate-900 ${className}`}
+      className={`relative overflow-hidden rounded-xl border border-slate-300 bg-slate-100 shadow-xl dark:border-slate-700/50 dark:bg-slate-900 ${className}`}
       role="img"
       aria-label={`終端機：${title} - ${tagline}`}
     >
+      <div className="pointer-events-none absolute inset-0 opacity-30 dark:opacity-25" aria-hidden="true">
+        <MatrixRain />
+      </div>
       {/* macOS-style title bar */}
-      <div className="flex items-center gap-2 border-b border-slate-200 px-4 py-2.5 dark:border-slate-700/50 sm:px-5 sm:py-3 lg:px-6 lg:py-3.5">
+      <div className="relative z-10 flex items-center gap-2 border-b border-slate-200 px-4 py-2.5 dark:border-slate-700/50 sm:px-5 sm:py-3 lg:px-6 lg:py-3.5">
         <div className="flex gap-1.5 sm:gap-2">
           <span className="h-3 w-3 rounded-full bg-red-500/90 sm:h-3.5 sm:w-3.5 lg:h-4 lg:w-4" />
           <span className="h-3 w-3 rounded-full bg-amber-500/90 sm:h-3.5 sm:w-3.5 lg:h-4 lg:w-4" />
@@ -165,7 +169,7 @@ export function TerminalWindow({
       </div>
 
       {/* Terminal content */}
-      <div className="px-4 py-4 font-mono text-sm sm:px-5 sm:py-5 sm:text-base lg:px-6 lg:py-6 lg:text-lg">
+      <div className="relative z-10 px-4 py-4 font-mono text-sm sm:px-5 sm:py-5 sm:text-base lg:px-6 lg:py-6 lg:text-lg">
         <div className="text-slate-600 dark:text-slate-300">
           <span className="text-emerald-600 dark:text-emerald-400">~</span>
           <span className="text-slate-500"> $ </span>

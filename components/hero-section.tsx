@@ -1,4 +1,3 @@
-import { MatrixRain } from './matrix-rain';
 import { TerminalWindow } from './terminal-window';
 
 /**
@@ -18,9 +17,6 @@ export function HeroSection({
 }) {
   return (
     <div className="relative h-[360px] w-full overflow-hidden rounded-2xl sm:h-[400px] lg:h-[440px] xl:h-[480px]">
-      <div className="absolute inset-0 opacity-40" aria-hidden="true">
-        <MatrixRain />
-      </div>
       <div className="relative z-10 mx-auto w-full max-w-2xl px-4 py-6 sm:max-w-3xl lg:max-w-4xl xl:max-w-5xl">
         <TerminalWindow title={title} tagline={tagline} />
       </div>
