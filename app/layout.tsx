@@ -127,8 +127,6 @@ export default async function RootLayout({
   return (
     <html lang={siteConfig.defaultLocale} suppressHydrationWarning className={`${playfair.variable} ${lxgwWenKai.variable}`}>
       <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link rel="font" href="https://fonts.googleapis.com" />
         <link rel="font" href="https://fonts.gstatic.com" />
       </head>

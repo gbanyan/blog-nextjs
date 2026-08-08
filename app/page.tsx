@@ -4,10 +4,12 @@ import { siteConfig } from '@/lib/config';
 import { PostListItem } from '@/components/post-list-item';
 import { TimelineWrapper } from '@/components/timeline-wrapper';
 import { SidebarLayout } from '@/components/sidebar-layout';
+import { getSidebarData } from '@/lib/sidebar-data';
 import { JsonLd } from '@/components/json-ld';
 import { HeroSection } from '@/components/hero-section';
 
 export default function HomePage() {
+  const { tags, aboutUrl, avatarSrc } = getSidebarData();
   const posts = getAllPostsSorted().slice(0, siteConfig.postsPerPage);
 
   // CollectionPage Schema for homepage
@@ -34,7 +36,7 @@ export default function HomePage() {
     <>
       <JsonLd data={collectionPageSchema} />
       <section className="space-y-6">
-      <SidebarLayout>
+      <SidebarLayout tags={tags} aboutUrl={aboutUrl} avatarSrc={avatarSrc}>
         <h1 className="sr-only">
           {siteConfig.name} 的最新動態 — {siteConfig.tagline}
         </h1>

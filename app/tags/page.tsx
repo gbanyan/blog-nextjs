@@ -5,6 +5,7 @@ import { getAllTagsWithCount } from '@/lib/posts';
 import { SectionDivider } from '@/components/section-divider';
 import { ScrollReveal } from '@/components/scroll-reveal';
 import { SidebarLayout } from '@/components/sidebar-layout';
+import { getSidebarData } from '@/lib/sidebar-data';
 import { siteConfig } from '@/lib/config';
 import { JsonLd } from '@/components/json-ld';
 
@@ -17,6 +18,7 @@ export const metadata: Metadata = {
 };
 
 export default function TagIndexPage() {
+  const { tags: sidebarTags, aboutUrl, avatarSrc } = getSidebarData();
   const tags = getAllTagsWithCount();
   const topTags = tags.slice(0, 3);
 
@@ -53,7 +55,7 @@ export default function TagIndexPage() {
   return (
     <section className="space-y-6">
       <JsonLd data={collectionPageSchema} />
-      <SidebarLayout>
+      <SidebarLayout tags={sidebarTags} aboutUrl={aboutUrl} avatarSrc={avatarSrc}>
         <SectionDivider>
           <ScrollReveal>
             <div className="motion-card rounded-2xl border border-white/40 bg-white/60 p-8 text-center shadow-lg backdrop-blur-md dark:border-white/10 dark:bg-slate-900/60">

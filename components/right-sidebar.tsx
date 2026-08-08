@@ -6,8 +6,9 @@ import { useEffect, useRef, useState } from 'react';
 import { FaGithub, FaMastodon, FaLinkedin } from 'react-icons/fa';
 import { FiTrendingUp, FiArrowRight } from 'react-icons/fi';
 import { siteConfig } from '@/lib/config';
-import { getAllTagsWithCount } from '@/lib/posts';
-import { allPages } from 'contentlayer2/generated';
+import type { TagItem } from '@/lib/sidebar-data';
+
+
 import dynamic from 'next/dynamic';
 
 // Lazy load MastodonFeed - only load when sidebar is visible
@@ -17,7 +18,17 @@ const MastodonFeed = dynamic(() => import('./mastodon-feed').then(mod => ({ defa
 });
 
 /** Shared sidebar content for desktop aside and mobile drawer */
-export function RightSidebarContent({ forceLoadFeed = false }: { forceLoadFeed?: boolean }) {
+export function RightSidebarContent({
+  tags,
+  aboutUrl,
+  avatarSrc,
+  forceLoadFeed = false,
+}: {
+  tags: TagItem[];
+  aboutUrl: string;
+  avatarSrc: string;
+  forceLoadFeed?: boolean;
+}) {
   const [shouldLoadFeed, setShouldLoadFeed] = useState(forceLoadFeed);
   const feedRef = useRef<HTMLDivElement>(null);
 
@@ -64,14 +75,6 @@ export function RightSidebarContent({ forceLoadFeed = false }: { forceLoadFeed?:
     };
   }, [forceLoadFeed]);
 
-  const tags = getAllTagsWithCount().slice(0, 5);
-
-  const aboutPage =
-    allPages.find((p) => p.title.includes('關於作者')) ??
-    allPages.find((p) => p.slug === 'about-me');
-
-  const avatarSrc = siteConfig.avatar;
-
   const socialItems = [
     siteConfig.social.github && {
       key: 'github',
@@ -101,7 +104,7 @@ export function RightSidebarContent({ forceLoadFeed = false }: { forceLoadFeed?:
 
           <div className="relative flex flex-col items-center">
             <Link
-              href={aboutPage?.url || '/pages/關於作者'}
+              href={aboutUrl}
               aria-label="關於作者"
               className="mb-2 inline-block transition-transform duration-300 ease-out group-hover:-translate-y-0.5"
             >
@@ -192,11 +195,19 @@ export function RightSidebarContent({ forceLoadFeed = false }: { forceLoadFeed?:
   );
 }
 
-export function RightSidebar() {
+export function RightSidebar({
+  tags,
+  aboutUrl,
+  avatarSrc,
+}: {
+  tags: TagItem[];
+  aboutUrl: string;
+  avatarSrc: string;
+}) {
   return (
     <aside className="hidden lg:block">
       <div className="sticky top-20">
-        <RightSidebarContent />
+        <RightSidebarContent tags={tags} aboutUrl={aboutUrl} avatarSrc={avatarSrc} />
       </div>
     </aside>
   );

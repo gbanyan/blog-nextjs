@@ -17,6 +17,7 @@ interface TerminalWindowProps {
   /** Skip typing animation, show all at once */
   reducedMotion?: boolean;
   className?: string;
+  static?: boolean;
 }
 
 type Phase =
@@ -32,19 +33,20 @@ export function TerminalWindow({
   tagline,
   reducedMotion = false,
   className = '',
+  static: isStatic = false,
 }: TerminalWindowProps) {
-  const [phase, setPhase] = useState<Phase>('prompt');
-  const [displayedPrompt, setDisplayedPrompt] = useState('');
-  const [displayedLine1, setDisplayedLine1] = useState('');
-  const [displayedLine2, setDisplayedLine2] = useState('');
-  const [displayedPrompt2, setDisplayedPrompt2] = useState('');
-  const [displayedAscii, setDisplayedAscii] = useState<string[]>([]);
-  const [showCursor, setShowCursor] = useState(true);
-
   const prompt = 'cat ~/welcome.txt';
   const prompt2 = 'fastfetch';
   const line1 = `${title}`;
   const line2 = tagline;
+
+  const [phase, setPhase] = useState<Phase>(isStatic ? 'done' : 'prompt');
+  const [displayedPrompt, setDisplayedPrompt] = useState(isStatic ? prompt : '');
+  const [displayedLine1, setDisplayedLine1] = useState(isStatic ? line1 : '');
+  const [displayedLine2, setDisplayedLine2] = useState(isStatic ? line2 : '');
+  const [displayedPrompt2, setDisplayedPrompt2] = useState(isStatic ? prompt2 : '');
+  const [displayedAscii, setDisplayedAscii] = useState<string[]>(isStatic ? ASCII_ART : []);
+  const [showCursor, setShowCursor] = useState(!isStatic);
 
   const charDelay = reducedMotion ? 0 : 50;
   const lineDelay = reducedMotion ? 0 : 400;
@@ -136,6 +138,7 @@ export function TerminalWindow({
 
   // Blinking cursor
   useEffect(() => {
+    if (isStatic) return;
     if (!reducedMotion && phase !== 'done') {
       const id = setInterval(() => setShowCursor((c) => !c), 530);
       return () => clearInterval(id);

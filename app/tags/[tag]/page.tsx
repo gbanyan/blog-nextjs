@@ -3,6 +3,7 @@ import { allPosts } from 'contentlayer2/generated';
 import { PostListWithControls } from '@/components/post-list-with-controls';
 import { getTagSlug } from '@/lib/posts';
 import { SidebarLayout } from '@/components/sidebar-layout';
+import { getSidebarData } from '@/lib/sidebar-data';
 import { SectionDivider } from '@/components/section-divider';
 import { ScrollReveal } from '@/components/scroll-reveal';
 import { FiTag } from 'react-icons/fi';
@@ -52,6 +53,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function TagPage({ params }: Props) {
+  const { tags, aboutUrl, avatarSrc } = getSidebarData();
   const { tag: slug } = await params;
   const decodedSlug = decodeURIComponent(slug);
 
@@ -91,7 +93,7 @@ export default async function TagPage({ params }: Props) {
   };
 
   return (
-    <SidebarLayout>
+    <SidebarLayout tags={tags} aboutUrl={aboutUrl} avatarSrc={avatarSrc}>
       <JsonLd data={collectionPageSchema} />
       <SectionDivider>
         <ScrollReveal>

@@ -1,6 +1,7 @@
 import { FaGithub } from 'react-icons/fa';
 import { fetchPublicRepos } from '@/lib/github';
 import { SidebarLayout } from '@/components/sidebar-layout';
+import { getSidebarData } from '@/lib/sidebar-data';
 import { RepoCard } from '@/components/repo-card';
 
 import { siteConfig } from '@/lib/config';
@@ -34,11 +35,12 @@ export const metadata = {
 };
 
 export default async function ProjectsPage() {
+  const { tags, aboutUrl, avatarSrc } = getSidebarData();
   const repos = await fetchPublicRepos();
 
   return (
     <section className="space-y-4">
-      <SidebarLayout>
+      <SidebarLayout tags={tags} aboutUrl={aboutUrl} avatarSrc={avatarSrc}>
         <header className="space-y-1">
           <h1 className="type-title font-semibold text-slate-900 dark:text-slate-50">
             GitHub 專案
