@@ -22,7 +22,7 @@ export function HeroSection({
         <MatrixRain />
       </div>
       <div className="relative z-10 mx-auto w-full max-w-2xl px-4 py-6 sm:max-w-3xl lg:max-w-4xl xl:max-w-5xl">
-        <TerminalWindow title={title} tagline={tagline} static />
+        <TerminalWindow title={title} tagline={tagline} />
       </div>
     </div>
   );

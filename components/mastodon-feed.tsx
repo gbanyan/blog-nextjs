@@ -1,4 +1,6 @@
-import { Suspense } from 'react';
+'use client';
+
+import { useEffect, useState } from 'react';
 import { FaMastodon } from 'react-icons/fa';
 import { FiArrowRight } from 'react-icons/fi';
 import {
@@ -11,7 +13,6 @@ import {
   type MastodonStatus
 } from '@/lib/mastodon';
 import { siteConfig } from '@/lib/config';
-
 /**
  * Fetch the latest statuses server-side from the configured Mastodon account.
  * Runs inside a Suspense boundary so the page shell streams immediately while
@@ -54,9 +55,8 @@ function FeedSkeleton() {
   );
 }
 
-/** Server-fetched status list wrapped in Suspense. */
-async function StatusList() {
-  const statuses = await fetchFeedStatuses();
+/** Client-fetched status list. */
+function StatusListContent({ statuses }: { statuses: MastodonStatus[] | null }) {
 
   if (!statuses || statuses.length === 0) {
     return (
@@ -191,15 +191,31 @@ async function StatusList() {
     </div>
   );
 }
-
-/**
- * Mastodon sidebar feed as an async Server Component. Data is fetched
- * server-side and streamed through a Suspense fallback skeleton instead of
- * blocking the full page with a client-side useEffect fetch.
- */
-export async function MastodonFeed() {
+export function MastodonFeed() {
   const mastodonUrl = siteConfig.social.mastodon;
   if (!mastodonUrl) return null;
+
+  const [statuses, setStatuses] = useState<MastodonStatus[] | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    let cancelled = false;
+    ;(async () => {
+      try {
+        const list = await fetchFeedStatuses();
+        if (!cancelled) {
+          setStatuses(list);
+          setLoading(false);
+        }
+      } catch {
+        if (!cancelled) {
+          setStatuses([]);
+          setLoading(false);
+        }
+      }
+    })();
+    return () => { cancelled = true; };
+  }, []);
 
   return (
     <section className="motion-card group rounded-xl border bg-white px-4 py-3 shadow-sm hover:bg-slate-50 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-100 dark:hover:bg-slate-900/90">
@@ -209,9 +225,11 @@ export async function MastodonFeed() {
         微網誌
       </div>
 
-      <Suspense fallback={<FeedSkeleton />}>
-        <StatusList />
-      </Suspense>
+      {loading ? (
+        <FeedSkeleton />
+      ) : (
+        <StatusListContent statuses={statuses} />
+      )}
 
       <a
         href={mastodonUrl}
