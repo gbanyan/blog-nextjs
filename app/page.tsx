@@ -8,9 +8,9 @@ import { getSidebarData } from '@/lib/sidebar-data';
 import { JsonLd } from '@/components/json-ld';
 import { HeroSection } from '@/components/hero-section';
 
-export default function HomePage() {
+export default async function HomePage() {
   const { tags, aboutUrl, avatarSrc } = getSidebarData();
-  const posts = getAllPostsSorted().slice(0, siteConfig.postsPerPage);
+  const posts = (await getAllPostsSorted()).slice(0, siteConfig.postsPerPage);
 
   // CollectionPage Schema for homepage
   const collectionPageSchema = {

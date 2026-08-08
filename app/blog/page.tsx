@@ -6,24 +6,23 @@ import { SectionDivider } from '@/components/section-divider';
 import { siteConfig } from '@/lib/config';
 import { JsonLd } from '@/components/json-ld';
 
-const posts = getAllPostsSorted();
-const postCount = posts.length;
-const { tags, aboutUrl, avatarSrc } = getSidebarData();
-
 export const metadata = {
   title: '所有文章',
-  description: `瀏覽所有文章，共 ${postCount} 篇。`,
+  description: '瀏覽所有文章，持續更新中。',
   alternates: {
     canonical: `${siteConfig.url}/blog`
   }
 };
 
-export default function BlogIndexPage() {
+export default async function BlogIndexPage() {
+  const posts = await getAllPostsSorted();
+  const { tags, aboutUrl, avatarSrc } = getSidebarData();
+
   const blogSchema = {
     '@context': 'https://schema.org',
     '@type': 'Blog',
     name: '所有文章',
-    description: `瀏覽所有文章，共 ${postCount} 篇。`,
+    description: '瀏覽所有文章，持續更新中。',
     url: `${siteConfig.url}/blog`,
     inLanguage: siteConfig.defaultLocale,
     blogPost: posts.slice(0, 10).map((post) => ({
@@ -49,7 +48,7 @@ export default function BlogIndexPage() {
               所有文章
             </h1>
             <p className="type-small text-slate-500 dark:text-slate-400">
-              共 {postCount} 篇文章，依時間排序。
+              瀏覽所有文章，持續更新中。
             </p>
           </header>
         </SectionDivider>

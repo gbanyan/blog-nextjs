@@ -1,7 +1,17 @@
+import { cacheLife } from 'next/cache';
 import { allPosts } from 'contentlayer2/generated';
 import { siteConfig } from '@/lib/config';
 
-export async function GET() {
+/**
+ * Build the RSS XML string. Marked `'use cache'` and cached for an hour so
+ * feed readers get fresh content without a dynamic render on every request.
+ * Returns a plain serializable string — a cached function can't return a
+ * `Response` object.
+ */
+async function generateRss(): Promise<string> {
+  'use cache';
+  cacheLife({ revalidate: 3600 });
+
   const sortedPosts = allPosts
     .filter((post) => post.status === 'published')
     .sort((a, b) => {
@@ -45,6 +55,11 @@ export async function GET() {
   </channel>
 </rss>`;
 
+  return rss;
+}
+
+export async function GET() {
+  const rss = await generateRss();
   return new Response(rss, {
     headers: {
       'Content-Type': 'application/xml; charset=utf-8',

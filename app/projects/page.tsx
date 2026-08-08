@@ -1,3 +1,5 @@
+'use cache';
+
 import { FaGithub } from 'react-icons/fa';
 import { fetchPublicRepos } from '@/lib/github';
 import { SidebarLayout } from '@/components/sidebar-layout';
@@ -6,7 +8,7 @@ import { RepoCard } from '@/components/repo-card';
 
 import { siteConfig } from '@/lib/config';
 
-export const revalidate = 3600;
+import { cacheLife } from 'next/cache';
 
 export const metadata = {
   title: 'GitHub 專案',
@@ -36,6 +38,7 @@ export const metadata = {
 
 export default async function ProjectsPage() {
   const { tags, aboutUrl, avatarSrc } = getSidebarData();
+  cacheLife({ revalidate: 3600 });
   const repos = await fetchPublicRepos();
 
   return (

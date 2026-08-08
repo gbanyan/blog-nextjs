@@ -83,7 +83,7 @@ export default async function RootLayout({
   children: React.ReactNode;
 }) {
   const theme = siteConfig.theme;
-  const recentPosts = getAllPostsSorted()
+  const recentPosts = (await getAllPostsSorted())
     .slice(0, 5)
     .map((p) => ({ title: p.title, url: p.url }));
 

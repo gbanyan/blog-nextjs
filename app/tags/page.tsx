@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import type { Metadata } from 'next';
 import { FiTag, FiTrendingUp } from 'react-icons/fi';
-import { getAllTagsWithCount } from '@/lib/posts';
+import { getAllTagsWithCount } from '@/lib/tags';
 import { SectionDivider } from '@/components/section-divider';
 import { ScrollReveal } from '@/components/scroll-reveal';
 import { SidebarLayout } from '@/components/sidebar-layout';

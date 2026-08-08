@@ -3,7 +3,8 @@ import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
 import { allPosts } from 'contentlayer2/generated';
-import { getPostBySlug, getRelatedPosts, getPostNeighbors, getTagSlug } from '@/lib/posts';
+import { getPostBySlug, getRelatedPosts, getPostNeighbors } from '@/lib/posts';
+import { getTagSlug } from '@/lib/tags';
 import { siteConfig } from '@/lib/config';
 import { ReadingProgress } from '@/components/reading-progress';
 import { ScrollReveal } from '@/components/scroll-reveal';
@@ -90,8 +91,8 @@ export default async function BlogPostPage({ params }: Props) {
 
   if (!post) return notFound();
 
-  const relatedPosts = getRelatedPosts(post, 3);
-  const neighbors = getPostNeighbors(post);
+  const relatedPosts = await getRelatedPosts(post, 3);
+  const neighbors = await getPostNeighbors(post);
 
   const hasToc = /<h[23]/.test(post.body.html);
   const hasMermaid =
