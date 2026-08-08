@@ -8,7 +8,7 @@ export const siteConfig = {
   author: process.env.NEXT_PUBLIC_SITE_AUTHOR || 'Your Name',
   tagline:
     process.env.NEXT_PUBLIC_SITE_TAGLINE ||
-    '這裡是我的個人首頁與技術 Blog。',
+    '個人首頁與技術筆記',
   postsPerPage:
     Number(process.env.NEXT_PUBLIC_POSTS_PER_PAGE) > 0
       ? Number(process.env.NEXT_PUBLIC_POSTS_PER_PAGE)
@@ -17,7 +17,7 @@ export const siteConfig = {
   avatar: process.env.NEXT_PUBLIC_SITE_AVATAR_URL || '',
   aboutShort:
     process.env.NEXT_PUBLIC_SITE_ABOUT_SHORT ||
-    '醫師，喜歡寫作與技術分享。',
+    '醫師／寫作／技術分享',
   social: {
     twitter: process.env.NEXT_PUBLIC_TWITTER_HANDLE || '',
     github: process.env.NEXT_PUBLIC_GITHUB_URL || '',

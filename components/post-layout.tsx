@@ -61,6 +61,7 @@ export function PostLayout({ children, hasToc = true, contentKey, wide }: { chil
                         <button
                             onClick={() => setIsTocOpen(false)}
                             className="rounded-full p-1 text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800"
+                            aria-label="關閉目錄"
                         >
                             <FiX className="h-5 w-5" />
                         </button>
@@ -88,7 +89,7 @@ export function PostLayout({ children, hasToc = true, contentKey, wide }: { chil
                 "fixed bottom-6 right-16 z-40 flex h-9 items-center gap-2 rounded-full border border-slate-200 bg-white/90 px-3 text-sm font-medium text-slate-600 shadow-md backdrop-blur-sm transition hover:bg-slate-50 hover:text-accent dark:border-slate-700 dark:bg-slate-900/90 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-accent lg:hidden",
                 isTocOpen ? "opacity-0 pointer-events-none" : "opacity-100"
               )}
-            aria-label="Open Table of Contents"
+            aria-label="開啟文章目錄"
         >
             <FiList className="h-4 w-4" />
             <span>目錄</span>
@@ -101,7 +102,7 @@ export function PostLayout({ children, hasToc = true, contentKey, wide }: { chil
              className={cn(
                 "fixed bottom-6 right-16 z-40 hidden h-9 items-center gap-2 rounded-full border border-slate-200 bg-white/90 px-3 text-sm font-medium text-slate-600 shadow-md backdrop-blur-sm transition hover:bg-slate-50 hover:text-accent dark:border-slate-700 dark:bg-slate-900/90 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-accent lg:flex",
               )}
-            aria-label={isDesktopTocOpen ? "Close Table of Contents" : "Open Table of Contents"}
+            aria-label={isDesktopTocOpen ? "隱藏文章目錄" : "開啟文章目錄"}
         >
             <FiList className="h-4 w-4" />
             <span>{isDesktopTocOpen ? '隱藏目錄' : '顯示目錄'}</span>

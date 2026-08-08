@@ -88,7 +88,7 @@ export function PostListWithControls({ posts, pageSize }: Props) {
               }`}
           >
             <FiArrowDown className="h-3 w-3" />
-            新到舊
+            最新
           </button>
           <button
             type="button"
@@ -99,7 +99,7 @@ export function PostListWithControls({ posts, pageSize }: Props) {
               }`}
           >
             <FiArrowUp className="h-3 w-3" />
-            舊到新
+            最舊
           </button>
         </div>
         <div className="flex w-full items-center text-sm sm:w-auto">
@@ -140,7 +140,7 @@ export function PostListWithControls({ posts, pageSize }: Props) {
 
       {currentPosts.length === 0 ? (
         <div className="rounded-lg border border-dashed border-slate-200 p-6 text-center text-sm text-slate-500 dark:border-slate-700 dark:text-slate-400">
-          找不到符合關鍵字的文章，換個詞再試試？
+          無符合條件的文章
         </div>
       ) : (
         <TimelineWrapper className="space-y-3">
