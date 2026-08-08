@@ -4,34 +4,18 @@ import { useEffect, useState } from 'react';
 import { FaMastodon } from 'react-icons/fa';
 import { FiArrowRight } from 'react-icons/fi';
 import {
-  parseMastodonUrl,
   stripHtml,
   truncateText,
   formatRelativeTime,
-  fetchAccountId,
-  fetchStatuses,
   type MastodonStatus
 } from '@/lib/mastodon';
 import { siteConfig } from '@/lib/config';
 /**
- * Fetch the latest statuses server-side from the configured Mastodon account.
- * Runs inside a Suspense boundary so the page shell streams immediately while
- * the social feed loads.
+ * Mastodon feed card.
+ * Data is fetched server-side via the /api/mastodon route handler so the
+ * browser never talks to the external instance directly, while the
+ * lazy-rendered client card stays interactive.
  */
-async function fetchFeedStatuses(): Promise<MastodonStatus[]> {
-  const mastodonUrl = siteConfig.social.mastodon;
-  if (!mastodonUrl) return [];
-
-  const parsed = parseMastodonUrl(mastodonUrl);
-  if (!parsed) return [];
-
-  const accountId = await fetchAccountId(parsed.instance, parsed.username);
-  if (!accountId) return [];
-
-  return await fetchStatuses(parsed.instance, accountId, 5);
-}
-
-/** Streaming fallback skeleton shown while statuses load. */
 function FeedSkeleton() {
   return (
     <div className="space-y-3">
@@ -202,7 +186,9 @@ export function MastodonFeed() {
     let cancelled = false;
     ;(async () => {
       try {
-        const list = await fetchFeedStatuses();
+        const res = await fetch('/api/mastodon', { cache: 'no-store' });
+        const data = await res.json();
+        const list: MastodonStatus[] | null = Array.isArray(data.statuses) ? data.statuses : null;
         if (!cancelled) {
           setStatuses(list);
           setLoading(false);
