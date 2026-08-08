@@ -225,7 +225,7 @@ export function NavMenu({ items }: NavMenuProps) {
               type="button"
               className="inline-flex h-10 w-10 items-center justify-center rounded-full text-slate-600 transition-colors hover:bg-slate-100 hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40 dark:text-slate-200 dark:hover:bg-slate-800 dark:hover:text-accent"
               onClick={close}
-              aria-label="Close menu"
+              aria-label="關閉選單"
             >
               <div className="relative h-5 w-5">
                 <span className="absolute left-0 top-1/2 h-0.5 w-5 -translate-y-1/2 rotate-45 bg-current" />

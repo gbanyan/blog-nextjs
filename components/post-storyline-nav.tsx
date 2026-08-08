@@ -22,17 +22,17 @@ export function PostStorylineNav({ current, newer, older }: Props) {
   const stations: StationConfig[] = [
     {
       key: 'older',
-      label: '上一站',
+      label: '上一篇',
       post: older,
-      subtitle: older ? '回顧這篇' : '到達起點',
+      subtitle: older ? '較舊文章' : '已是首篇',
       rel: 'prev',
       align: 'end'
     },
     {
       key: 'newer',
-      label: '下一站',
+      label: '下一篇',
       post: newer,
-      subtitle: newer ? '繼續前往' : '尚無新章',
+      subtitle: newer ? '較新文章' : '已是最新',
       rel: 'next',
       align: 'start'
     }

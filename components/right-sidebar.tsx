@@ -174,16 +174,13 @@ export function RightSidebarContent({ forceLoadFeed = false }: { forceLoadFeed?:
                 );
               })}
             </div>
-            <div className="mt-3 flex items-center justify-between type-small text-slate-500 dark:text-slate-400">
-              <span className="inline-flex items-center gap-1">
-                <FiArrowRight className="h-3 w-3" />
-                一覽所有標籤
-              </span>
+            <div className="mt-3 type-small text-slate-500 dark:text-slate-400">
               <Link
                 href="/tags"
-                className="motion-link text-accent-textLight hover:text-accent dark:text-accent-textDark dark:hover:text-accent"
+                className="motion-link inline-flex items-center gap-1 text-accent-textLight hover:text-accent dark:text-accent-textDark dark:hover:text-accent"
               >
-                前往
+                所有標籤
+                <FiArrowRight className="h-3 w-3" />
               </Link>
             </div>
           </section>

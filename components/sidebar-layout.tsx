@@ -58,7 +58,7 @@ export function SidebarLayout({ children }: { children: React.ReactNode }) {
             type="button"
             onClick={() => setMobileSidebarOpen(false)}
              className="rounded-full p-1 text-slate-500 hover:bg-slate-100 hover:text-accent dark:hover:bg-slate-800 dark:hover:text-accent"
-            aria-label="關閉側邊欄"
+            aria-label="關閉更多內容"
           >
             <FiX className="h-5 w-5" />
           </button>
@@ -80,7 +80,7 @@ export function SidebarLayout({ children }: { children: React.ReactNode }) {
         'fixed bottom-6 left-6 z-40 flex h-11 w-11 items-center justify-center rounded-full border border-slate-200 bg-white/90 text-slate-600 shadow-md backdrop-blur-sm transition hover:bg-slate-50 hover:text-accent dark:border-slate-700 dark:bg-slate-900/90 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-accent lg:hidden',
         mobileSidebarOpen ? 'opacity-0 pointer-events-none' : 'opacity-100'
         )}
-      aria-label="開啟側邊欄"
+      aria-label="開啟更多內容"
     >
       <FiLayout className="h-5 w-5" />
     </button>
