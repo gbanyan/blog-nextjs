@@ -26,44 +26,30 @@ export function SiteHeader({ recentPosts = [] }: SiteHeaderProps) {
     .slice()
     .sort((a, b) => (a.title || '').localeCompare(b.title || ''));
 
-  const findPage = (title: string) => pages.find((page) => page.title === title);
 
+  // Nav groups are driven by declarative frontmatter (TARGET #2): pages
+  // declare `nav_category`, `nav_label` and `icon` instead of us
+  // string-matching titles/slugs at runtime.
   const aboutChildren: NavLinkItem[] = [
-    ...(
-      [
-        { title: '關於作者', label: '作者' },
-        { title: '關於本站', label: '本站' }
-      ]
-        .map(({ title, label }) => {
-          const page = findPage(title);
-          if (!page) return null;
-          return {
-            key: page._id,
-            href: page.url,
-            label,
-            iconKey: getIconForPage(page.title, page.slug)
-          } satisfies NavLinkItem;
-        })
-        .filter(Boolean) as NavLinkItem[]
-    ),
+    ...pages
+      .filter((page) => page.nav_category === 'about')
+      .map((page) => ({
+        key: page._id,
+        href: page.url,
+        label: page.nav_label || page.title,
+        iconKey: (page.icon as IconKey) ?? 'user'
+      })),
     { key: 'projects', href: '/projects', label: '作品', iconKey: 'pen' }
   ];
 
-  const deviceChildren = [
-    { title: '開發工作環境', label: '開發環境' },
-    { title: 'HomeLab', label: 'HomeLab' }
-  ]
-    .map(({ title, label }) => {
-      const page = findPage(title);
-      if (!page) return null;
-      return {
-        key: page._id,
-        href: page.url,
-        label,
-        iconKey: getIconForPage(page.title, page.slug)
-      } satisfies NavLinkItem;
-    })
-    .filter(Boolean) as NavLinkItem[];
+  const deviceChildren: NavLinkItem[] = pages
+    .filter((page) => page.nav_category === 'device')
+    .map((page) => ({
+      key: page._id,
+      href: page.url,
+      label: page.nav_label || page.title,
+      iconKey: (page.icon as IconKey) ?? 'device'
+    }));
 
   const navItems: NavLinkItem[] = [
     { key: 'home', href: '/', label: '首頁', iconKey: 'home' },
@@ -108,45 +94,4 @@ export function SiteHeader({ recentPosts = [] }: SiteHeaderProps) {
       </div>
     </header>
   );
-}
-
-
-const titleOverrides = Object.fromEntries(
-  Object.entries(siteConfig.navIconOverrides?.titles ?? {}).map(([key, value]) => [
-    key.trim().toLowerCase(),
-    value as IconKey
-  ])
-);
-
-const slugOverrides = Object.fromEntries(
-  Object.entries(siteConfig.navIconOverrides?.slugs ?? {}).map(([key, value]) => [
-    key.trim().toLowerCase(),
-    value as IconKey
-  ])
-);
-
-function getIconForPage(title?: string, slug?: string): IconKey {
-  const normalizedTitle = title?.trim().toLowerCase();
-  if (normalizedTitle && titleOverrides[normalizedTitle]) {
-    return titleOverrides[normalizedTitle];
-  }
-
-  const normalizedSlug = slug?.trim().toLowerCase();
-  if (normalizedSlug && slugOverrides[normalizedSlug]) {
-    return slugOverrides[normalizedSlug];
-  }
-
-  if (!title) return 'file';
-  const lower = title.toLowerCase();
-  if (lower.includes('關於本站')) return 'menu';
-  if (lower.includes('關於') || lower.includes('about')) return 'user';
-  if (lower.includes('聯絡') || lower.includes('contact')) return 'contact';
-  if (lower.includes('位置') || lower.includes('map')) return 'location';
-  if (lower.includes('作品') || lower.includes('portfolio')) return 'pen';
-  if (lower.includes('標籤') || lower.includes('tags')) return 'tags';
-  if (lower.includes('homelab')) return 'server';
-  if (lower.includes('server') || lower.includes('伺服') || lower.includes('infrastructure')) return 'server';
-  if (lower.includes('開發工作環境')) return 'device';
-  if (lower.includes('device') || lower.includes('設備') || lower.includes('硬體') || lower.includes('hardware')) return 'device';
-  return 'file';
 }

@@ -1,3 +1,21 @@
+/**
+ * NOTE (TARGET #4): `contentlayer2` (and its predecessor `contentlayer`) is
+ * **unmaintained**. We keep it because the existing pipeline works, but be
+ * aware of the workarounds required to keep it building:
+ *   - `disableImportAliasWarning: true` — silences a warning caused by the
+ *     import-alias heuristics of the unmaintained package.
+ *   - `typeFieldName` on `documentTypeName` — workaround for the package's
+ *     handling of `type` fields in markdown frontmatter.
+ *   - `scripts/sync-assets` (see package.json) — custom copy of content
+ *     assets, because Contentlayer2's built-in asset handling is buggy.
+ *   - The `@contentlayer/generated` / `contentlayer2/generated` import is
+ *     generated at build time by `contentlayer2 build`.
+ *
+ * This is a **migration candidate**: if this breaks, the natural replacement
+ * is `@content-collections` (content-collections) or a small hand-rolled
+ * markdown pipeline (remark/rehype + glob), which removes the dependency on
+ * this unmaintained package entirely.
+ */
 import { defineDocumentType, makeSource } from 'contentlayer2/source-files';
 import rehypeSlug from 'rehype-slug';
 import rehypeAutolinkHeadings from 'rehype-autolink-headings';
@@ -61,7 +79,14 @@ export const Page = defineDocumentType(() => ({
     custom_excerpt: { type: 'string', required: false },
     tags: { type: 'list', of: { type: 'string' }, required: false },
     authors: { type: 'list', of: { type: 'string' }, required: false },
-    feature_image: { type: 'string', required: false }
+    feature_image: { type: 'string', required: false },
+    // Declarative layout/hero/nav metadata (see TARGET #2 — replaces fragile
+    // slug/title string-matching in page.tsx / site-header.tsx).
+    layout: { type: 'string', required: false },      // 'default' | 'device'
+    nav_category: { type: 'string', required: false }, // nav group: 'about' | 'device'
+    nav_label: { type: 'string', required: false },    // nav display label
+    hero: { type: 'string', required: false },         // hero component key: 'dev-env' | 'homelab'
+    icon: { type: 'string', required: false }          // nav IconKey
   },
   computedFields: {
     url: {

@@ -9,6 +9,7 @@ import { ReadingProgress } from '@/components/reading-progress';
 import { PostLayout } from '@/components/post-layout';
 import { ScrollReveal } from '@/components/scroll-reveal';
 import { SectionDivider } from '@/components/section-divider';
+import type { ComponentType } from 'react';
 import { JsonLd } from '@/components/json-ld';
 import { DevEnvDeviceHero } from '@/components/dev-env-device-hero';
 import { HomeLabDeviceHero } from '@/components/homelab-device-hero';
@@ -77,6 +78,14 @@ export default async function StaticPage({ params }: Props) {
 
   const hasToc = /<h[23]/.test(page.body.html);
 
+  // Declarative layout/hero metadata (TARGET #2) — no more slug string-matching.
+  const isDevice = page.layout === 'device';
+  const heroByKey: Record<string, ComponentType> = {
+    'dev-env': DevEnvDeviceHero,
+    'homelab': HomeLabDeviceHero
+  };
+  const Hero = page.hero ? heroByKey[page.hero] : null;
+
   // Generate absolute URL for the page
   const pageUrl = `${siteConfig.url}${page.url}`;
 
@@ -111,13 +120,13 @@ export default async function StaticPage({ params }: Props) {
     <>
       <JsonLd data={webPageSchema} />
       <ReadingProgress />
-      <PostLayout hasToc={hasToc} contentKey={slug} wide={slug === 'dev-env' || slug === 'homelab'}>
-        <div className={slug === 'dev-env' || slug === 'homelab' ? 'space-y-4' : 'space-y-8'}>
+      <PostLayout hasToc={hasToc} contentKey={slug} wide={isDevice}>
+        <div className={isDevice ? 'space-y-4' : 'space-y-8'}>
           {/* Main content area for Pagefind indexing */}
           <div data-pagefind-body>
             <SectionDivider>
               <ScrollReveal>
-                <header className={slug === 'dev-env' || slug === 'homelab' ? 'mb-4 space-y-3 text-center' : 'mb-6 space-y-4 text-center'}>
+                <header className={isDevice ? 'mb-4 space-y-3 text-center' : 'mb-6 space-y-4 text-center'}>
                   {page.published_at && (
                     <p className="type-small text-slate-500 dark:text-slate-500">
                       {new Date(page.published_at).toLocaleDateString(
@@ -151,10 +160,8 @@ export default async function StaticPage({ params }: Props) {
                   data-toc-content={slug}
                   className="prose prose-lg prose-slate mx-auto max-w-none dark:prose-invert"
                 >
-                  {slug === 'dev-env' ? (
-                    <DevEnvDeviceHero />
-                  ) : slug === 'homelab' ? (
-                    <HomeLabDeviceHero />
+                  {Hero ? (
+                    <Hero />
                   ) : (
                     page.feature_image && (
                       <div className="-mx-4 mb-8 transition-all duration-500 sm:-mx-12 lg:-mx-20 group-[.toc-open]:lg:-mx-4">

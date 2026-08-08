@@ -430,3 +430,45 @@ Follow the same process as above, but create the file in `content/pages/` instea
 ## License
 
 This is a personal project. No explicit open-source license is provided; all rights reserved unless otherwise noted.
+
+
+## Architecture Notes
+
+### Content pipeline: `contentlayer2` (unmaintained — migration candidate)
+
+The content pipeline is built on **`contentlayer2`** (and its predecessor
+`contentlayer`), which is **unmaintained**. We keep it because the existing
+pipeline works, but it requires several workarounds (see the header comment in
+`contentlayer.config.ts`):
+
+- `disableImportAliasWarning: true` and `typeFieldName` workarounds.
+- A custom `scripts/sync-assets` step because the package's built-in asset
+  handling is buggy.
+- Build-time generation of `contentlayer2/generated` types.
+
+**This is a migration candidate.** If the package breaks, the natural
+replacement is `@content-collections` or a small hand-rolled markdown pipeline
+(remark/rehype + glob), removing the dependency entirely.
+
+### TARGET #1 — single-pass markdown image handling
+
+Images in markdown are handled **once, at build time** in
+`lib/rehype-optimize-images.ts` (src rewrite + intrinsic width/height + lazy
+loading + sizes). `components/markdown-body.tsx` renders the rehype HTML
+directly via `dangerouslySetInnerHTML`; we do **not** re-parse with
+html-react-parser nor re-wrap `<img>` in `next/image` at runtime (that was
+duplicated work). `html-react-parser` is no longer a dependency.
+
+### TARGET #2 — declarative page layout/nav metadata
+
+Page layout/hero/nav decisions are driven by declarative frontmatter fields on
+the Page schema (`layout`, `hero`, `nav_category`, `nav_label`, `icon`) instead
+of fragile slug/title string-matching at runtime (see `app/pages/[slug]/page.tsx`
+and `components/site-header.tsx`).
+
+### TARGET #3 — shared mobile drawer
+
+Mobile drawer/portal boilerplate (body overflow-lock, `mounted` state,
+backdrop + panel + close button) is extracted into `lib/use-drawer.ts` +
+`components/mobile-drawer.tsx`. `sidebar-layout.tsx` and `post-layout.tsx`
+consume the shared pieces instead of duplicating them.
