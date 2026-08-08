@@ -1,111 +1,45 @@
-'use client';
-
-import { useState, useEffect } from 'react';
-import { createPortal } from 'react-dom';
 import dynamic from 'next/dynamic';
-import type { TagItem } from '@/lib/sidebar-data';
-import { FiLayout, FiX } from 'react-icons/fi';
+import { FiLayout } from 'react-icons/fi';
 import { clsx } from 'clsx';
+import { MobileDrawer } from './mobile-drawer';
+import { useDrawer } from '@/lib/use-drawer';
 
-// Lazy load RightSidebar since it's only visible on lg+ screens
-const RightSidebar = dynamic(() => import('./right-sidebar').then(mod => ({ default: mod.RightSidebar })), {
-  ssr: false,
-});
+const RightSidebar = dynamic(() => import('./right-sidebar').then(mod => mod.RightSidebar), { ssr: false });
+const RightSidebarContent = dynamic(() => import('./right-sidebar').then(mod => mod.RightSidebarContent), { ssr: false });
 
-const RightSidebarContent = dynamic(() => import('./right-sidebar').then(mod => ({ default: mod.RightSidebarContent })), {
-  ssr: false,
-});
-
-export function SidebarLayout({
-  children,
-  tags,
-  aboutUrl,
-  avatarSrc,
-}: {
-  children: React.ReactNode;
-  tags: TagItem[];
-  aboutUrl: string;
-  avatarSrc: string;
-}) {
-  const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => setMounted(true), []);
-
-  useEffect(() => {
-    if (mobileSidebarOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = '';
-    }
-    return () => { document.body.style.overflow = ''; };
-  }, [mobileSidebarOpen]);
-
-  const mobileDrawer = mounted && createPortal(
-    <>
-      {/* Backdrop */}
-      <div
-        className={clsx(
-          'fixed inset-0 z-[1100] bg-black/40 backdrop-blur-sm transition-opacity duration-300 lg:hidden',
-          mobileSidebarOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'
-        )}
-        onClick={() => setMobileSidebarOpen(false)}
-        aria-hidden="true"
-      />
-
-      {/* Slide-over panel from right */}
-      <div
-        className={clsx(
-          'fixed top-0 right-0 bottom-0 z-[1110] w-full max-w-sm flex flex-col rounded-l-2xl border-l border-white/20 bg-white/95 shadow-2xl backdrop-blur-xl transition-transform duration-300 ease-snappy dark:border-white/10 dark:bg-slate-900/95 lg:hidden',
-          mobileSidebarOpen ? 'translate-x-0' : 'translate-x-full'
-        )}
-      >
-        <div className="flex items-center justify-between border-b border-slate-200/50 px-6 py-4 dark:border-slate-700/50">
-          <div className="flex items-center gap-2 font-semibold text-slate-900 dark:text-slate-100">
-            <FiLayout className="h-5 w-5 text-slate-500" />
-            <span>側邊欄</span>
-          </div>
-          <button
-            type="button"
-            onClick={() => setMobileSidebarOpen(false)}
-             className="rounded-full p-1 text-slate-500 hover:bg-slate-100 hover:text-accent dark:hover:bg-slate-800 dark:hover:text-accent"
-            aria-label="關閉更多內容"
-          >
-            <FiX className="h-5 w-5" />
-          </button>
-        </div>
-
-        <div className="scroll-panel flex-1 px-6 py-6">
-          <RightSidebarContent tags={tags} aboutUrl={aboutUrl} avatarSrc={avatarSrc} forceLoadFeed={mobileSidebarOpen} />
-        </div>
-      </div>
-    </>,
-    document.body
-  );
-
-  const mobileFab = mounted && (
-    <button
-      type="button"
-      onClick={() => setMobileSidebarOpen(true)}
-        className={clsx(
-        'fixed bottom-6 left-6 z-40 flex h-11 w-11 items-center justify-center rounded-full border border-slate-200 bg-white/90 text-slate-600 shadow-md backdrop-blur-sm transition hover:bg-slate-50 hover:text-accent dark:border-slate-700 dark:bg-slate-900/90 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-accent lg:hidden',
-        mobileSidebarOpen ? 'opacity-0 pointer-events-none' : 'opacity-100'
-        )}
-      aria-label="開啟更多內容"
-    >
-      <FiLayout className="h-5 w-5" />
-    </button>
-  );
+export function SidebarLayout({ children, tags, aboutUrl, avatarSrc }: { children: React.ReactNode; tags: TagItem[]; aboutUrl: string; avatarSrc: string }) {
+  const { open, setOpen, mounted } = useDrawer();
 
   return (
     <>
-      <div className="grid gap-8 lg:grid-cols-[minmax(0,3fr)_minmax(0,1.4fr)]">
+      <div className="grid gap-8 lg:grid-cols-[minmax(0,3fr)_minmax(0,1.4fr)] lg:gap-12">
         <div>{children}</div>
-        <RightSidebar tags={tags} aboutUrl={aboutUrl} avatarSrc={avatarSrc} />
+        <div className="hidden lg:block">
+          <RightSidebar tags={tags} aboutUrl={aboutUrl} avatarSrc={avatarSrc} />
+        </div>
       </div>
 
-      {mobileDrawer}
-      {mobileFab}
+      <MobileDrawer
+        open={open}
+        mounted={mounted}
+        onClose={() => setOpen(false)}
+        title="側邊欄"
+        icon={<FiLayout className="h-5 w-5" />}
+        closeLabel="關閉側邊欄"
+      >
+        <RightSidebarContent tags={tags} aboutUrl={aboutUrl} avatarSrc={avatarSrc} />
+      </MobileDrawer>
+
+      <button
+        type="button"
+        onClick={() => setOpen(true)}
+        aria-label="開啟側邊欄"
+        className={clsx(
+          'fixed bottom-6 left-6 z-40 flex h-12 w-12 items-center justify-center rounded-full border border-slate-200 bg-white/90 text-slate-600 shadow-md backdrop-blur transition hover:bg-slate-100 hover:text-accent dark:border-slate-700 dark:bg-slate-900/90 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-slate-200 lg:hidden'
+        )}
+      >
+        <FiLayout className="h-5 w-5" />
+      </button>
     </>
   );
 }
