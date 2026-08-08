@@ -94,6 +94,8 @@ export default async function BlogPostPage({ params }: Props) {
   const neighbors = getPostNeighbors(post);
 
   const hasToc = /<h[23]/.test(post.body.html);
+  const hasMermaid =
+    /data-language="mermaid"|language-mermaid/.test(post.body.html);
 
   // Generate absolute URL for the post
   const postUrl = `${siteConfig.url}${post.url}`;
@@ -258,7 +260,7 @@ export default async function BlogPostPage({ params }: Props) {
                 <div>
                   <MarkdownBody html={post.body.html} />
                 </div>
-                <MermaidRenderer />
+                {hasMermaid && <MermaidRenderer />}
               </article>
             </ScrollReveal>
           </SectionDivider>

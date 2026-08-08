@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import dynamic from 'next/dynamic';
+import type { TagItem } from '@/lib/sidebar-data';
 import { FiLayout, FiX } from 'react-icons/fi';
 import { clsx } from 'clsx';
 
@@ -15,7 +16,17 @@ const RightSidebarContent = dynamic(() => import('./right-sidebar').then(mod => 
   ssr: false,
 });
 
-export function SidebarLayout({ children }: { children: React.ReactNode }) {
+export function SidebarLayout({
+  children,
+  tags,
+  aboutUrl,
+  avatarSrc,
+}: {
+  children: React.ReactNode;
+  tags: TagItem[];
+  aboutUrl: string;
+  avatarSrc: string;
+}) {
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
 
@@ -65,7 +76,7 @@ export function SidebarLayout({ children }: { children: React.ReactNode }) {
         </div>
 
         <div className="scroll-panel flex-1 px-6 py-6">
-          <RightSidebarContent forceLoadFeed={mobileSidebarOpen} />
+          <RightSidebarContent tags={tags} aboutUrl={aboutUrl} avatarSrc={avatarSrc} forceLoadFeed={mobileSidebarOpen} />
         </div>
       </div>
     </>,
@@ -90,7 +101,7 @@ export function SidebarLayout({ children }: { children: React.ReactNode }) {
     <>
       <div className="grid gap-8 lg:grid-cols-[minmax(0,3fr)_minmax(0,1.4fr)]">
         <div>{children}</div>
-        <RightSidebar />
+        <RightSidebar tags={tags} aboutUrl={aboutUrl} avatarSrc={avatarSrc} />
       </div>
 
       {mobileDrawer}

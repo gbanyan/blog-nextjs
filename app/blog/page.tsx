@@ -3,6 +3,7 @@ import { getAllPostsSorted } from '@/lib/posts';
 import { PostListWithControls } from '@/components/post-list-with-controls';
 import { TimelineWrapper } from '@/components/timeline-wrapper';
 import { SidebarLayout } from '@/components/sidebar-layout';
+import { getSidebarData } from '@/lib/sidebar-data';
 import { SectionDivider } from '@/components/section-divider';
 import { ScrollReveal } from '@/components/scroll-reveal';
 import { FiTrendingUp } from 'react-icons/fi';
@@ -18,6 +19,7 @@ export const metadata = {
 };
 
 export default function BlogIndexPage() {
+  const { tags, aboutUrl, avatarSrc } = getSidebarData();
   const posts = getAllPostsSorted();
 
   // Blog schema
@@ -44,7 +46,7 @@ export default function BlogIndexPage() {
   return (
     <section className="space-y-4">
       <JsonLd data={blogSchema} />
-      <SidebarLayout>
+      <SidebarLayout tags={tags} aboutUrl={aboutUrl} avatarSrc={avatarSrc}>
         <SectionDivider>
           <ScrollReveal>
             <header className="space-y-1">

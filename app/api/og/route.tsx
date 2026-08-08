@@ -1,15 +1,19 @@
+import { readFileSync } from 'node:fs';
+import path from 'node:path';
+
 import { ImageResponse } from 'next/og';
 import { NextRequest } from 'next/server';
 
+const FONT_DIR = path.join(process.cwd(), 'lib', 'og-fonts');
 const fontCache = new Map<string, ArrayBuffer>();
 
-async function loadFont(url: string): Promise<ArrayBuffer> {
-  const cached = fontCache.get(url);
+function loadFontSync(filename: string): ArrayBuffer {
+  const cached = fontCache.get(filename);
   if (cached) return cached;
-  const res = await fetch(url);
-  const data = await res.arrayBuffer();
-  fontCache.set(url, data);
-  return data;
+  const buf = readFileSync(path.join(FONT_DIR, filename));
+  const ab = buf.buffer.slice(buf.byteOffset, buf.byteOffset + buf.byteLength) as ArrayBuffer;
+  fontCache.set(filename, ab);
+  return ab;
 }
 
 export async function GET(request: NextRequest) {
@@ -22,12 +26,8 @@ export async function GET(request: NextRequest) {
     const tags = searchParams.get('tags')?.split(',').slice(0, 3) || [];
 
     // Load CJK font for Chinese text rendering
-    const fontData = await loadFont(
-      'https://cdn.jsdelivr.net/fontsource/fonts/noto-sans-tc@latest/chinese-traditional-400-normal.woff'
-    );
-    const fontBoldData = await loadFont(
-      'https://cdn.jsdelivr.net/fontsource/fonts/noto-sans-tc@latest/chinese-traditional-700-normal.woff'
-    );
+    const fontData = loadFontSync('noto-400.woff');
+    const fontBoldData = loadFontSync('noto-700.woff');
 
     const imageResponse = new ImageResponse(
       (
@@ -186,7 +186,7 @@ export async function GET(request: NextRequest) {
     return new Response(imageResponse.body, {
       headers: {
         'Content-Type': 'image/png',
-        'Cache-Control': 'public, max-age=3600, s-maxage=3600, stale-while-revalidate=86400',
+        'Cache-Control': 'public, max-age=31536000, s-maxage=31536000, immutable',
       },
     });
   } catch (e: any) {

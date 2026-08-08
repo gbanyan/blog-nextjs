@@ -1,27 +1,16 @@
-'use client';
-
-import { useState } from 'react';
-import dynamic from 'next/dynamic';
 import { ThemeToggle } from './theme-toggle';
+import { SiteHeaderSearch } from './site-header-search';
 import { NavMenu, NavLinkItem, IconKey } from './nav-menu';
-import { SearchButton } from './search-modal';
 import { siteConfig } from '@/lib/config';
 import { allPages } from 'contentlayer2/generated';
 import Link from 'next/link';
 import { NAV_TRANSITION } from '@/lib/navigation';
-
-// Dynamically import SearchModal to reduce initial bundle size
-const SearchModal = dynamic(
-  () => import('./search-modal').then((mod) => ({ default: mod.SearchModal })),
-  { ssr: false }
-);
 
 interface SiteHeaderProps {
   recentPosts?: { title: string; url: string }[];
 }
 
 export function SiteHeader({ recentPosts = [] }: SiteHeaderProps) {
-  const [isSearchOpen, setIsSearchOpen] = useState(false);
   const pages = allPages
     .slice()
     .sort((a, b) => (a.title || '').localeCompare(b.title || ''));
@@ -97,14 +86,9 @@ export function SiteHeader({ recentPosts = [] }: SiteHeaderProps) {
         </Link>
         <div className="flex items-center gap-3">
           <NavMenu items={navItems} />
-          <SearchButton onClick={() => setIsSearchOpen(true)} />
+          <SiteHeaderSearch recentPosts={recentPosts} />
           <ThemeToggle />
         </div>
-        <SearchModal
-          isOpen={isSearchOpen}
-          onClose={() => setIsSearchOpen(false)}
-          recentPosts={recentPosts}
-        />
       </div>
     </header>
   );
