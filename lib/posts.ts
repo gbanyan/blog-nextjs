@@ -1,18 +1,20 @@
 import { allPosts, allPages, Post, Page } from 'contentlayer2/generated';
 
-let _sortedCache: Post[] | null = null;
-let _relatedCache: Map<string, Post[]> = new Map();
-let _neighborsCache: Map<string, { newer?: Post; older?: Post }> = new Map();
-let _tagsCache: { tag: string; slug: string; count: number }[] | null = null;
-
-export function getAllPostsSorted(): Post[] {
-  if (_sortedCache) return _sortedCache;
-  _sortedCache = [...allPosts].sort((a, b) => {
+/**
+ * All posts sorted newest-first.
+ *
+ * Uses Next.js `"use cache"` (enabled via `cacheComponents`) so the derivation
+ * is cached across renders/requests instead of relying on a brittle
+ * module-level `_sortedCache` variable. This also lets the route be
+ * statically prerendered under Partial Prerendering (PPR).
+ */
+export async function getAllPostsSorted(): Promise<Post[]> {
+  'use cache';
+  return [...allPosts].sort((a, b) => {
     const aDate = a.published_at ? new Date(a.published_at).getTime() : 0;
     const bDate = b.published_at ? new Date(b.published_at).getTime() : 0;
     return bDate - aDate;
   });
-  return _sortedCache;
 }
 
 export function getPostBySlug(slug: string): Post | undefined {
@@ -33,45 +35,16 @@ export function getPageBySlug(slug: string): Page | undefined {
   );
 }
 
-export function getTagSlug(tag: string): string {
-  // Normalize spaces and convert to lowercase
-  // Replace multiple spaces/dashes with single dash
-  // Next.js will handle URL encoding automatically, so we don't encode here
-  return tag
-    .toLowerCase()
-    .replace(/\s+/g, '-')
-    .replace(/-+/g, '-')
-    .trim();
-}
-
-export function getAllTagsWithCount(): { tag: string; slug: string; count: number }[] {
-  if (_tagsCache) return _tagsCache;
-
-  const map = new Map<string, number>();
-  for (const post of allPosts) {
-    if (!post.tags) continue;
-    for (const postTag of post.tags) {
-      map.set(postTag, (map.get(postTag) ?? 0) + 1);
-    }
-  }
-
-  _tagsCache = Array.from(map.entries())
-    .map(([tag, count]) => ({ tag, slug: getTagSlug(tag), count }))
-    .sort((a, b) => {
-      if (b.count === a.count) return a.tag.localeCompare(b.tag);
-      return b.count - a.count;
-    });
-  return _tagsCache;
-}
-
-export function getRelatedPosts(target: Post, limit = 3): Post[] {
-  const cacheKey = `${target._id}-${limit}`;
-  if (_relatedCache.has(cacheKey)) {
-    return _relatedCache.get(cacheKey)!;
-  }
+/**
+ * Posts related to `target` by shared tags, newest-first.
+ * `"use cache"` replaces the previous module-level `_relatedCache`.
+ */
+export async function getRelatedPosts(target: Post, limit = 3): Promise<Post[]> {
+  'use cache';
+  const posts = await getAllPostsSorted();
 
   const targetTags = new Set(target.tags?.map((tag) => tag.toLowerCase()) ?? []);
-  const candidates = getAllPostsSorted().filter((post) => post._id !== target._id);
+  const candidates = posts.filter((post) => post._id !== target._id);
 
   if (candidates.length === 0) return [];
 
@@ -108,29 +81,25 @@ export function getRelatedPosts(target: Post, limit = 3): Post[] {
     result = [...scored, ...fallback.slice(0, limit - scored.length)].slice(0, limit);
   }
 
-  _relatedCache.set(cacheKey, result);
   return result;
 }
 
-export function getPostNeighbors(target: Post): {
+/**
+ * Newer/older neighbors around `target` for prev/next navigation.
+ * `"use cache"` replaces the previous module-level `_neighborsCache`.
+ */
+export async function getPostNeighbors(target: Post): Promise<{
   newer?: Post;
   older?: Post;
-} {
-  const cacheKey = target._id;
-  if (_neighborsCache.has(cacheKey)) {
-    return _neighborsCache.get(cacheKey)!;
-  }
+}> {
+  'use cache';
+  const posts = await getAllPostsSorted();
 
-  const sorted = getAllPostsSorted();
-  const index = sorted.findIndex((post) => post._id === target._id);
-
+  const index = posts.findIndex((post) => post._id === target._id);
   if (index === -1) return {};
 
-  const result = {
-    newer: index > 0 ? sorted[index - 1] : undefined,
-    older: index < sorted.length - 1 ? sorted[index + 1] : undefined
+  return {
+    newer: index > 0 ? posts[index - 1] : undefined,
+    older: index < posts.length - 1 ? posts[index + 1] : undefined
   };
-
-  _neighborsCache.set(cacheKey, result);
-  return result;
 }

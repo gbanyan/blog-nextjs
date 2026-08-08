@@ -17,8 +17,8 @@ export const metadata = {
   }
 };
 
-export default function BlogIndexPage() {
-  const posts = getAllPostsSorted();
+export default async function BlogIndexPage() {
+  const posts = await getAllPostsSorted();
 
   // Blog schema
   const blogSchema = {

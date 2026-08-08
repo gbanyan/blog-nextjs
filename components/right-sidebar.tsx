@@ -6,15 +6,9 @@ import { useEffect, useRef, useState } from 'react';
 import { FaGithub, FaMastodon, FaLinkedin } from 'react-icons/fa';
 import { FiTrendingUp, FiArrowRight } from 'react-icons/fi';
 import { siteConfig } from '@/lib/config';
-import { getAllTagsWithCount } from '@/lib/posts';
+import { getAllTagsWithCount } from '@/lib/tags';
 import { allPages } from 'contentlayer2/generated';
-import dynamic from 'next/dynamic';
-
-// Lazy load MastodonFeed - only load when sidebar is visible
-const MastodonFeed = dynamic(() => import('./mastodon-feed').then(mod => ({ default: mod.MastodonFeed })), {
-  ssr: false,
-  loading: () => <div className="h-32 w-full animate-pulse rounded-xl bg-slate-100 dark:bg-slate-800" />,
-});
+import { MastodonFeed } from './mastodon-feed';
 
 /** Shared sidebar content for desktop aside and mobile drawer */
 export function RightSidebarContent({ forceLoadFeed = false }: { forceLoadFeed?: boolean }) {

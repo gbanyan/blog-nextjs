@@ -1,5 +1,10 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // Next 16: `cacheComponents` (top-level) enables Partial Prerendering (PPR)
+  // and the `"use cache"` directive. It replaces the deprecated
+  // `experimental.ppr: "incremental"` flag.
+  cacheComponents: true,
+
   experimental: {
     // Enable React View Transitions for App Router navigations (Next.js 16.2+)
     viewTransition: true,

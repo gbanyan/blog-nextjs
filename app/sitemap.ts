@@ -1,6 +1,6 @@
 import { MetadataRoute } from 'next';
 import { allPosts, allPages } from 'contentlayer2/generated';
-import { getTagSlug } from '@/lib/posts';
+import { getTagSlug } from '@/lib/tags';
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';

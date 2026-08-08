@@ -1,9 +1,6 @@
-'use client';
-
-import { useEffect, useState } from 'react';
+import { Suspense } from 'react';
 import { FaMastodon } from 'react-icons/fa';
 import { FiArrowRight } from 'react-icons/fi';
-import { siteConfig } from '@/lib/config';
 import {
   parseMastodonUrl,
   stripHtml,
@@ -13,63 +10,196 @@ import {
   fetchStatuses,
   type MastodonStatus
 } from '@/lib/mastodon';
+import { siteConfig } from '@/lib/config';
 
-export function MastodonFeed() {
-  const [statuses, setStatuses] = useState<MastodonStatus[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(false);
+/**
+ * Fetch the latest statuses server-side from the configured Mastodon account.
+ * Runs inside a Suspense boundary so the page shell streams immediately while
+ * the social feed loads.
+ */
+async function fetchFeedStatuses(): Promise<MastodonStatus[]> {
+  const mastodonUrl = siteConfig.social.mastodon;
+  if (!mastodonUrl) return [];
 
-  useEffect(() => {
-    const loadStatuses = async () => {
-      const mastodonUrl = siteConfig.social.mastodon;
+  const parsed = parseMastodonUrl(mastodonUrl);
+  if (!parsed) return [];
 
-      if (!mastodonUrl) {
-        setLoading(false);
-        return;
-      }
+  const accountId = await fetchAccountId(parsed.instance, parsed.username);
+  if (!accountId) return [];
 
-      try {
-        // Parse the Mastodon URL
-        const parsed = parseMastodonUrl(mastodonUrl);
-        if (!parsed) {
-          setError(true);
-          setLoading(false);
-          return;
-        }
+  return await fetchStatuses(parsed.instance, accountId, 5);
+}
 
-        const { instance, username } = parsed;
+/** Streaming fallback skeleton shown while statuses load. */
+function FeedSkeleton() {
+  return (
+    <div className="space-y-3">
+      {[...Array(3)].map((_, i) => (
+        <div key={i}>
+          <div
+            className="mastodon-skeleton-shimmer h-3 w-3/4 rounded"
+            style={{ animationDelay: `${i * 120}ms` }}
+          />
+          <div
+            className="mastodon-skeleton-shimmer mt-2 h-3 w-full rounded"
+            style={{ animationDelay: `${i * 120}ms` }}
+          />
+          <div
+            className="mastodon-skeleton-shimmer mt-2 h-2 w-1/3 rounded"
+            style={{ animationDelay: `${i * 120}ms` }}
+          />
+        </div>
+      ))}
+    </div>
+  );
+}
 
-        // Fetch account ID
-        const accountId = await fetchAccountId(instance, username);
-        if (!accountId) {
-          setError(true);
-          setLoading(false);
-          return;
-        }
+/** Server-fetched status list wrapped in Suspense. */
+async function StatusList() {
+  const statuses = await fetchFeedStatuses();
 
-        // Fetch statuses (5 posts, exclude replies, include boosts)
-        const fetchedStatuses = await fetchStatuses(instance, accountId, 5);
-        setStatuses(fetchedStatuses);
-      } catch (err) {
-        console.error('Error loading Mastodon feed:', err);
-        setError(true);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    loadStatuses();
-  }, []);
-
-  // Don't render if no Mastodon URL is configured
-  if (!siteConfig.social.mastodon) {
-    return null;
+  if (!statuses || statuses.length === 0) {
+    return (
+      <p className="type-small text-slate-400 dark:text-slate-500">
+        暫無動態
+      </p>
+    );
   }
 
-  // Don't render if there's an error (fail silently)
-  if (error) {
-    return null;
-  }
+  return (
+    <div className="space-y-3">
+      {statuses.map((status) => {
+        // Handle boosts (reblogs)
+        const displayStatus = status.reblog || status;
+        const content = stripHtml(displayStatus.content);
+        const truncated = truncateText(content, 180);
+        const relativeTime = formatRelativeTime(status.created_at);
+        const hasMedia = displayStatus.media_attachments.length > 0;
+
+        return (
+          <article key={status.id} className="group/post">
+            <a
+              href={status.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="block space-y-1.5 transition-opacity hover:opacity-70"
+            >
+              {/* Boost indicator */}
+              {status.reblog && (
+                <div className="type-small flex items-center gap-1 text-slate-400 dark:text-slate-500">
+                  <FiArrowRight className="h-2.5 w-2.5 rotate-90" />
+                  <span>轉推了</span>
+                </div>
+              )}
+
+              {/* Content */}
+              <p className="whitespace-pre-line text-sm leading-relaxed text-slate-700 dark:text-slate-200">
+                {truncated}
+              </p>
+
+              {/* Media attachments - render images/videos from remote URLs */}
+              {hasMedia && (
+                <div
+                  className={`mt-1.5 grid gap-1 ${
+                    displayStatus.media_attachments.length === 1
+                      ? 'grid-cols-1'
+                      : 'grid-cols-2'
+                  }`}
+                >
+                  {displayStatus.media_attachments.map((att) => {
+                    const src = att.preview_url ?? att.url;
+                    if (!src) return null;
+
+                    if (att.type === 'image') {
+                      return (
+                        <img
+                          key={att.id}
+                          src={src}
+                          alt={att.description ?? ''}
+                          loading="lazy"
+                          className="aspect-video w-full rounded-md object-cover"
+                        />
+                      );
+                    }
+                    if (att.type === 'gifv' && att.url) {
+                      return (
+                        <div
+                          key={att.id}
+                          className="overflow-hidden rounded-md"
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          <video
+                            src={att.url}
+                            poster={att.preview_url ?? undefined}
+                            autoPlay
+                            loop
+                            muted
+                            playsInline
+                            className="aspect-video w-full object-cover"
+                          />
+                        </div>
+                      );
+                    }
+                    if (att.type === 'video' && att.url) {
+                      return (
+                        <div
+                          key={att.id}
+                          className="overflow-hidden rounded-md"
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          <video
+                            src={att.url}
+                            poster={att.preview_url ?? undefined}
+                            controls
+                            playsInline
+                            className="aspect-video w-full object-cover"
+                          />
+                        </div>
+                      );
+                    }
+                    if (att.type === 'audio' && att.preview_url) {
+                      return (
+                        <div
+                          key={att.id}
+                          className="flex aspect-video w-full items-center justify-center rounded-md bg-slate-200 dark:bg-slate-700"
+                        >
+                          <img
+                            src={att.preview_url}
+                            alt={att.description ?? '音訊'}
+                            loading="lazy"
+                            className="h-full w-full object-cover opacity-80"
+                          />
+                        </div>
+                      );
+                    }
+                    return null;
+                  })}
+                </div>
+              )}
+
+              {/* Timestamp */}
+              <time
+                className="type-small block text-slate-400 dark:text-slate-500"
+                dateTime={status.created_at}
+              >
+                {relativeTime}
+              </time>
+            </a>
+          </article>
+        );
+      })}
+    </div>
+  );
+}
+
+/**
+ * Mastodon sidebar feed as an async Server Component. Data is fetched
+ * server-side and streamed through a Suspense fallback skeleton instead of
+ * blocking the full page with a client-side useEffect fetch.
+ */
+export async function MastodonFeed() {
+  const mastodonUrl = siteConfig.social.mastodon;
+  if (!mastodonUrl) return null;
 
   return (
     <section className="motion-card group rounded-xl border bg-white px-4 py-3 shadow-sm hover:bg-slate-50 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-100 dark:hover:bg-slate-900/90">
@@ -79,167 +209,19 @@ export function MastodonFeed() {
         微網誌
       </div>
 
-      {/* Content */}
-      {loading ? (
-        <div className="space-y-3">
-          {[...Array(3)].map((_, i) => (
-            <div key={i}>
-              <div
-                className="mastodon-skeleton-shimmer h-3 w-3/4 rounded"
-                style={{ animationDelay: `${i * 120}ms` }}
-              />
-              <div
-                className="mastodon-skeleton-shimmer mt-2 h-3 w-full rounded"
-                style={{ animationDelay: `${i * 120}ms` }}
-              />
-              <div
-                className="mastodon-skeleton-shimmer mt-2 h-2 w-1/3 rounded"
-                style={{ animationDelay: `${i * 120}ms` }}
-              />
-            </div>
-          ))}
-        </div>
-      ) : statuses.length === 0 ? (
-        <p className="type-small text-slate-400 dark:text-slate-500">
-          暫無動態
-        </p>
-      ) : (
-        <div className="space-y-3">
-          {statuses.map((status) => {
-            // Handle boosts (reblogs)
-            const displayStatus = status.reblog || status;
-            const content = stripHtml(displayStatus.content);
-            const truncated = truncateText(content, 180);
-            const relativeTime = formatRelativeTime(status.created_at);
-            const hasMedia = displayStatus.media_attachments.length > 0;
+      <Suspense fallback={<FeedSkeleton />}>
+        <StatusList />
+      </Suspense>
 
-            return (
-              <article key={status.id} className="group/post">
-                <a
-                  href={status.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="block space-y-1.5 transition-opacity hover:opacity-70"
-                >
-                  {/* Boost indicator */}
-                  {status.reblog && (
-                    <div className="type-small flex items-center gap-1 text-slate-400 dark:text-slate-500">
-                      <FiArrowRight className="h-2.5 w-2.5 rotate-90" />
-                      <span>轉推了</span>
-                    </div>
-                  )}
-
-                  {/* Content */}
-                  <p className="whitespace-pre-line text-sm leading-relaxed text-slate-700 dark:text-slate-200">
-                    {truncated}
-                  </p>
-
-                  {/* Media attachments - render images/videos from remote URLs */}
-                  {hasMedia && (
-                    <div
-                      className={`mt-1.5 grid gap-1 ${
-                        displayStatus.media_attachments.length === 1
-                          ? 'grid-cols-1'
-                          : 'grid-cols-2'
-                      }`}
-                    >
-                      {displayStatus.media_attachments.map((att) => {
-                        const src = att.preview_url ?? att.url;
-                        if (!src) return null;
-
-                        if (att.type === 'image') {
-                          return (
-                            <img
-                              key={att.id}
-                              src={src}
-                              alt={att.description ?? ''}
-                              loading="lazy"
-                              className="aspect-video w-full rounded-md object-cover"
-                            />
-                          );
-                        }
-                        if (att.type === 'gifv' && att.url) {
-                          return (
-                            <div
-                              key={att.id}
-                              className="overflow-hidden rounded-md"
-                              onClick={(e) => e.stopPropagation()}
-                            >
-                              <video
-                                src={att.url}
-                                poster={att.preview_url ?? undefined}
-                                autoPlay
-                                loop
-                                muted
-                                playsInline
-                                className="aspect-video w-full object-cover"
-                              />
-                            </div>
-                          );
-                        }
-                        if (att.type === 'video' && att.url) {
-                          return (
-                            <div
-                              key={att.id}
-                              className="overflow-hidden rounded-md"
-                              onClick={(e) => e.stopPropagation()}
-                            >
-                              <video
-                                src={att.url}
-                                poster={att.preview_url ?? undefined}
-                                controls
-                                playsInline
-                                className="aspect-video w-full object-cover"
-                              />
-                            </div>
-                          );
-                        }
-                        if (att.type === 'audio' && att.preview_url) {
-                          return (
-                            <div
-                              key={att.id}
-                              className="flex aspect-video w-full items-center justify-center rounded-md bg-slate-200 dark:bg-slate-700"
-                            >
-                              <img
-                                src={att.preview_url}
-                                alt={att.description ?? '音訊'}
-                                loading="lazy"
-                                className="h-full w-full object-cover opacity-80"
-                              />
-                            </div>
-                          );
-                        }
-                        return null;
-                      })}
-                    </div>
-                  )}
-
-                  {/* Timestamp */}
-                  <time
-                    className="type-small block text-slate-400 dark:text-slate-500"
-                    dateTime={status.created_at}
-                  >
-                    {relativeTime}
-                  </time>
-                </a>
-              </article>
-            );
-          })}
-        </div>
-      )}
-
-      {/* Footer link */}
-      {!loading && statuses.length > 0 && (
-        <a
-          href={siteConfig.social.mastodon}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="type-small mt-3 flex items-center justify-end gap-1.5 text-slate-500 transition-colors hover:text-accent-textLight dark:text-slate-400 dark:hover:text-accent-textDark"
-        >
-          查看更多
-          <FiArrowRight className="h-3 w-3" />
-        </a>
-      )}
+      <a
+        href={mastodonUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="type-small mt-3 flex items-center justify-end gap-1.5 text-slate-500 transition-colors hover:text-accent-textLight dark:text-slate-400 dark:hover:text-accent-textDark"
+      >
+        查看更多
+        <FiArrowRight className="h-3 w-3" />
+      </a>
     </section>
   );
 }

@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { allPosts } from 'contentlayer2/generated';
 import { PostListWithControls } from '@/components/post-list-with-controls';
-import { getTagSlug } from '@/lib/posts';
+import { getTagSlug } from '@/lib/tags';
 import { SidebarLayout } from '@/components/sidebar-layout';
 import { SectionDivider } from '@/components/section-divider';
 import { ScrollReveal } from '@/components/scroll-reveal';

@@ -7,8 +7,8 @@ import { SidebarLayout } from '@/components/sidebar-layout';
 import { JsonLd } from '@/components/json-ld';
 import { HeroSection } from '@/components/hero-section';
 
-export default function HomePage() {
-  const posts = getAllPostsSorted().slice(0, siteConfig.postsPerPage);
+export default async function HomePage() {
+  const posts = (await getAllPostsSorted()).slice(0, siteConfig.postsPerPage);
 
   // CollectionPage Schema for homepage
   const collectionPageSchema = {
