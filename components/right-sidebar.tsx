@@ -9,6 +9,7 @@ import { siteConfig } from '@/lib/config';
 import { getAllTagsWithCount } from '@/lib/tags';
 import { allPages } from 'contentlayer2/generated';
 import { MastodonFeed } from './mastodon-feed';
+import type { TagItem } from '@/lib/sidebar-data';
 
 /** Shared sidebar content for desktop aside and mobile drawer */
 export function RightSidebarContent({

@@ -5,7 +5,7 @@
  * or `allPages`) is what bloated the initial JS. Computing this once on the
  * server and passing only tiny serializable props keeps the client bundle lean.
  */
-import { getAllTagsWithCount } from '@/lib/posts';
+import { getAllTagsWithCount } from '@/lib/tags';
 import { allPages } from 'contentlayer2/generated';
 import { siteConfig } from '@/lib/config';
 

@@ -3,6 +3,7 @@ import { FiLayout } from 'react-icons/fi';
 import { clsx } from 'clsx';
 import { MobileDrawer } from './mobile-drawer';
 import { useDrawer } from '@/lib/use-drawer';
+import type { TagItem } from '@/lib/sidebar-data';
 
 const RightSidebar = dynamic(() => import('./right-sidebar').then(mod => mod.RightSidebar), { ssr: false });
 const RightSidebarContent = dynamic(() => import('./right-sidebar').then(mod => mod.RightSidebarContent), { ssr: false });
