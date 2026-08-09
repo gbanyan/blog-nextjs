@@ -106,7 +106,7 @@ function adaptDocument(document: VeliteDocument, collection: 'posts' | 'pages'):
       sourceFileName: sourceFileName(filePath),
       sourceFileDir: sourceFileDir(filePath),
       contentType: 'markdown' as const,
-      flattenedPath
+      flattenedPath: contentPath
     },
     __ignoredType: collection === 'posts' ? ('Post' as const) : ('Page' as const),
     flattenedPath,
