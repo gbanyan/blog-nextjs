@@ -10,6 +10,7 @@ import { MastodonFeed } from './mastodon-feed';
 import type { Locale } from '@/lib/i18n/config';
 import { getDictionary } from '@/lib/i18n/dictionaries';
 type TagItem = { tag: string; slug: string; count: number };
+type SidebarVariant = 'default' | 'reading';
 
 /** Shared sidebar content for desktop aside and mobile drawer */
 export function RightSidebarContent({
@@ -18,16 +19,19 @@ export function RightSidebarContent({
   avatarSrc,
   locale,
   forceLoadFeed = false,
+  variant = 'default',
 }: {
   tags: TagItem[];
   aboutUrl: string;
   avatarSrc: string;
   locale: Locale;
   forceLoadFeed?: boolean;
+  variant?: SidebarVariant;
 }) {
   const dictionary = getDictionary(locale);
   const [shouldLoadFeed, setShouldLoadFeed] = useState(forceLoadFeed);
   const feedRef = useRef<HTMLDivElement>(null);
+  const readingVariant = variant === 'reading';
 
   useEffect(() => {
     if (forceLoadFeed) {
@@ -93,10 +97,18 @@ export function RightSidebarContent({
   ].filter(Boolean) as { key: string; href: string; icon: any; label: string }[];
 
   return (
-    <div className="flex flex-col gap-4">
-      <section className="motion-card group relative overflow-hidden rounded-xl border bg-white px-4 py-4 shadow-sm hover:bg-slate-50 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-100 dark:hover:bg-slate-800/80">
-          <div className="pointer-events-none absolute -left-10 -top-10 h-24 w-24 rounded-full bg-sky-300/35 blur-3xl mix-blend-soft-light dark:bg-sky-500/25" />
-          <div className="pointer-events-none absolute -bottom-12 right-[-2.5rem] h-28 w-28 rounded-full bg-indigo-300/30 blur-3xl mix-blend-soft-light dark:bg-indigo-500/20" />
+    <div className={readingVariant ? 'flex flex-col gap-6' : 'flex flex-col gap-4'}>
+      <section
+        className={readingVariant
+          ? 'relative overflow-hidden rounded-xl border border-slate-200/70 bg-slate-50/60 px-4 py-5 dark:border-slate-800/80 dark:bg-slate-900/40 dark:text-slate-100'
+          : 'motion-card group relative overflow-hidden rounded-xl border bg-white px-4 py-4 shadow-sm hover:bg-slate-50 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-100 dark:hover:bg-slate-800/80'}
+      >
+          {!readingVariant && (
+            <>
+              <div className="pointer-events-none absolute -left-10 -top-10 h-24 w-24 rounded-full bg-sky-300/35 blur-3xl mix-blend-soft-light dark:bg-sky-500/25" />
+              <div className="pointer-events-none absolute -bottom-12 right-[-2.5rem] h-28 w-28 rounded-full bg-indigo-300/30 blur-3xl mix-blend-soft-light dark:bg-indigo-500/20" />
+            </>
+          )}
 
           <div className="relative flex flex-col items-center">
             <LocalizedLink
@@ -111,10 +123,14 @@ export function RightSidebarContent({
                   width={96}
                   height={96}
                   unoptimized
-                  className="h-24 w-24 rounded-full border border-slate-200 object-cover shadow-sm transition-transform duration-300 ease-out group-hover:scale-105 dark:border-slate-700"
+                  className={readingVariant
+                    ? 'h-20 w-20 rounded-full border border-slate-200 object-cover dark:border-slate-700'
+                    : 'h-24 w-24 rounded-full border border-slate-200 object-cover shadow-sm transition-transform duration-300 ease-out group-hover:scale-105 dark:border-slate-700'}
                 />
               ) : (
-                <div className="flex h-24 w-24 items-center justify-center rounded-full bg-slate-900 text-lg font-semibold text-slate-50 shadow-sm transition-transform duration-300 ease-out group-hover:scale-105 dark:bg-slate-100 dark:text-slate-900">
+                <div className={readingVariant
+                  ? 'flex h-20 w-20 items-center justify-center rounded-full bg-slate-900 text-lg font-semibold text-slate-50 dark:bg-slate-100 dark:text-slate-900'
+                  : 'flex h-24 w-24 items-center justify-center rounded-full bg-slate-900 text-lg font-semibold text-slate-50 shadow-sm transition-transform duration-300 ease-out group-hover:scale-105 dark:bg-slate-100 dark:text-slate-900'}>
                   {siteConfig.name.charAt(0).toUpperCase()}
                 </div>
               )}
@@ -146,12 +162,21 @@ export function RightSidebarContent({
         </section>
 
         {/* Mastodon Feed - Lazy loaded when visible */}
-        <div ref={feedRef}>
+        <div
+          ref={feedRef}
+          className={readingVariant
+            ? '[&>section]:!border-slate-200/70 [&>section]:!bg-slate-50/60 [&>section]:!shadow-none [&>section]:hover:!translate-y-0 dark:[&>section]:!border-slate-800/80 dark:[&>section]:!bg-slate-900/40'
+            : undefined}
+        >
           {shouldLoadFeed && <MastodonFeed locale={locale} labels={dictionary.mastodon} />}
         </div>
 
         {tags.length > 0 && (
-          <section className="motion-card rounded-xl border bg-white px-4 py-3 shadow-sm dark:border-slate-800 dark:bg-slate-900 dark:text-slate-100">
+          <section
+            className={readingVariant
+              ? 'rounded-xl border border-slate-200/70 bg-slate-50/60 px-4 py-4 dark:border-slate-800/80 dark:bg-slate-900/40 dark:text-slate-100'
+              : 'motion-card rounded-xl border bg-white px-4 py-3 shadow-sm dark:border-slate-800 dark:bg-slate-900 dark:text-slate-100'}
+          >
             <h2 className="type-small flex items-center gap-2 font-semibold uppercase tracking-[0.35em] text-slate-500 dark:text-slate-400">
               <FiTrendingUp className="h-3 w-3 text-orange-400" />
               {dictionary.sidebar.popularTags}
@@ -166,7 +191,11 @@ export function RightSidebarContent({
                   <LocalizedLink
                     key={tag}
                     href={`/tags/${slug}`}
-                    className={`${sizeClass} tag-chip rounded-full bg-accent-soft px-2 py-0.5 text-accent-textLight transition hover:bg-accent hover:text-white dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700 dark:hover:text-white`}
+                    className={`${sizeClass} tag-chip rounded-full px-2 py-0.5 transition ${
+                      readingVariant
+                        ? 'bg-white text-slate-600 ring-1 ring-inset ring-slate-200 hover:bg-slate-100 hover:text-accent-textLight dark:bg-slate-900/70 dark:text-slate-300 dark:ring-slate-700 dark:hover:bg-slate-800 dark:hover:text-accent-textDark'
+                        : 'bg-accent-soft text-accent-textLight hover:bg-accent hover:text-white dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700 dark:hover:text-white'
+                    }`}
                   >
                     {tag}
                   </LocalizedLink>
@@ -193,16 +222,24 @@ export function RightSidebar({
   aboutUrl,
   avatarSrc,
   locale,
+  variant = 'default',
 }: {
   tags: TagItem[];
   aboutUrl: string;
   avatarSrc: string;
   locale: Locale;
+  variant?: SidebarVariant;
 }) {
   return (
     <aside className="hidden lg:block">
-      <div className="sticky top-20">
-        <RightSidebarContent tags={tags} aboutUrl={aboutUrl} avatarSrc={avatarSrc} locale={locale} />
+      <div className={variant === 'reading' ? 'sticky top-24' : 'sticky top-20'}>
+        <RightSidebarContent
+          tags={tags}
+          aboutUrl={aboutUrl}
+          avatarSrc={avatarSrc}
+          locale={locale}
+          variant={variant}
+        />
       </div>
     </aside>
   );

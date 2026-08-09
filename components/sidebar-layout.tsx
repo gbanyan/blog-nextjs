@@ -11,17 +11,32 @@ const RightSidebar = dynamic(() => import('./right-sidebar').then(mod => mod.Rig
 const RightSidebarContent = dynamic(() => import('./right-sidebar').then(mod => mod.RightSidebarContent), { ssr: false });
 
 type TagItem = { tag: string; slug: string; count: number };
+type SidebarLayoutVariant = 'default' | 'reading';
 
-export function SidebarLayout({ children, tags, aboutUrl, avatarSrc, locale }: { children: React.ReactNode; tags: TagItem[]; aboutUrl: string; avatarSrc: string; locale: Locale }) {
+export function SidebarLayout({ children, tags, aboutUrl, avatarSrc, locale, variant = 'default' }: { children: React.ReactNode; tags: TagItem[]; aboutUrl: string; avatarSrc: string; locale: Locale; variant?: SidebarLayoutVariant }) {
   const { open, setOpen, mounted } = useDrawer();
   const dictionary = getDictionary(locale);
+  const readingLayout = variant === 'reading';
 
   return (
     <>
-      <div className="grid gap-8 lg:grid-cols-[minmax(0,3fr)_minmax(0,1.4fr)] lg:gap-12">
-        <div>{children}</div>
+      <div
+        className={clsx(
+          'grid items-start gap-8',
+          readingLayout
+            ? 'lg:grid-cols-[minmax(0,1fr)_18rem] lg:gap-10 xl:grid-cols-[minmax(0,1fr)_20rem] xl:gap-14'
+            : 'lg:grid-cols-[minmax(0,3fr)_minmax(0,1.4fr)] lg:gap-12'
+        )}
+      >
+        <div className="min-w-0">{children}</div>
         <div className="hidden lg:block">
-          <RightSidebar tags={tags} aboutUrl={aboutUrl} avatarSrc={avatarSrc} locale={locale} />
+          <RightSidebar
+            tags={tags}
+            aboutUrl={aboutUrl}
+            avatarSrc={avatarSrc}
+            locale={locale}
+            variant={variant}
+          />
         </div>
       </div>
 
@@ -40,6 +55,7 @@ export function SidebarLayout({ children, tags, aboutUrl, avatarSrc, locale }: {
             avatarSrc={avatarSrc}
             locale={locale}
             forceLoadFeed
+            variant={variant}
           />
         )}
       </MobileDrawer>

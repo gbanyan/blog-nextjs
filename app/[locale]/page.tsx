@@ -61,41 +61,57 @@ export default async function HomePage({ params }: Props) {
   return (
     <>
       <JsonLd data={collectionPageSchema} />
-      <section className="space-y-6">
-      <SidebarLayout tags={tags} aboutUrl={aboutUrl} avatarSrc={avatarSrc} locale={locale}>
-        <h1 className="sr-only">
-          {siteConfig.name} — {dictionary.common.latestPosts} — {dictionary.brand.tagline}
-        </h1>
-        <HeroSection
-          title={`${siteConfig.name} — ${dictionary.common.latestPosts}`}
-          tagline={dictionary.brand.tagline}
-          ariaLabel={dictionary.terminal.ariaLabel(
-            `${siteConfig.name} — ${dictionary.common.latestPosts}`,
-            dictionary.brand.tagline
-          )}
-        />
+      <section className="pb-4 sm:pb-8">
+        <SidebarLayout
+          tags={tags}
+          aboutUrl={aboutUrl}
+          avatarSrc={avatarSrc}
+          locale={locale}
+          variant="reading"
+        >
+          <div className="space-y-10 sm:space-y-12 lg:space-y-14">
+            <h1 className="sr-only">
+              {siteConfig.name} — {dictionary.common.latestPosts} — {dictionary.brand.tagline}
+            </h1>
+            <HeroSection
+              title={`${siteConfig.name} — ${dictionary.common.latestPosts}`}
+              tagline={dictionary.brand.tagline}
+              ariaLabel={dictionary.terminal.ariaLabel(
+                `${siteConfig.name} — ${dictionary.common.latestPosts}`,
+                dictionary.brand.tagline
+              )}
+            />
 
-        <div>
-          <div className="mb-3 flex items-baseline justify-between">
-            <h2 className="type-small font-semibold uppercase tracking-[0.4em] text-slate-500 dark:text-slate-400">
-              {dictionary.common.latestPosts}
-            </h2>
-            <LocalizedLink
-              href="/blog"
-              prefetch={true}
-              className="text-xs text-accent hover:underline"
-            >
-              {dictionary.common.allPosts} →
-            </LocalizedLink>
+            <section aria-labelledby="latest-posts-heading">
+              <header className="mb-6 flex items-end justify-between gap-4 border-b border-slate-200/80 pb-3 dark:border-slate-800">
+                <h2
+                  id="latest-posts-heading"
+                  className="text-xl font-semibold tracking-tight text-slate-900 dark:text-slate-100 sm:text-2xl"
+                >
+                  {dictionary.common.latestPosts}
+                </h2>
+                <LocalizedLink
+                  href="/blog"
+                  prefetch={true}
+                  className="shrink-0 text-sm font-medium text-accent-textLight transition-colors hover:text-accent dark:text-accent-textDark dark:hover:text-accent"
+                >
+                  {dictionary.common.allPosts} →
+                </LocalizedLink>
+              </header>
+              <TimelineWrapper>
+                {posts.map((post, index) => (
+                  <PostListItem
+                    key={post._id}
+                    post={post}
+                    priority={index === 0}
+                    variant="reading"
+                  />
+                ))}
+              </TimelineWrapper>
+            </section>
           </div>
-          <TimelineWrapper>
-            {posts.map((post, index) => (
-              <PostListItem key={post._id} post={post} priority={index === 0} />
-            ))}
-          </TimelineWrapper>
-        </div>
-      </SidebarLayout>
-    </section>
+        </SidebarLayout>
+      </section>
     </>
   );
 }
