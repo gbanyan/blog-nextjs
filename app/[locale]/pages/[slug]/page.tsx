@@ -3,7 +3,7 @@ import { LocalizedLink } from '@/components/localized-link';
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
-import { allPages } from '@/lib/content';
+import { allPagesByLocale } from '@/lib/content';
 import { getPageBySlug } from '@/lib/posts';
 import { getTagSlug } from '@/lib/tags';
 import { siteConfig } from '@/lib/config';
@@ -17,48 +17,36 @@ import { DevEnvDeviceHero } from '@/components/dev-env-device-hero';
 import { HomeLabDeviceHero } from '@/components/homelab-device-hero';
 import { MermaidRenderer } from '@/components/mermaid-renderer';
 import { MarkdownBody } from '@/components/markdown-body';
+import { metadataForDocument } from '@/lib/seo';
+import {
+  absoluteUrl,
+  documentPath,
+  getDocumentLocale,
+  isLocale,
+  type Locale,
+} from '@/lib/locales';
 
 export function generateStaticParams() {
-  const params = allPages.map((page) => ({
-    slug: page.slug || page.flattenedPath
+  const params = allPagesByLocale.map((page) => ({
+    locale: getDocumentLocale(page),
+    slug: page.slug || page.flattenedPath,
   }));
-  return params.length > 0 ? params : [{ slug: '__placeholder__' }];
+  return params.length > 0 ? params : [{ locale: 'zh-TW', slug: '__placeholder__' }];
 }
 
 interface Props {
-  params: Promise<{ slug: string }>;
+  params: Promise<{ locale: string; slug: string }>;
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { slug } = await params;
-  const page = getPageBySlug(slug);
-  if (!page) return {};
-
-  const pageUrl = `${siteConfig.url}${page.url}`;
+  const { locale: rawLocale, slug } = await params;
+  if (!isLocale(rawLocale)) return { robots: { index: false, follow: false } };
+  const locale: Locale = rawLocale;
+  const page = getPageBySlug(slug, locale);
+  if (!page) return { robots: { index: false, follow: false } };
 
   return {
-    title: page.title,
-    description: page.description || page.title,
-    alternates: {
-      canonical: pageUrl
-    },
-    openGraph: {
-      title: page.title,
-      description: page.description || page.title,
-      url: pageUrl,
-      type: 'website',
-      images: [
-        page.feature_image
-          ? {
-              url: `${siteConfig.url}${page.feature_image.replace('../assets', '/assets')}`,
-              alt: page.title
-            }
-          : {
-              url: `${siteConfig.url}${siteConfig.ogImage}`,
-              alt: page.title
-            }
-      ]
-    },
+    ...metadataForDocument(page, allPagesByLocale),
     twitter: {
       card: siteConfig.twitterCard,
       title: page.title,
@@ -73,8 +61,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function StaticPage({ params }: Props) {
-  const { slug } = await params;
-  const page = getPageBySlug(slug);
+  const { locale: rawLocale, slug } = await params;
+  if (!isLocale(rawLocale)) return notFound();
+  const locale: Locale = rawLocale;
+  const page = getPageBySlug(slug, locale);
 
   if (!page) return notFound();
 
@@ -89,7 +79,7 @@ export default async function StaticPage({ params }: Props) {
   const Hero = page.hero ? heroByKey[page.hero] : null;
 
   // Generate absolute URL for the page
-  const pageUrl = `${siteConfig.url}${page.url}`;
+  const pageUrl = absoluteUrl(documentPath(page, locale));
 
   // Get image URL if available
   const imageUrl = page.feature_image
@@ -104,7 +94,7 @@ export default async function StaticPage({ params }: Props) {
     description: page.description || page.title,
     url: pageUrl,
     image: imageUrl,
-    inLanguage: siteConfig.defaultLocale,
+    inLanguage: getDocumentLocale(page),
     isPartOf: {
       '@type': 'WebSite',
       name: siteConfig.title,
@@ -132,7 +122,7 @@ export default async function StaticPage({ params }: Props) {
                   {page.published_at && (
                     <p className="type-small text-slate-500 dark:text-slate-500">
                       {new Date(page.published_at).toLocaleDateString(
-                        siteConfig.defaultLocale
+                        getDocumentLocale(page)
                       )}
                     </p>
                   )}

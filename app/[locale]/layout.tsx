@@ -10,6 +10,7 @@ import { WebVitals } from '@/components/web-vitals';
 import NextTopLoader from 'nextjs-toploader';
 import { notFound } from 'next/navigation';
 import { isLocale, locales, type Locale } from '@/lib/i18n/config';
+import { DEFAULT_LOCALE, absoluteUrl, localeToOpenGraph } from '@/lib/locales';
 
 const playfair = Playfair_Display({
   subsets: ['latin'],
@@ -33,6 +34,17 @@ export const metadata: Metadata = {
   },
   description: siteConfig.description,
   metadataBase: new URL(siteConfig.url),
+  alternates: {
+    canonical: siteConfig.url,
+    languages: {
+      [DEFAULT_LOCALE]: siteConfig.url,
+      en: absoluteUrl('/en'),
+      'x-default': siteConfig.url,
+    },
+    types: {
+      'application/rss+xml': absoluteUrl('/feed.xml')
+    }
+  },
   creator: siteConfig.author,
   robots: {
     index: true,
@@ -51,7 +63,7 @@ export const metadata: Metadata = {
     description: siteConfig.description,
     url: siteConfig.url,
     siteName: siteConfig.title,
-    locale: siteConfig.defaultLocale,
+    locale: localeToOpenGraph(DEFAULT_LOCALE),
     images: [
       {
         url: siteConfig.ogImage,
@@ -72,11 +84,6 @@ export const metadata: Metadata = {
     icon: '/favicon.png',
     apple: '/favicon.png'
   },
-  alternates: {
-    types: {
-      'application/rss+xml': `${siteConfig.url}/feed.xml`
-    }
-  }
 };
 
 export function generateStaticParams(): { locale: Locale }[] {

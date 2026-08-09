@@ -7,7 +7,8 @@
  * bundle lean.
  */
 import { getAllTagsWithCount } from '@/lib/tags';
-import { allPages } from '@/lib/content';
+import { getPagesByLocale } from '@/lib/content';
+import type { ContentLocale } from '@/lib/content';
 import { siteConfig } from '@/lib/config';
 
 export interface TagItem {
@@ -23,11 +24,12 @@ export interface SidebarData {
   avatarSrc: string;
 }
 
-export function getSidebarData(): SidebarData {
-  const tags = getAllTagsWithCount().slice(0, 5);
+export function getSidebarData(locale?: ContentLocale): SidebarData {
+  const tags = getAllTagsWithCount(locale).slice(0, 5);
+  const pages = getPagesByLocale(locale);
   const aboutPage =
-    allPages.find((p) => p.title.includes('關於作者')) ??
-    allPages.find((p) => p.slug === 'about-me');
+    pages.find((p) => p.title.includes('關於作者')) ??
+    pages.find((p) => p.slug === 'about-me');
 
   return {
     tags,

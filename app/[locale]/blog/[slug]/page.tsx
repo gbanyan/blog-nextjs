@@ -3,7 +3,7 @@ import { LocalizedLink } from '@/components/localized-link';
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
-import { allPosts } from '@/lib/content';
+import { allPostsByLocale } from '@/lib/content';
 import { getPostBySlug, getRelatedPosts, getPostNeighbors } from '@/lib/posts';
 import { getTagSlug } from '@/lib/tags';
 import { siteConfig } from '@/lib/config';
@@ -18,22 +18,34 @@ import { JsonLd } from '@/components/json-ld';
 import { MermaidRenderer } from '@/components/mermaid-renderer';
 import { MarkdownBody } from '@/components/markdown-body';
 import { GiscusComments } from '@/components/giscus-comments';
+import { metadataForDocument } from '@/lib/seo';
+import {
+  absoluteUrl,
+  documentPath,
+  getDocumentLocale,
+  isLocale,
+  localeToOpenGraph,
+  type Locale,
+} from '@/lib/locales';
 
 export function generateStaticParams() {
-  const params = allPosts.map((post) => ({
-    slug: post.slug || post.flattenedPath
+  const params = allPostsByLocale.map((post) => ({
+    locale: getDocumentLocale(post),
+    slug: post.slug || post.flattenedPath,
   }));
-  return params.length > 0 ? params : [{ slug: '__placeholder__' }];
+  return params.length > 0 ? params : [{ locale: 'zh-TW', slug: '__placeholder__' }];
 }
 
 interface Props {
-  params: Promise<{ slug: string }>;
+  params: Promise<{ locale: string; slug: string }>;
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { slug } = await params;
-  const post = getPostBySlug(slug);
-  if (!post) return {};
+  const { locale: rawLocale, slug } = await params;
+  if (!isLocale(rawLocale)) return { robots: { index: false, follow: false } };
+  const locale: Locale = rawLocale;
+  const post = getPostBySlug(slug, locale);
+  if (!post) return { robots: { index: false, follow: false } };
 
   const ogImageUrl = new URL('/api/og', process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000');
   ogImageUrl.searchParams.set('title', post.title);
@@ -49,9 +61,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     ? `${siteConfig.url}${post.feature_image.replace('../assets', '/assets')}`
     : ogImageUrl.toString();
 
+  const baseMetadata = metadataForDocument(post, allPostsByLocale);
+
   return {
-    title: post.title,
-    description: post.description || post.title,
+    ...baseMetadata,
     authors: post.authors?.length ? post.authors.map(author => ({ name: author })) : [{ name: siteConfig.author }],
     robots: {
       index: true,
@@ -62,9 +75,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       },
     },
     openGraph: {
+      ...baseMetadata.openGraph,
       title: post.title,
       description: post.description || post.title,
       type: 'article',
+      locale: localeToOpenGraph(getDocumentLocale(post)),
       publishedTime: post.published_at
         ? new Date(post.published_at).toISOString()
         : undefined,
@@ -89,8 +104,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function BlogPostPage({ params }: Props) {
-  const { slug } = await params;
-  const post = getPostBySlug(slug);
+  const { locale: rawLocale, slug } = await params;
+  if (!isLocale(rawLocale)) return notFound();
+  const locale: Locale = rawLocale;
+  const post = getPostBySlug(slug, locale);
 
   if (!post) return notFound();
 
@@ -102,7 +119,7 @@ export default async function BlogPostPage({ params }: Props) {
     /data-language="mermaid"|language-mermaid/.test(post.body.html);
 
   // Generate absolute URL for the post
-  const postUrl = `${siteConfig.url}${post.url}`;
+  const postUrl = absoluteUrl(documentPath(post, locale));
 
   // Get the OG image URL (same as in metadata)
   const ogImageUrl = new URL('/api/og', siteConfig.url);
@@ -159,6 +176,7 @@ export default async function BlogPostPage({ params }: Props) {
       readingTime: `${readingTime} min read`,
     }),
     url: postUrl,
+    inLanguage: getDocumentLocale(post),
   };
 
   // Speakable Schema for AEO
@@ -185,13 +203,13 @@ export default async function BlogPostPage({ params }: Props) {
         '@type': 'ListItem',
         position: 1,
         name: '首頁',
-        item: siteConfig.url,
+        item: absoluteUrl(documentPath({ url: '/' }, locale)),
       },
       {
         '@type': 'ListItem',
         position: 2,
         name: '所有文章',
-        item: `${siteConfig.url}/blog`,
+        item: absoluteUrl(documentPath({ url: '/blog' }, locale)),
       },
       {
         '@type': 'ListItem',
@@ -218,7 +236,7 @@ export default async function BlogPostPage({ params }: Props) {
                 {post.published_at && (
                   <p className="type-small text-slate-500 dark:text-slate-500">
                     {new Date(post.published_at).toLocaleDateString(
-                      siteConfig.defaultLocale
+                      getDocumentLocale(post)
                     )}
                   </p>
                 )}

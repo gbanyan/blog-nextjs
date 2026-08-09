@@ -28,9 +28,9 @@ export function getPostBySlug(
 ): Post | undefined {
   return getPostsByLocale(locale).find(
     (post) =>
-      post.flattenedPath === slug ||
+      (post.flattenedPath === slug ||
       post.slug === slug ||
-      post._raw.flattenedPath === slug
+      post._raw.flattenedPath === slug)
   );
 }
 
@@ -40,9 +40,9 @@ export function getPageBySlug(
 ): Page | undefined {
   return getPagesByLocale(locale).find(
     (page) =>
-      page.flattenedPath === slug ||
+      (page.flattenedPath === slug ||
       page.slug === slug ||
-      page._raw.flattenedPath === slug
+      page._raw.flattenedPath === slug)
   );
 }
 

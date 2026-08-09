@@ -1,7 +1,16 @@
-import { MetadataRoute } from 'next';
+import type { MetadataRoute } from 'next';
+import { DEFAULT_LOCALE } from '@/lib/locales';
+import { siteConfig } from '@/lib/config';
 
 export default function robots(): MetadataRoute.Robots {
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
+  return localizedRobots(DEFAULT_LOCALE, '/sitemap.xml');
+}
+
+export function localizedRobots(
+  locale: typeof DEFAULT_LOCALE | 'en',
+  sitemapPath: string
+): MetadataRoute.Robots {
+  const siteUrl = siteConfig.url;
 
   return {
     rules: [
@@ -11,12 +20,21 @@ export default function robots(): MetadataRoute.Robots {
         disallow: ['/api/', '/_next/', '/admin/'],
       },
       {
-        userAgent: ['GPTBot', 'ChatGPT-User', 'Google-Extended', 'Anthropic-ai', 'ClaudeBot', 'Claude-Web', 'PerplexityBot', 'Cohere-ai'],
+        userAgent: [
+          'GPTBot',
+          'ChatGPT-User',
+          'Google-Extended',
+          'Anthropic-ai',
+          'ClaudeBot',
+          'Claude-Web',
+          'PerplexityBot',
+          'Cohere-ai',
+        ],
         allow: '/',
         disallow: ['/api/', '/_next/', '/admin/'],
       },
     ],
-    sitemap: `${siteUrl}/sitemap.xml`,
+    sitemap: `${siteUrl}${sitemapPath}`,
     host: siteUrl,
   };
 }

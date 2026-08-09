@@ -1,5 +1,6 @@
 import type { Page as VelitePage, Post as VelitePost } from '../.velite/index.js';
 import { pages as velitePages, posts as velitePosts } from '../.velite/index.js';
+import { getDocumentLocale, localizedPath } from '@/lib/locales';
 
 /**
  * The stable shape consumed by the application. Dates intentionally retain
@@ -29,9 +30,15 @@ interface SharedContentFields {
   locale: ContentLocale;
   /** Stable key shared by the source document and its translations. */
   translationId: string;
+  /** Public camelCase alias used by locale-aware consumers. */
+  translationKey: string;
+  /** Deterministic pairing metadata for switchers and SEO. */
+  pairing: { key: string; locale: ContentLocale };
   /** Original frontmatter field, retained for data consumers. */
   translation_id?: string;
   slug?: string;
+  locale?: string;
+  translation_key?: string;
   description?: string;
   type?: string;
   ghost_id?: string;
@@ -112,13 +119,20 @@ function adaptDocument(document: VeliteDocument, collection: 'posts' | 'pages'):
   const filePath = sourceFilePath(contentPath);
   const rawBody = document.raw;
   const htmlBody = document.body;
+  const stableTranslationId = translationId(
+    document.sourcePath,
+    collection,
+    document.translation_id ?? document.translation_key
+  );
 
   const { sourcePath: _sourcePath, raw: _rawBody, body: _body, ...fields } = document;
   const locale = (document.locale ?? DEFAULT_LOCALE) as ContentLocale;
   const adapted = {
     ...fields,
     locale,
-    translationId: translationId(document.sourcePath, collection, document.translation_id),
+    translationId: stableTranslationId,
+    translationKey: stableTranslationId,
+    pairing: { key: stableTranslationId, locale },
     body: {
       raw: rawBody,
       html: htmlBody,
@@ -134,7 +148,10 @@ function adaptDocument(document: VeliteDocument, collection: 'posts' | 'pages'):
     },
     __ignoredType: collection === 'posts' ? ('Post' as const) : ('Page' as const),
     flattenedPath,
-    url: `/${collection === 'posts' ? 'blog' : 'pages'}/${document.slug || flattenedPath}`
+    url: localizedPath(
+      `/${collection === 'posts' ? 'blog' : 'pages'}/${document.slug || flattenedPath}`,
+      getDocumentLocale(document)
+    )
   };
 
   return adapted as unknown as Post | Page;
