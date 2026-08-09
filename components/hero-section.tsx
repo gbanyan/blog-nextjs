@@ -63,6 +63,7 @@ export function HeroSection({ title, tagline, ariaLabel }: HeroSectionProps) {
           into the hero or outside the window. */}
       <div className="relative z-10 mx-auto w-full max-w-2xl px-4 py-6 sm:max-w-3xl lg:max-w-4xl xl:max-w-5xl">
         <TerminalWindow
+          className="terminal-hero-window"
           title={title}
           tagline={tagline}
           ariaLabel={ariaLabel}

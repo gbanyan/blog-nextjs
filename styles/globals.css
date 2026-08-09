@@ -1414,6 +1414,125 @@
   --color-ink-muted: #a8a29e;
 }
 
+/* Terminal hero — warm editorial shell, preserved technical core */
+.terminal-hero-window {
+  border-color: #c9bca7;
+  border-radius: clamp(0.75rem, 0.55rem + 0.5vw, 1rem);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.48), transparent 42%),
+    #f3eee5;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.86),
+    inset 0 -1px 0 rgba(92, 70, 45, 0.08),
+    0 22px 52px -34px rgba(92, 64, 38, 0.58),
+    0 8px 20px -14px rgba(92, 64, 38, 0.34);
+}
+
+.terminal-hero-window > .border-b {
+  padding-inline: clamp(1rem, 0.7rem + 1vw, 1.5rem);
+  padding-block: clamp(0.65rem, 0.55rem + 0.35vw, 0.8rem);
+  border-bottom-color: #d7ccbb;
+  background: rgba(232, 222, 207, 0.82);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.56);
+}
+
+.terminal-hero-window > .border-b > div > span {
+  box-shadow:
+    inset 0 0 0 1px rgba(70, 52, 34, 0.12),
+    0 1px 1px rgba(70, 52, 34, 0.1);
+}
+
+.terminal-hero-window > .border-b > div > span:nth-child(1) {
+  background: #c96f61;
+}
+
+.terminal-hero-window > .border-b > div > span:nth-child(2) {
+  background: #d29b4b;
+}
+
+.terminal-hero-window > .border-b > div > span:nth-child(3) {
+  background: #63966f;
+}
+
+.terminal-hero-window > .flex-1 {
+  padding: clamp(1rem, 0.7rem + 1vw, 1.5rem);
+  line-height: 1.5;
+}
+
+.terminal-hero-window .text-slate-900 {
+  color: #292524;
+}
+
+.terminal-hero-window .text-slate-600 {
+  color: #57534e;
+}
+
+.terminal-hero-window .text-slate-500 {
+  color: #6b625b;
+}
+
+.terminal-hero-window .text-emerald-600,
+.terminal-hero-window .text-emerald-600\/90 {
+  color: #256b4c;
+}
+
+.terminal-hero-window .bg-emerald-600 {
+  background-color: #256b4c;
+}
+
+.terminal-hero-window .border-emerald-600 {
+  border-color: #256b4c;
+}
+
+.dark .terminal-hero-window {
+  border-color: #413b33;
+  background:
+    linear-gradient(180deg, rgba(255, 248, 235, 0.045), transparent 44%),
+    #171512;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 248, 235, 0.07),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.28),
+    0 24px 58px -34px rgba(0, 0, 0, 0.88),
+    0 8px 22px -14px rgba(0, 0, 0, 0.72);
+}
+
+.dark .terminal-hero-window > .border-b {
+  border-bottom-color: #38332c;
+  background: rgba(34, 31, 27, 0.9);
+  box-shadow: inset 0 1px 0 rgba(255, 248, 235, 0.045);
+}
+
+.dark .terminal-hero-window > .border-b > div > span {
+  box-shadow:
+    inset 0 0 0 1px rgba(0, 0, 0, 0.25),
+    0 1px 2px rgba(0, 0, 0, 0.32);
+}
+
+.dark .terminal-hero-window .text-slate-900 {
+  color: #f2eee7;
+}
+
+.dark .terminal-hero-window .text-slate-600 {
+  color: #d2ccc3;
+}
+
+.dark .terminal-hero-window .text-slate-500 {
+  color: #aaa198;
+}
+
+.dark .terminal-hero-window .text-emerald-600,
+.dark .terminal-hero-window .text-emerald-600\/90 {
+  color: #78d5a4;
+}
+
+.dark .terminal-hero-window .bg-emerald-600 {
+  background-color: #78d5a4;
+}
+
+.dark .terminal-hero-window .border-emerald-600 {
+  border-color: #78d5a4;
+}
+
 @media (min-width: 2560px) {
   :root {
     font-size: 20px;
