@@ -6,10 +6,10 @@ import { siteConfig } from '@/lib/config';
 import { allPagesByLocale, allPostsByLocale, getPagesByLocale } from '@/lib/content';
 import { LocalizedLink } from '@/components/localized-link';
 import { NAV_TRANSITION } from '@/lib/navigation';
-import { getDictionary } from '@/lib/i18n/dictionaries';
 import type { Locale } from '@/lib/i18n/config';
 import { LOCALE_ROUTE_MANIFEST, type LocaleRouteManifest } from '@/lib/locale-switcher';
 import { documentPath } from '@/lib/locales';
+import { getDictionary } from '@/lib/i18n/dictionaries';
 
 interface SiteHeaderProps {
   recentPosts?: { title: string; url: string }[];
@@ -91,13 +91,24 @@ export function SiteHeader({ recentPosts = [], locale }: SiteHeaderProps) {
            className="motion-link group relative type-title whitespace-nowrap text-slate-900 hover:text-accent focus-visible:outline-none focus-visible:text-accent dark:text-slate-100 dark:hover:text-accent"
         >
           <span className="absolute -bottom-0.5 left-0 h-[2px] w-0 bg-accent transition-all duration-180 ease-snappy group-hover:w-full" aria-hidden="true" />
-          {siteConfig.title}
+          {dictionary.brand.title}
         </LocalizedLink>
         <div className="flex items-center gap-3">
-          <NavMenu items={navItems} />
-          <SiteHeaderSearch recentPosts={recentPosts} />
+          <NavMenu
+            items={navItems}
+            labels={{
+              openMenu: dictionary.common.openMenu,
+              closeMenu: dictionary.common.closeMenu,
+            }}
+          />
+          <SiteHeaderSearch recentPosts={recentPosts} locale={locale} />
           <LanguageSwitcher manifest={localeManifest} />
-          <ThemeToggle />
+          <ThemeToggle
+            labels={{
+              switchToLight: dictionary.common.switchToLight,
+              switchToDark: dictionary.common.switchToDark,
+            }}
+          />
         </div>
       </div>
     </header>

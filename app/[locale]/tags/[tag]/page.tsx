@@ -13,6 +13,7 @@ import { JsonLd } from '@/components/json-ld';
 import { metadataForPath } from '@/lib/seo';
 import { absoluteUrl, isLocale, localizedPath, type Locale } from '@/lib/locales';
 import { notFound } from 'next/navigation';
+import { getDictionary } from '@/lib/i18n/dictionaries';
 
 export function generateStaticParams() {
   const params = new Set<string>();
@@ -34,6 +35,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale: rawLocale, tag: slug } = await params;
   if (!isLocale(rawLocale)) return { robots: { index: false, follow: false } };
   const locale: Locale = rawLocale;
+  const dictionary = getDictionary(locale);
   const posts = getPostsByLocale(locale);
   const decodedSlug = decodeURIComponent(slug);
   const tag = posts
@@ -43,8 +45,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!tag) return { robots: { index: false, follow: false } };
 
   return metadataForPath({
-    title: `標籤：${tag}`,
-    description: `查看標籤為「${tag}」的所有文章`,
+    title: `${dictionary.tags.title}: ${tag}`,
+    description: `${dictionary.tags.title}: ${tag}`,
     path: `/tags/${slug}`,
     locale,
   });
@@ -54,6 +56,7 @@ export default async function TagPage({ params }: Props) {
   const { locale: rawLocale, tag: slug } = await params;
   if (!isLocale(rawLocale)) return notFound();
   const locale: Locale = rawLocale;
+  const dictionary = getDictionary(locale);
   const { tags, aboutUrl, avatarSrc } = getSidebarData(locale);
   const postsForLocale = getPostsByLocale(locale);
   const decodedSlug = decodeURIComponent(slug);
@@ -69,8 +72,8 @@ export default async function TagPage({ params }: Props) {
   const collectionPageSchema = {
     '@context': 'https://schema.org',
     '@type': 'CollectionPage',
-    name: `標籤：${tagLabel}`,
-    description: `查看標籤為「${tagLabel}」的所有文章`,
+    name: `${dictionary.tags.title}: ${tagLabel}`,
+    description: `${dictionary.tags.title}: ${tagLabel}`,
     url: absoluteUrl(localizedPath(`/tags/${slug}`, locale)),
     inLanguage: locale,
     about: {
@@ -94,7 +97,7 @@ export default async function TagPage({ params }: Props) {
   };
 
   return (
-    <SidebarLayout tags={tags} aboutUrl={aboutUrl} avatarSrc={avatarSrc}>
+    <SidebarLayout tags={tags} aboutUrl={aboutUrl} avatarSrc={avatarSrc} locale={locale}>
       <JsonLd data={collectionPageSchema} />
       <SectionDivider>
         <ScrollReveal>
@@ -109,12 +112,12 @@ export default async function TagPage({ params }: Props) {
               {tagLabel}
             </h1>
             <p className="type-small mt-2 text-slate-600 dark:text-slate-300">
-              收錄 {posts.length} 篇文章
+              {dictionary.tags.count(posts.length)}
             </p>
           </div>
         </ScrollReveal>
       </SectionDivider>
-      <PostListWithControls posts={posts} />
+      <PostListWithControls posts={posts} locale={locale} />
     </SidebarLayout>
   );
 }

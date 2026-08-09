@@ -28,12 +28,12 @@ export function getSidebarData(locale?: ContentLocale): SidebarData {
   const tags = getAllTagsWithCount(locale).slice(0, 5);
   const pages = getPagesByLocale(locale);
   const aboutPage =
-    pages.find((p) => p.title.includes('關於作者')) ??
+    pages.find((p) => p.nav_category === 'about') ??
     pages.find((p) => p.slug === 'about-me');
 
   return {
     tags,
-    aboutUrl: aboutPage?.url ?? '/pages/關於作者',
+    aboutUrl: aboutPage?.url ?? '/pages/about-me',
     avatarSrc: siteConfig.avatar,
   };
 }

@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useCallback } from 'react';
 import { useTheme } from 'next-themes';
+import type { Dictionary } from '@/lib/i18n/dictionaries';
 
 const ZOOM_STEP = 0.2;
 const ZOOM_MIN = 0.25;
@@ -195,7 +196,7 @@ function attachViewer(wrapper: HTMLDivElement, viewport: HTMLDivElement) {
   };
 }
 
-function buildShell(): { wrapper: HTMLDivElement; viewport: HTMLDivElement } {
+function buildShell(labels: Dictionary['mermaid']): { wrapper: HTMLDivElement; viewport: HTMLDivElement } {
   const wrapper = document.createElement('div');
   wrapper.className = 'mermaid-diagram';
 
@@ -214,17 +215,17 @@ function buildShell(): { wrapper: HTMLDivElement; viewport: HTMLDivElement } {
   const btnZoomOut = document.createElement('button');
   btnZoomOut.className = 'mermaid-zoom-btn mermaid-btn-zoomout';
   btnZoomOut.textContent = '−';
-  btnZoomOut.ariaLabel = '縮小';
+  btnZoomOut.ariaLabel = labels.zoomOut;
 
   const btnLevel = document.createElement('button');
   btnLevel.className = 'mermaid-zoom-btn mermaid-zoom-level';
   btnLevel.textContent = '100%';
-  btnLevel.ariaLabel = '重置';
+  btnLevel.ariaLabel = labels.reset;
 
   const btnZoomIn = document.createElement('button');
   btnZoomIn.className = 'mermaid-zoom-btn mermaid-btn-zoomin';
   btnZoomIn.textContent = '+';
-  btnZoomIn.ariaLabel = '放大';
+  btnZoomIn.ariaLabel = labels.zoomIn;
 
   const sep1 = document.createElement('span');
   sep1.className = 'mermaid-sep';
@@ -232,12 +233,12 @@ function buildShell(): { wrapper: HTMLDivElement; viewport: HTMLDivElement } {
   const btnFit = document.createElement('button');
   btnFit.className = 'mermaid-zoom-btn mermaid-btn-fit';
   btnFit.innerHTML = '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="12" height="12" rx="2"/><path d="M2 6V2h4M10 2h4v4M14 10v4h-4M6 14H2v-4"/></svg>';
-  btnFit.ariaLabel = '適合畫面';
+  btnFit.ariaLabel = labels.fit;
 
   const btnFullscreen = document.createElement('button');
   btnFullscreen.className = 'mermaid-zoom-btn mermaid-btn-fullscreen';
   btnFullscreen.innerHTML = '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 6V2h4M10 2h4v4M14 10v4h-4M6 14H2v-4"/></svg>';
-  btnFullscreen.ariaLabel = '全螢幕';
+  btnFullscreen.ariaLabel = labels.fullscreen;
 
   bar.append(btnZoomOut, btnLevel, btnZoomIn, sep1, btnFit, btnFullscreen);
   wrapper.append(canvas, bar);
@@ -245,7 +246,7 @@ function buildShell(): { wrapper: HTMLDivElement; viewport: HTMLDivElement } {
   return { wrapper, viewport };
 }
 
-export function MermaidRenderer() {
+export function MermaidRenderer({ labels }: { labels: Dictionary['mermaid'] }) {
   const { resolvedTheme } = useTheme();
   const containersRef = useRef<{ viewport: HTMLDivElement; wrapper: HTMLDivElement; source: string }[]>([]);
   const cleanupRef = useRef<(() => void)[]>([]);
@@ -294,7 +295,7 @@ export function MermaidRenderer() {
       const source = code.textContent?.trim() ?? '';
       if (!source) return;
 
-      const { wrapper, viewport } = buildShell();
+      const { wrapper, viewport } = buildShell(labels);
       figure.replaceWith(wrapper);
       entries.push({ viewport, wrapper, source });
     });

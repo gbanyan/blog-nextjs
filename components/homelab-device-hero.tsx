@@ -7,12 +7,12 @@ import { FiServer } from 'react-icons/fi';
  * HomeLab 設備展示：Proxmox VE + VyOS、Switch、NAS (TrueNAS)
  * 使用純 CSS 藝術，取代 HomeLab 頁的 feature_image
  */
-export function HomeLabDeviceHero() {
+export function HomeLabDeviceHero({ ariaLabel }: { ariaLabel: string }) {
   return (
     <div
       className="homelab-device-hero -mx-4 mb-6 flex justify-center py-4 sm:-mx-12 sm:py-6 lg:-mx-20 lg:py-8 group-[.toc-open]:lg:-mx-4"
       role="img"
-      aria-label="HomeLab 設備：Proxmox VE、VyOS、交換器、NAS (TrueNAS)"
+      aria-label={ariaLabel}
     >
       <div className="homelab-device-scene w-full max-w-full">
         <div className="homelab-rack">

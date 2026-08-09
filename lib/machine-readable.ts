@@ -8,8 +8,10 @@ import {
   type Locale,
 } from '@/lib/locales';
 import { documentLanguageLinks, localeDocuments } from '@/lib/seo';
+import { getDictionary } from '@/lib/i18n/dictionaries';
 
 export function generateRss(locale: Locale): string {
+  const dictionary = getDictionary(locale);
   const sortedPosts = localeDocuments(allPostsByLocale, locale)
     .sort((a, b) => {
       const dateA = a.published_at ? new Date(a.published_at).getTime() : 0;
@@ -23,9 +25,9 @@ export function generateRss(locale: Locale): string {
   const rss = `<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
-    <title>${escapeXml(siteConfig.name)}</title>
+    <title>${escapeXml(dictionary.brand.title)}</title>
     <link>${escapeXml(locale === 'zh-TW' ? siteUrl : absoluteUrl(`/${locale}`))}</link>
-    <description>${escapeXml(siteConfig.description)}</description>
+    <description>${escapeXml(dictionary.brand.description)}</description>
     <language>${localeToRss(locale)}</language>
     <lastBuildDate>${new Date().toUTCString()}</lastBuildDate>
     <atom:link href="${escapeXml(feedUrl)}" rel="self" type="application/rss+xml"/>
@@ -56,6 +58,7 @@ export function generateRss(locale: Locale): string {
 }
 
 export function generateLlms(locale: Locale): string {
+  const dictionary = getDictionary(locale);
   const posts = localeDocuments(allPostsByLocale, locale)
     .sort((a, b) => {
       const dateA = a.published_at ? new Date(a.published_at).getTime() : 0;
@@ -71,9 +74,9 @@ export function generateLlms(locale: Locale): string {
     .map((candidate) => `- ${candidate}: ${localizedEndpoint('/llms.txt', candidate as Locale)}`)
     .join('\n');
 
-  const content = `# ${siteConfig.name}
+  const content = `# ${dictionary.brand.title}
 
-> ${siteConfig.description}
+> ${dictionary.brand.description}
 
 ## Site Information
 
@@ -87,7 +90,7 @@ ${localizedIndexes}
 
 ## About
 
-${siteConfig.aboutShort}
+${dictionary.brand.aboutShort}
 
 ## Content Overview
 

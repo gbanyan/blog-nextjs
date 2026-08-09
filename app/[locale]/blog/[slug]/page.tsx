@@ -28,6 +28,7 @@ import {
   localeToOpenGraph,
   type Locale,
 } from '@/lib/locales';
+import { getDictionary } from '@/lib/i18n/dictionaries';
 
 export function generateStaticParams() {
   const params = allPostsByLocale.map((post) => ({
@@ -45,10 +46,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale: rawLocale, slug } = await params;
   if (!isLocale(rawLocale)) return { robots: { index: false, follow: false } };
   const locale: Locale = rawLocale;
+  const dictionary = getDictionary(locale);
   const post = getPostBySlug(slug, locale);
   if (!post) return { robots: { index: false, follow: false } };
 
   const ogImageUrl = new URL('/api/og', process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000');
+  ogImageUrl.searchParams.set('locale', locale);
   ogImageUrl.searchParams.set('title', post.title);
   if (post.description) {
     ogImageUrl.searchParams.set('description', post.description);
@@ -103,6 +106,7 @@ export default async function BlogPostPage({ params }: Props) {
   const { locale: rawLocale, slug } = await params;
   if (!isLocale(rawLocale)) return notFound();
   const locale: Locale = rawLocale;
+  const dictionary = getDictionary(locale);
   const post = getPostBySlug(slug, locale);
 
   if (!post) return notFound();
@@ -119,6 +123,7 @@ export default async function BlogPostPage({ params }: Props) {
 
   // Get the OG image URL (same as in metadata)
   const ogImageUrl = new URL('/api/og', siteConfig.url);
+  ogImageUrl.searchParams.set('locale', locale);
   ogImageUrl.searchParams.set('title', post.title);
   if (post.description) {
     ogImageUrl.searchParams.set('description', post.description);
@@ -198,13 +203,13 @@ export default async function BlogPostPage({ params }: Props) {
       {
         '@type': 'ListItem',
         position: 1,
-        name: '首頁',
+        name: dictionary.navigation.home,
         item: absoluteUrl(documentPath({ url: '/' }, locale)),
       },
       {
         '@type': 'ListItem',
         position: 2,
-        name: '所有文章',
+        name: dictionary.common.allPosts,
         item: absoluteUrl(documentPath({ url: '/blog' }, locale)),
       },
       {
@@ -222,7 +227,7 @@ export default async function BlogPostPage({ params }: Props) {
       <JsonLd data={breadcrumbSchema} />
       <JsonLd data={speakableSchema} />
       <ReadingProgress />
-      <PostLayout hasToc={hasToc} contentKey={slug}>
+      <PostLayout hasToc={hasToc} contentKey={slug} locale={locale}>
         <div className="space-y-8">
           {/* Main content area for Pagefind indexing */}
           <div data-pagefind-body>
@@ -278,13 +283,13 @@ export default async function BlogPostPage({ params }: Props) {
                 <div>
                   <MarkdownBody html={post.body.html} />
                 </div>
-                {hasMermaid && <MermaidRenderer />}
+                {hasMermaid && <MermaidRenderer labels={dictionary.mermaid} />}
               </article>
             </ScrollReveal>
           </SectionDivider>
           </div>
 
-          <FooterCue />
+          <FooterCue label={dictionary.common.footerCue} />
 
           {/* Exclude navigation and related posts from search indexing */}
           <div data-pagefind-ignore>
@@ -294,6 +299,7 @@ export default async function BlogPostPage({ params }: Props) {
                   current={post}
                   newer={neighbors.newer}
                   older={neighbors.older}
+                  labels={dictionary.common}
                 />
               </ScrollReveal>
             </SectionDivider>
@@ -304,10 +310,10 @@ export default async function BlogPostPage({ params }: Props) {
                   <section className="space-y-6 rounded-2xl border border-slate-200/60 bg-slate-50/50 p-8 dark:border-slate-800 dark:bg-slate-900/30">
                   <div className="flex items-center justify-between gap-2">
                     <h2 className="type-subtitle font-semibold text-slate-900 dark:text-slate-50">
-                      相關文章
+                      {dictionary.common.relatedPosts}
                     </h2>
                     <p className="type-small text-slate-500 dark:text-slate-400">
-                      為你挑選相似主題
+                      {dictionary.common.relatedPostsDescription}
                     </p>
                   </div>
                   <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
@@ -322,7 +328,7 @@ export default async function BlogPostPage({ params }: Props) {
 
             <SectionDivider>
               <ScrollReveal>
-                <GiscusComments />
+                <GiscusComments locale={locale} />
               </ScrollReveal>
             </SectionDivider>
           </div>

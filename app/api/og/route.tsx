@@ -3,6 +3,8 @@ import path from 'node:path';
 
 import { ImageResponse } from 'next/og';
 import { NextRequest } from 'next/server';
+import { getDictionary } from '@/lib/i18n/dictionaries';
+import { isLocale } from '@/lib/locales';
 
 const FONT_DIR = path.join(process.cwd(), 'lib', 'og-fonts');
 const fontCache = new Map<string, ArrayBuffer>();
@@ -24,6 +26,8 @@ export async function GET(request: NextRequest) {
     const title = searchParams.get('title') || 'Blog Post';
     const description = searchParams.get('description') || '';
     const tags = searchParams.get('tags')?.split(',').slice(0, 3) || [];
+    const localeParam = searchParams.get('locale');
+    const brandTitle = isLocale(localeParam ?? undefined) ? getDictionary(localeParam as 'zh-TW' | 'en').brand.title : 'Personal blog';
 
     // Load CJK font for Chinese text rendering
     const fontData = loadFontSync('noto-400.woff');
@@ -70,7 +74,7 @@ export async function GET(request: NextRequest) {
                 letterSpacing: '-0.02em',
               }}
             >
-              個人部落格
+              {brandTitle}
             </div>
           </div>
 

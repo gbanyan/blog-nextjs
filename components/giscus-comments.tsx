@@ -2,6 +2,8 @@
 
 import { useEffect, useMemo, useRef } from 'react';
 import { useTheme } from 'next-themes';
+import type { Locale } from '@/lib/i18n/config';
+import { getDictionary } from '@/lib/i18n/dictionaries';
 
 const REQUIRED_ENV_KEYS = [
   'NEXT_PUBLIC_GISCUS_REPO',
@@ -14,7 +16,8 @@ function getMissingEnvKeys(config: Record<string, string | undefined>) {
   return REQUIRED_ENV_KEYS.filter((key) => !config[key]);
 }
 
-export function GiscusComments() {
+export function GiscusComments({ locale }: { locale: Locale }) {
+  const labels = getDictionary(locale).comments;
   const ref = useRef<HTMLDivElement>(null);
   const { resolvedTheme } = useTheme();
 
@@ -70,7 +73,7 @@ export function GiscusComments() {
     if (process.env.NODE_ENV === 'development') {
       return (
         <section className="rounded-2xl border border-dashed border-amber-400/60 bg-amber-50/70 p-6 text-sm text-amber-900 dark:border-amber-500/50 dark:bg-amber-950/30 dark:text-amber-200">
-          Giscus 尚未完成設定。請在 `.env.local` 補齊：{missingEnvKeys.join(', ')}
+          {labels.setup(missingEnvKeys.join(', '))}
         </section>
       );
     }
@@ -79,7 +82,7 @@ export function GiscusComments() {
 
   return (
     <section className="space-y-4 rounded-2xl border border-slate-200/60 bg-slate-50/50 p-6 dark:border-slate-800 dark:bg-slate-900/30">
-      <h2 className="type-subtitle font-semibold text-slate-900 dark:text-slate-50">留言討論</h2>
+      <h2 className="type-subtitle font-semibold text-slate-900 dark:text-slate-50">{labels.title}</h2>
       <div ref={ref} />
     </section>
   );

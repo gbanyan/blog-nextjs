@@ -7,6 +7,7 @@ import { TerminalWindow } from './terminal-window';
 interface HeroSectionProps {
   title: string;
   tagline: string;
+  ariaLabel: string;
 }
 
 const REDUCED_MOTION_QUERY = '(prefers-reduced-motion: reduce)';
@@ -24,7 +25,7 @@ function getReducedMotion() {
   return window.matchMedia(REDUCED_MOTION_QUERY).matches;
 }
 
-export function HeroSection({ title, tagline }: HeroSectionProps) {
+export function HeroSection({ title, tagline, ariaLabel }: HeroSectionProps) {
   const reducedMotion = useSyncExternalStore(
     subscribeToReducedMotion,
     getReducedMotion,
@@ -64,6 +65,7 @@ export function HeroSection({ title, tagline }: HeroSectionProps) {
         <TerminalWindow
           title={title}
           tagline={tagline}
+          ariaLabel={ariaLabel}
           reducedMotion={reducedMotion}
           startTyping={startTyping}
           matrixVisible={matrixVisible}

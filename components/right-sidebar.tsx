@@ -7,6 +7,8 @@ import { FaGithub, FaMastodon, FaLinkedin } from 'react-icons/fa';
 import { FiTrendingUp, FiArrowRight } from 'react-icons/fi';
 import { siteConfig } from '@/lib/config';
 import { MastodonFeed } from './mastodon-feed';
+import type { Locale } from '@/lib/i18n/config';
+import { getDictionary } from '@/lib/i18n/dictionaries';
 type TagItem = { tag: string; slug: string; count: number };
 
 /** Shared sidebar content for desktop aside and mobile drawer */
@@ -14,13 +16,16 @@ export function RightSidebarContent({
   tags,
   aboutUrl,
   avatarSrc,
+  locale,
   forceLoadFeed = false,
 }: {
   tags: TagItem[];
   aboutUrl: string;
   avatarSrc: string;
+  locale: Locale;
   forceLoadFeed?: boolean;
 }) {
+  const dictionary = getDictionary(locale);
   const [shouldLoadFeed, setShouldLoadFeed] = useState(forceLoadFeed);
   const feedRef = useRef<HTMLDivElement>(null);
 
@@ -96,7 +101,7 @@ export function RightSidebarContent({
           <div className="relative flex flex-col items-center">
             <LocalizedLink
               href={aboutUrl}
-              aria-label="關於作者"
+              aria-label={dictionary.sidebar.aboutAuthor}
               className="mb-2 inline-block transition-transform duration-300 ease-out group-hover:-translate-y-0.5"
             >
               {avatarSrc ? (
@@ -130,9 +135,9 @@ export function RightSidebarContent({
                 ))}
               </div>
             )}
-            {siteConfig.aboutShort && (
+            {dictionary.brand.aboutShort && (
               <div className="type-body mt-3 space-y-1 text-center text-slate-600 dark:text-slate-200">
-                {siteConfig.aboutShort.split(/\n+/).map((line, index) => (
+                {dictionary.brand.aboutShort.split(/\n+/).map((line, index) => (
                   <p key={`${line}-${index}`}>{line}</p>
                 ))}
               </div>
@@ -142,14 +147,14 @@ export function RightSidebarContent({
 
         {/* Mastodon Feed - Lazy loaded when visible */}
         <div ref={feedRef}>
-          {shouldLoadFeed && <MastodonFeed />}
+          {shouldLoadFeed && <MastodonFeed locale={locale} labels={dictionary.mastodon} />}
         </div>
 
         {tags.length > 0 && (
           <section className="motion-card rounded-xl border bg-white px-4 py-3 shadow-sm dark:border-slate-800 dark:bg-slate-900 dark:text-slate-100">
             <h2 className="type-small flex items-center gap-2 font-semibold uppercase tracking-[0.35em] text-slate-500 dark:text-slate-400">
               <FiTrendingUp className="h-3 w-3 text-orange-400" />
-              熱門標籤
+              {dictionary.sidebar.popularTags}
             </h2>
             <div className="mt-2 flex flex-wrap gap-2 text-base">
               {tags.map(({ tag, slug, count }) => {
@@ -173,7 +178,7 @@ export function RightSidebarContent({
                 href="/tags"
                 className="motion-link inline-flex items-center gap-1 text-accent-textLight hover:text-accent dark:text-accent-textDark dark:hover:text-accent"
               >
-                所有標籤
+                {dictionary.common.allTags}
                 <FiArrowRight className="h-3 w-3" />
               </LocalizedLink>
             </div>
@@ -187,15 +192,17 @@ export function RightSidebar({
   tags,
   aboutUrl,
   avatarSrc,
+  locale,
 }: {
   tags: TagItem[];
   aboutUrl: string;
   avatarSrc: string;
+  locale: Locale;
 }) {
   return (
     <aside className="hidden lg:block">
       <div className="sticky top-20">
-        <RightSidebarContent tags={tags} aboutUrl={aboutUrl} avatarSrc={avatarSrc} />
+        <RightSidebarContent tags={tags} aboutUrl={aboutUrl} avatarSrc={avatarSrc} locale={locale} />
       </div>
     </aside>
   );

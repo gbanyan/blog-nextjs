@@ -12,6 +12,7 @@ import { absoluteUrl, isLocale, localizedPath, type Locale } from '@/lib/locales
 import { metadataForPath } from '@/lib/seo';
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
+import { getDictionary } from '@/lib/i18n/dictionaries';
 
 interface Props {
   params: Promise<{ locale: string }>;
@@ -20,9 +21,10 @@ interface Props {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale: rawLocale } = await params;
   if (!isLocale(rawLocale)) return { robots: { index: false, follow: false } };
+  const dictionary = getDictionary(rawLocale);
   return metadataForPath({
-    title: `${siteConfig.name} 的最新動態`,
-    description: siteConfig.description,
+    title: `${siteConfig.name} — ${dictionary.common.latestPosts}`,
+    description: dictionary.brand.description,
     path: '/',
     locale: rawLocale,
   });
@@ -32,6 +34,7 @@ export default async function HomePage({ params }: Props) {
   const { locale: rawLocale } = await params;
   if (!isLocale(rawLocale)) return notFound();
   const locale: Locale = rawLocale;
+  const dictionary = getDictionary(locale);
   const { tags, aboutUrl, avatarSrc } = getSidebarData(locale);
   const posts = (await getAllPostsSorted(locale)).slice(0, siteConfig.postsPerPage);
 
@@ -39,19 +42,19 @@ export default async function HomePage({ params }: Props) {
   const collectionPageSchema = {
     '@context': 'https://schema.org',
     '@type': 'CollectionPage',
-    name: `${siteConfig.name} 的最新動態`,
-    description: siteConfig.description,
+    name: `${siteConfig.name} — ${dictionary.common.latestPosts}`,
+    description: dictionary.brand.description,
     url: absoluteUrl(localizedPath('/', locale)),
     inLanguage: locale,
     isPartOf: {
       '@type': 'WebSite',
-      name: siteConfig.title,
+      name: dictionary.brand.title,
       url: absoluteUrl(localizedPath('/', locale)),
     },
     about: {
       '@type': 'Blog',
-      name: siteConfig.title,
-      description: siteConfig.description,
+      name: dictionary.brand.title,
+      description: dictionary.brand.description,
     },
   };
 
@@ -59,26 +62,30 @@ export default async function HomePage({ params }: Props) {
     <>
       <JsonLd data={collectionPageSchema} />
       <section className="space-y-6">
-      <SidebarLayout tags={tags} aboutUrl={aboutUrl} avatarSrc={avatarSrc}>
+      <SidebarLayout tags={tags} aboutUrl={aboutUrl} avatarSrc={avatarSrc} locale={locale}>
         <h1 className="sr-only">
-          {siteConfig.name} 的最新動態 — {siteConfig.tagline}
+          {siteConfig.name} — {dictionary.common.latestPosts} — {dictionary.brand.tagline}
         </h1>
         <HeroSection
-          title={`${siteConfig.name} 的最新動態`}
-          tagline={siteConfig.tagline}
+          title={`${siteConfig.name} — ${dictionary.common.latestPosts}`}
+          tagline={dictionary.brand.tagline}
+          ariaLabel={dictionary.terminal.ariaLabel(
+            `${siteConfig.name} — ${dictionary.common.latestPosts}`,
+            dictionary.brand.tagline
+          )}
         />
 
         <div>
           <div className="mb-3 flex items-baseline justify-between">
             <h2 className="type-small font-semibold uppercase tracking-[0.4em] text-slate-500 dark:text-slate-400">
-              最新文章
+              {dictionary.common.latestPosts}
             </h2>
             <LocalizedLink
               href="/blog"
               prefetch={true}
               className="text-xs text-accent hover:underline"
             >
-              所有文章 →
+              {dictionary.common.allPosts} →
             </LocalizedLink>
           </div>
           <TimelineWrapper>

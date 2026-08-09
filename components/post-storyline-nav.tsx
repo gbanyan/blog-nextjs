@@ -2,11 +2,13 @@ import { LocalizedLink } from '@/components/localized-link';
 import type { Post } from '@/lib/content';
 import { FiArrowLeft, FiArrowRight } from 'react-icons/fi';
 import { NAV_BACK, NAV_FORWARD } from '@/lib/navigation';
+import type { Dictionary } from '@/lib/i18n/dictionaries';
 
 interface Props {
   current: Post;
   newer?: Post;
   older?: Post;
+  labels: Dictionary['common'];
 }
 
 interface StationConfig {
@@ -18,28 +20,28 @@ interface StationConfig {
   align: 'start' | 'end';
 }
 
-export function PostStorylineNav({ current, newer, older }: Props) {
+export function PostStorylineNav({ current, newer, older, labels }: Props) {
   const stations: StationConfig[] = [
     {
       key: 'older',
-      label: '上一篇',
+      label: labels.previousPost,
       post: older,
-      subtitle: older ? '較舊文章' : '已是首篇',
+      subtitle: older ? labels.olderPost : labels.firstPost,
       rel: 'prev',
       align: 'end'
     },
     {
       key: 'newer',
-      label: '下一篇',
+      label: labels.nextPost,
       post: newer,
-      subtitle: newer ? '較新文章' : '已是最新',
+      subtitle: newer ? labels.newerPost : labels.latestPost,
       rel: 'next',
       align: 'start'
     }
   ];
 
   return (
-    <nav aria-label="文章導覽" className="relative mt-10">
+    <nav aria-label={labels.articleNavigation} className="relative mt-10">
       <div className="relative overflow-hidden rounded-[32px] border border-slate-200/70 bg-gradient-to-r from-white via-slate-50 to-white px-6 py-8 shadow-lg dark:border-slate-800/70 dark:from-slate-900 dark:via-slate-900/80 dark:to-slate-900">
         <div className="pointer-events-none absolute inset-x-12 top-1/2 hidden md:block">
           <div className="relative flex items-center text-slate-200 dark:text-slate-700">
@@ -52,7 +54,7 @@ export function PostStorylineNav({ current, newer, older }: Props) {
           <Station station={stations[0]} />
           <div className="hidden flex-col items-center gap-2 text-center text-xs uppercase tracking-[0.4em] text-slate-400 md:flex">
             <span className="h-2 w-2 rounded-full bg-blue-500" aria-hidden="true" />
-            <span>你在這裡</span>
+            <span>{labels.youAreHere}</span>
           </div>
           <Station station={stations[1]} />
         </div>

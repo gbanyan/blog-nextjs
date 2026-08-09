@@ -22,6 +22,7 @@ import {
 import { LocalizedLink } from '@/components/localized-link';
 import { usePathname } from 'next/navigation';
 import { NAV_TRANSITION } from '@/lib/navigation';
+import type { Dictionary } from '@/lib/i18n/dictionaries';
 
 export type IconKey =
   | 'home'
@@ -60,9 +61,10 @@ export interface NavLinkItem {
 
 interface NavMenuProps {
   items: NavLinkItem[];
+  labels: Pick<Dictionary['common'], 'openMenu' | 'closeMenu'>;
 }
 
-export function NavMenu({ items }: NavMenuProps) {
+export function NavMenu({ items, labels }: NavMenuProps) {
   const [open, setOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const [expandedMobileItems, setExpandedMobileItems] = useState<string[]>([]);
@@ -193,7 +195,7 @@ export function NavMenu({ items }: NavMenuProps) {
       <button
         type="button"
           className="relative z-50 inline-flex h-10 w-10 items-center justify-center rounded-full text-slate-600 transition-colors hover:bg-slate-100 hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40 dark:text-slate-200 dark:hover:bg-slate-800 dark:hover:text-accent sm:hidden"
-        aria-label={open ? '關閉選單' : '開啟選單'}
+        aria-label={open ? labels.closeMenu : labels.openMenu}
         aria-expanded={open}
         onClick={toggle}
       >
@@ -225,7 +227,7 @@ export function NavMenu({ items }: NavMenuProps) {
               type="button"
               className="inline-flex h-10 w-10 items-center justify-center rounded-full text-slate-600 transition-colors hover:bg-slate-100 hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40 dark:text-slate-200 dark:hover:bg-slate-800 dark:hover:text-accent"
               onClick={close}
-              aria-label="關閉選單"
+              aria-label={labels.closeMenu}
             >
               <div className="relative h-5 w-5">
                 <span className="absolute left-0 top-1/2 h-0.5 w-5 -translate-y-1/2 rotate-45 bg-current" />

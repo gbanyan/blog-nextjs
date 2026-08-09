@@ -12,6 +12,7 @@ import { JsonLd } from '@/components/json-ld';
 import { metadataForPath } from '@/lib/seo';
 import { absoluteUrl, isLocale, localizedPath, type Locale } from '@/lib/locales';
 import { notFound } from 'next/navigation';
+import { getDictionary } from '@/lib/i18n/dictionaries';
 
 interface Props {
   params: Promise<{ locale: string }>;
@@ -20,9 +21,10 @@ interface Props {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale: rawLocale } = await params;
   if (!isLocale(rawLocale)) return { robots: { index: false, follow: false } };
+  const dictionary = getDictionary(rawLocale);
   return metadataForPath({
-    title: '標籤索引',
-    description: '瀏覽所有標籤，探索不同主題的文章。',
+    title: dictionary.tags.title,
+    description: dictionary.tags.description,
     path: '/tags',
     locale: rawLocale,
   });
@@ -32,6 +34,7 @@ export default async function TagIndexPage({ params }: Props) {
   const { locale: rawLocale } = await params;
   if (!isLocale(rawLocale)) return notFound();
   const locale: Locale = rawLocale;
+  const dictionary = getDictionary(locale);
   const { tags: sidebarTags, aboutUrl, avatarSrc } = getSidebarData(locale);
   const tags = getAllTagsWithCount(locale);
   const topTags = tags.slice(0, 3);
@@ -46,8 +49,8 @@ export default async function TagIndexPage({ params }: Props) {
   const collectionPageSchema = {
     '@context': 'https://schema.org',
     '@type': 'CollectionPage',
-    name: '標籤索引',
-    description: '瀏覽所有標籤，探索不同主題的文章。',
+    name: dictionary.tags.title,
+    description: dictionary.tags.description,
     url: absoluteUrl(localizedPath('/tags', locale)),
     inLanguage: locale,
     mainEntity: {
@@ -60,7 +63,7 @@ export default async function TagIndexPage({ params }: Props) {
         item: {
           '@type': 'Thing',
           name: tag.tag,
-          description: `${tag.count} 篇文章`
+          description: dictionary.tags.count(tag.count)
         }
       }))
     }
@@ -69,21 +72,21 @@ export default async function TagIndexPage({ params }: Props) {
   return (
     <section className="space-y-6">
       <JsonLd data={collectionPageSchema} />
-      <SidebarLayout tags={sidebarTags} aboutUrl={aboutUrl} avatarSrc={avatarSrc}>
+      <SidebarLayout tags={sidebarTags} aboutUrl={aboutUrl} avatarSrc={avatarSrc} locale={locale}>
         <SectionDivider>
           <ScrollReveal>
             <div className="motion-card rounded-2xl border border-white/40 bg-white/60 p-8 text-center shadow-lg backdrop-blur-md dark:border-white/10 dark:bg-slate-900/60">
               <div className="inline-flex items-center gap-2 text-accent">
                 <FiTag className="h-5 w-5" />
                 <span className="type-small uppercase tracking-[0.4em] text-slate-500 dark:text-slate-400">
-                  標籤索引
+                  {dictionary.tags.title}
                 </span>
               </div>
               <h1 className="type-title mt-2 font-semibold text-slate-900 dark:text-slate-50">
-                共 {tags.length} 組主題，任你探索
+                {dictionary.tags.explore(tags.length)}
               </h1>
               <p className="type-small mt-2 text-slate-600 dark:text-slate-300">
-                熱度最高的標籤：
+                {dictionary.tags.topTags}
                 {topTags.map((t) => t.tag).join('、')}
               </p>
             </div>
@@ -105,12 +108,12 @@ export default async function TagIndexPage({ params }: Props) {
                     {tag}
                   </h2>
                   <span className="type-small text-slate-600 dark:text-slate-300">
-                    {count} 篇
+                    {dictionary.tags.count(count)}
                   </span>
                 </div>
                 <span className="mt-1 inline-flex items-center gap-1 text-xs text-slate-500 dark:text-slate-400">
                   <FiTrendingUp className="h-3 w-3 text-orange-400" />
-                  熱度 #{index + 1}
+                  {dictionary.tags.rank(index + 1)}
                 </span>
               </LocalizedLink>
             );

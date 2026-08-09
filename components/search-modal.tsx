@@ -13,6 +13,7 @@ import {
 import { cn } from '@/lib/utils';
 import { NAV_TRANSITION } from '@/lib/navigation';
 import { getLocaleFromPathname, type SupportedLocale } from '@/lib/locale-switcher';
+import type { Dictionary } from '@/lib/i18n/dictionaries';
 
 interface PagefindResult {
   url: string;
@@ -35,12 +36,8 @@ interface SearchModalProps {
   isOpen: boolean;
   onClose: () => void;
   recentPosts?: { title: string; url: string }[];
+  labels: Dictionary['search'];
 }
-
-const META_LABELS: Record<string, string> = {
-  title: '標題相符',
-  tags: '標籤相符',
-};
 
 function escapeHtml(text: string): string {
   return text
@@ -115,7 +112,8 @@ function localizeInternalUrl(url: string, locale: SupportedLocale): string {
 export function SearchModal({
   isOpen,
   onClose,
-  recentPosts = []
+  recentPosts = [],
+  labels,
 }: SearchModalProps) {
   const router = useRouter();
   const pathname = usePathname();
@@ -205,16 +203,16 @@ export function SearchModal({
   );
 
   const navActions: QuickAction[] = [
-    { id: 'home', title: '首頁', url: localizeInternalUrl('/', locale), icon: <FiHome className="size-4" /> },
+    { id: 'home', title: labels.home, url: localizeInternalUrl('/', locale), icon: <FiHome className="size-4" /> },
     {
       id: 'blog',
-      title: '部落格',
+      title: labels.blog,
       url: localizeInternalUrl('/blog', locale),
       icon: <FiFileText className="size-4" />
     },
     {
       id: 'tags',
-      title: '標籤',
+      title: labels.tags,
       url: localizeInternalUrl('/tags', locale),
       icon: <FiTag className="size-4" />
     }
@@ -231,7 +229,7 @@ export function SearchModal({
     <Command.Dialog
       open={isOpen}
       onOpenChange={(open) => !open && onClose()}
-      label="全站搜尋"
+      label={labels.dialogLabel}
       shouldFilter={false}
       className="fixed left-1/2 top-[20%] z-[9999] w-full max-w-2xl -translate-x-1/2 rounded-2xl border border-white/40 bg-white/95 shadow-2xl backdrop-blur-md dark:border-white/10 dark:bg-slate-900/95"
     >
@@ -240,7 +238,7 @@ export function SearchModal({
         <Command.Input
           value={search}
           onValueChange={setSearch}
-          placeholder="搜尋文章或快速導航…"
+          placeholder={labels.inputPlaceholder}
           className="flex h-14 w-full bg-transparent px-3 text-base text-slate-900 placeholder:text-slate-400 focus:outline-none dark:text-slate-100 dark:placeholder:text-slate-500"
         />
       </div>
@@ -248,13 +246,13 @@ export function SearchModal({
       <Command.List className="scroll-panel max-h-[min(60vh,400px)] p-2">
         {loading && (
           <Command.Loading className="flex items-center justify-center py-8 text-sm text-slate-500 dark:text-slate-400">
-            搜尋中…
+            {labels.searching}
           </Command.Loading>
         )}
 
         {!loading && !search.trim() && (
           <>
-            <Command.Group heading="導航" className="[&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:py-1.5 [&_[cmdk-group-heading]]:text-xs [&_[cmdk-group-heading]]:font-medium [&_[cmdk-group-heading]]:text-slate-500 [&_[cmdk-group-heading]]:dark:text-slate-400">
+            <Command.Group heading={labels.navigation} className="[&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:py-1.5 [&_[cmdk-group-heading]]:text-xs [&_[cmdk-group-heading]]:font-medium [&_[cmdk-group-heading]]:text-slate-500 [&_[cmdk-group-heading]]:dark:text-slate-400">
               {navActions.map((action) => (
                 <Command.Item
                   key={action.id}
@@ -274,7 +272,7 @@ export function SearchModal({
               ))}
             </Command.Group>
             {recentPostActions.length > 0 && (
-              <Command.Group heading="最近文章" className="[&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:py-1.5 [&_[cmdk-group-heading]]:text-xs [&_[cmdk-group-heading]]:font-medium [&_[cmdk-group-heading]]:text-slate-500 [&_[cmdk-group-heading]]:dark:text-slate-400">
+              <Command.Group heading={labels.recentPosts} className="[&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:py-1.5 [&_[cmdk-group-heading]]:text-xs [&_[cmdk-group-heading]]:font-medium [&_[cmdk-group-heading]]:text-slate-500 [&_[cmdk-group-heading]]:dark:text-slate-400">
                 {recentPostActions.map((action) => (
                   <Command.Item
                     key={action.id}
@@ -298,13 +296,13 @@ export function SearchModal({
         )}
 
         {!loading && search.trim() && results.length > 0 && (
-          <Command.Group heading="搜尋結果" className="[&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:py-1.5 [&_[cmdk-group-heading]]:text-xs [&_[cmdk-group-heading]]:font-medium [&_[cmdk-group-heading]]:text-slate-500 [&_[cmdk-group-heading]]:dark:text-slate-400">
+          <Command.Group heading={labels.searchResults} className="[&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:py-1.5 [&_[cmdk-group-heading]]:text-xs [&_[cmdk-group-heading]]:font-medium [&_[cmdk-group-heading]]:text-slate-500 [&_[cmdk-group-heading]]:dark:text-slate-400">
             {results.map((result, i) => {
               const title = result.meta?.title ?? result.url;
               const matchedMeta = result.matchedMetaFields ?? [];
               const titleMatched = matchedMeta.includes('title');
               const metaBadges = matchedMeta
-                .map((field) => META_LABELS[field])
+                .map((field) => field === 'title' ? labels.titleMatches : field === 'tags' ? labels.tagsMatches : undefined)
                 .filter(Boolean);
               const excerptHtml = result.excerpt
                 ? result.excerpt
@@ -350,19 +348,19 @@ export function SearchModal({
         )}
 
         <Command.Empty className="py-8 text-center text-sm text-slate-500 dark:text-slate-400">
-          找不到結果
+          {labels.noResults}
         </Command.Empty>
       </Command.List>
 
       <div className="border-t border-slate-200 px-4 py-2 text-xs text-slate-500 dark:border-slate-700 dark:text-slate-400">
-        <span>ESC 關閉</span>
-        <span className="ml-4">⌘K 開啟</span>
+        <span>{labels.close}</span>
+        <span className="ml-4">{labels.open}</span>
       </div>
     </Command.Dialog>
   );
 }
 
-export function SearchButton({ onClick }: { onClick: () => void }) {
+export function SearchButton({ onClick, labels }: { onClick: () => void; labels: Dictionary['search'] }) {
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
@@ -379,10 +377,10 @@ export function SearchButton({ onClick }: { onClick: () => void }) {
     <button
       onClick={onClick}
               className="motion-link inline-flex h-9 shrink-0 items-center gap-2 rounded-full bg-slate-100 px-3 py-1.5 text-sm text-slate-600 transition-all duration-260 ease-snappy hover:-translate-y-0.5 hover:bg-slate-200 hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700 dark:hover:text-accent"
-      aria-label="搜尋 (Cmd+K)"
+      aria-label={`${labels.dialogLabel} (Cmd+K)`}
     >
       <FiSearch className="h-3.5 w-3.5 shrink-0" />
-      <span className="hidden shrink-0 whitespace-nowrap sm:inline">搜尋</span>
+      <span className="hidden shrink-0 whitespace-nowrap sm:inline">{labels.dialogLabel}</span>
       <kbd className="hidden rounded bg-white px-1.5 py-0.5 text-xs font-semibold text-slate-500 shadow-sm dark:bg-slate-900 dark:text-slate-400 sm:inline-block">
         ⌘K
       </kbd>

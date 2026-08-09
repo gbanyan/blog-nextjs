@@ -2,13 +2,17 @@ import Link from 'next/link';
 import { FiExternalLink } from 'react-icons/fi';
 import type { RepoSummary } from '@/lib/github';
 import { getLanguageColor } from '@/lib/github-lang-colors';
+import type { Locale } from '@/lib/i18n/config';
+import type { Dictionary } from '@/lib/i18n/dictionaries';
 
 interface RepoCardProps {
   repo: RepoSummary;
   animationDelay?: number;
+  locale: Locale;
+  labels: Dictionary['repo'];
 }
 
-export function RepoCard({ repo, animationDelay = 0 }: RepoCardProps) {
+export function RepoCard({ repo, animationDelay = 0, locale, labels }: RepoCardProps) {
   const langColor = getLanguageColor(repo.language);
 
   return (
@@ -50,13 +54,13 @@ export function RepoCard({ repo, animationDelay = 0 }: RepoCardProps) {
             style={{ backgroundColor: langColor }}
             aria-hidden
           />
-          {repo.language ?? '其他'}
+          {repo.language ?? labels.otherLanguage}
         </span>
         <span suppressHydrationWarning>
-          更新於{' '}
+          {labels.updatedAt}{' '}
           {repo.updatedAt
-            ? new Date(repo.updatedAt).toLocaleDateString('zh-TW')
-            : '未知'}
+            ? new Date(repo.updatedAt).toLocaleDateString(locale === 'en' ? 'en-US' : 'zh-TW')
+            : labels.unknown}
         </span>
       </div>
     </li>

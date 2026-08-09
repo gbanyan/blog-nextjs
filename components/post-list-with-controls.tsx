@@ -6,15 +6,19 @@ import { FiArrowDown, FiArrowUp, FiSearch, FiList } from 'react-icons/fi';
 import { siteConfig } from '@/lib/config';
 import { PostListItem } from './post-list-item';
 import { TimelineWrapper } from './timeline-wrapper';
+import type { Locale } from '@/lib/i18n/config';
+import { getDictionary } from '@/lib/i18n/dictionaries';
 
 interface Props {
   posts: Post[];
   pageSize?: number;
+  locale: Locale;
 }
 
 type SortOrder = 'new' | 'old';
 
-export function PostListWithControls({ posts, pageSize }: Props) {
+export function PostListWithControls({ posts, pageSize, locale }: Props) {
+  const labels = getDictionary(locale).common;
   const [sortOrder, setSortOrder] = useState<SortOrder>('new');
   const [page, setPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState('');
@@ -78,7 +82,7 @@ export function PostListWithControls({ posts, pageSize }: Props) {
       <div className="flex flex-col gap-4 text-xs text-slate-500 dark:text-slate-400 sm:flex-row sm:items-center sm:justify-between">
         <div className="inline-flex items-center gap-2 rounded-full bg-slate-100/70 px-2 py-1 text-slate-600 dark:bg-slate-800/70 dark:text-slate-300">
           <FiList className="h-3.5 w-3.5" />
-          <span>排序</span>
+          <span>{labels.sort}</span>
           <button
             type="button"
             onClick={() => handleChangeSort('new')}
@@ -88,7 +92,7 @@ export function PostListWithControls({ posts, pageSize }: Props) {
               }`}
           >
             <FiArrowDown className="h-3 w-3" />
-            最新
+            {labels.newest}
           </button>
           <button
             type="button"
@@ -99,12 +103,12 @@ export function PostListWithControls({ posts, pageSize }: Props) {
               }`}
           >
             <FiArrowUp className="h-3 w-3" />
-            最舊
+            {labels.oldest}
           </button>
         </div>
         <div className="flex w-full items-center text-sm sm:w-auto">
           <label htmlFor="post-search" className="sr-only">
-            搜尋文章
+            {labels.searchPosts}
           </label>
           <div className="relative w-full sm:w-64">
             <FiSearch
@@ -113,7 +117,7 @@ export function PostListWithControls({ posts, pageSize }: Props) {
             <input
               id="post-search"
               type="search"
-              placeholder="搜尋文章…"
+              placeholder={labels.searchPlaceholder}
               value={searchTerm}
               onChange={(event) => setSearchTerm(event.target.value)}
               className="w-full rounded-full border border-slate-200 bg-white py-1.5 pl-9 pr-3 text-sm text-slate-700 shadow-sm transition duration-180 ease-snappy focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:focus:border-accent dark:focus:ring-accent/30"
@@ -124,8 +128,8 @@ export function PostListWithControls({ posts, pageSize }: Props) {
 
       <div className="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
         <p>
-          第 {currentPage} / {totalPages} 頁 · 共 {sortedPosts.length} 篇
-          {normalizedQuery && `（搜尋「${searchTerm}」）`}
+          {labels.pageStatus(currentPage, totalPages, sortedPosts.length)}
+          {normalizedQuery && ` ${labels.searchStatus(searchTerm)}`}
         </p>
         {normalizedQuery && sortedPosts.length === 0 && (
           <button
@@ -133,14 +137,14 @@ export function PostListWithControls({ posts, pageSize }: Props) {
             onClick={() => setSearchTerm('')}
             className="text-blue-600 underline-offset-2 hover:underline dark:text-blue-400"
           >
-            清除搜尋
+            {labels.clearSearch}
           </button>
         )}
       </div>
 
       {currentPosts.length === 0 ? (
         <div className="rounded-lg border border-dashed border-slate-200 p-6 text-center text-sm text-slate-500 dark:border-slate-700 dark:text-slate-400">
-          無符合條件的文章
+          {labels.noMatchingPosts}
         </div>
       ) : (
         <TimelineWrapper className="space-y-3">
@@ -158,7 +162,7 @@ export function PostListWithControls({ posts, pageSize }: Props) {
             disabled={currentPage === 1}
             className="rounded border border-slate-200 px-2 py-1 disabled:opacity-40 dark:border-slate-700"
           >
-            上一頁
+            {labels.previousPage}
           </button>
           <div className="flex items-center gap-1">
             {Array.from({ length: totalPages }).map((_, i) => {
@@ -185,7 +189,7 @@ export function PostListWithControls({ posts, pageSize }: Props) {
             disabled={currentPage === totalPages}
             className="rounded border border-slate-200 px-2 py-1 disabled:opacity-40 dark:border-slate-700"
           >
-            下一頁
+            {labels.nextPage}
           </button>
         </nav>
       )}

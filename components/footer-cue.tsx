@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 
-export function FooterCue() {
+export function FooterCue({ label }: { label: string }) {
   const ref = useRef<HTMLDivElement | null>(null);
   const [active, setActive] = useState(false);
 
@@ -32,7 +32,7 @@ export function FooterCue() {
 
   return (
     <div ref={ref} className="flex flex-col items-center gap-2 py-4 text-[11px] uppercase tracking-[0.3em] text-slate-400 dark:text-slate-500">
-      <span className="text-xs">即將展開</span>
+      <span className="text-xs">{label}</span>
       <span
         className={`h-10 w-px overflow-hidden rounded-full bg-gradient-to-b from-transparent via-accent to-transparent transition-[height,opacity] duration-500 ease-snappy ${
           active ? 'opacity-80' : 'h-4 opacity-30'

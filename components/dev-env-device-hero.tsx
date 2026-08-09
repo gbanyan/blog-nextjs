@@ -6,12 +6,12 @@ import { SiArchlinux, SiUbuntu, SiLinux } from 'react-icons/si';
  * Mac mini + 螢幕 3D 裝置展示
  * 使用純 CSS 3D transforms，取代開發工作環境頁的 feature_image
  */
-export function DevEnvDeviceHero() {
+export function DevEnvDeviceHero({ ariaLabel }: { ariaLabel: string }) {
   return (
     <div
       className="dev-env-device-hero -mx-4 mb-6 flex justify-center py-4 sm:-mx-12 sm:py-6 lg:-mx-20 lg:py-8 group-[.toc-open]:lg:-mx-4"
       role="img"
-      aria-label="Mac mini、鍵盤與外接螢幕的 3D 裝置展示"
+      aria-label={ariaLabel}
     >
       <div className="dev-env-device-scene">
         {/* Monitor */}

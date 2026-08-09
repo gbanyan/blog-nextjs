@@ -10,6 +10,8 @@ import {
   type MastodonStatus
 } from '@/lib/mastodon';
 import { siteConfig } from '@/lib/config';
+import type { Locale } from '@/lib/i18n/config';
+import type { Dictionary } from '@/lib/i18n/dictionaries';
 /**
  * Mastodon feed card.
  * Data is fetched server-side via the /api/mastodon route handler so the
@@ -40,12 +42,12 @@ function FeedSkeleton() {
 }
 
 /** Client-fetched status list. */
-function StatusListContent({ statuses }: { statuses: MastodonStatus[] | null }) {
+function StatusListContent({ statuses, locale, labels }: { statuses: MastodonStatus[] | null; locale: Locale; labels: Dictionary['mastodon'] }) {
 
   if (!statuses || statuses.length === 0) {
     return (
       <p className="type-small text-slate-400 dark:text-slate-500">
-        暫無動態
+        {labels.noStatus}
       </p>
     );
   }
@@ -57,7 +59,7 @@ function StatusListContent({ statuses }: { statuses: MastodonStatus[] | null }) 
         const displayStatus = status.reblog || status;
         const content = stripHtml(displayStatus.content);
         const truncated = truncateText(content, 180);
-        const relativeTime = formatRelativeTime(status.created_at);
+        const relativeTime = formatRelativeTime(status.created_at, locale);
         const hasMedia = displayStatus.media_attachments.length > 0;
 
         return (
@@ -72,7 +74,7 @@ function StatusListContent({ statuses }: { statuses: MastodonStatus[] | null }) 
               {status.reblog && (
                 <div className="type-small flex items-center gap-1 text-slate-400 dark:text-slate-500">
                   <FiArrowRight className="h-2.5 w-2.5 rotate-90" />
-                  <span>轉推了</span>
+                  <span>{labels.boosted}</span>
                 </div>
               )}
 
@@ -149,7 +151,7 @@ function StatusListContent({ statuses }: { statuses: MastodonStatus[] | null }) 
                         >
                           <img
                             src={att.preview_url}
-                            alt={att.description ?? '音訊'}
+                            alt={att.description ?? labels.audio}
                             loading="lazy"
                             className="h-full w-full object-cover opacity-80"
                           />
@@ -175,7 +177,7 @@ function StatusListContent({ statuses }: { statuses: MastodonStatus[] | null }) 
     </div>
   );
 }
-export function MastodonFeed() {
+export function MastodonFeed({ locale, labels }: { locale: Locale; labels: Dictionary['mastodon'] }) {
   const mastodonUrl = siteConfig.social.mastodon;
   if (!mastodonUrl) return null;
 
@@ -208,13 +210,13 @@ export function MastodonFeed() {
       {/* Header */}
       <div className="type-small mb-3 flex items-center gap-2 font-semibold uppercase tracking-[0.35em] text-slate-500 dark:text-slate-400">
         <FaMastodon className="h-4 w-4 text-purple-500 dark:text-purple-400" />
-        微網誌
+        {labels.title}
       </div>
 
       {loading ? (
         <FeedSkeleton />
       ) : (
-        <StatusListContent statuses={statuses} />
+        <StatusListContent statuses={statuses} locale={locale} labels={labels} />
       )}
 
       <a
@@ -223,7 +225,7 @@ export function MastodonFeed() {
         rel="noopener noreferrer"
         className="type-small mt-3 flex items-center justify-end gap-1.5 text-slate-500 transition-colors hover:text-accent-textLight dark:text-slate-400 dark:hover:text-accent-textDark"
       >
-        查看更多
+        {labels.more}
         <FiArrowRight className="h-3 w-3" />
       </a>
     </section>

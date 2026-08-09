@@ -2,6 +2,7 @@ import { SiteHeader } from './site-header';
 import { SiteFooter } from './site-footer';
 import { BackToTop } from './back-to-top';
 import type { Locale } from '@/lib/i18n/config';
+import { getDictionary } from '@/lib/i18n/dictionaries';
 
 /**
  * Server Component layout shell.
@@ -18,12 +19,14 @@ export function LayoutShell({
   recentPosts?: { title: string; url: string }[];
   locale: Locale;
 }) {
+  const labels = getDictionary(locale).common;
+
   return (
     <div className="flex min-h-screen flex-col">
       <SiteHeader recentPosts={recentPosts} locale={locale} />
       <main className="container mx-auto flex-1 px-4 py-6">{children}</main>
       <SiteFooter />
-      <BackToTop />
+      <BackToTop label={labels.backToTop} />
     </div>
   );
 }

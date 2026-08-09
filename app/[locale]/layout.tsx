@@ -11,6 +11,7 @@ import NextTopLoader from 'nextjs-toploader';
 import { notFound } from 'next/navigation';
 import { isLocale, locales, type Locale } from '@/lib/i18n/config';
 import { DEFAULT_LOCALE, absoluteUrl, localeToOpenGraph, localizedPath } from '@/lib/locales';
+import { getDictionary } from '@/lib/i18n/dictionaries';
 
 const playfair = Playfair_Display({
   subsets: ['latin'],
@@ -27,64 +28,75 @@ const lxgwWenKai = LXGW_WenKai_TC({
   adjustFontFallback: false,
 });
 
-export const metadata: Metadata = {
-  title: {
-    default: siteConfig.title,
-    template: `%s | ${siteConfig.title}`
-  },
-  description: siteConfig.description,
-  metadataBase: new URL(siteConfig.url),
-  alternates: {
-    canonical: siteConfig.url,
-    languages: {
-      [DEFAULT_LOCALE]: siteConfig.url,
-      en: absoluteUrl('/en'),
-      'x-default': siteConfig.url,
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale: rawLocale } = await params;
+  const locale = isLocale(rawLocale) ? rawLocale : DEFAULT_LOCALE;
+  const dictionary = getDictionary(locale);
+  const canonical = absoluteUrl(localizedPath('/', locale));
+
+  return {
+    title: {
+      default: dictionary.brand.title,
+      template: `%s | ${dictionary.brand.title}`,
     },
-    types: {
-      'application/rss+xml': absoluteUrl('/feed.xml')
-    }
-  },
-  creator: siteConfig.author,
-  robots: {
-    index: true,
-    follow: true,
-    googleBot: {
+    description: dictionary.brand.description,
+    metadataBase: new URL(siteConfig.url),
+    alternates: {
+      canonical,
+      languages: {
+        [DEFAULT_LOCALE]: absoluteUrl('/'),
+        en: absoluteUrl('/en'),
+        'x-default': absoluteUrl('/'),
+      },
+      types: {
+        'application/rss+xml': absoluteUrl(localizedPath('/feed.xml', locale)),
+      },
+    },
+    creator: siteConfig.author,
+    robots: {
       index: true,
       follow: true,
-      'max-video-preview': -1,
-      'max-image-preview': 'large',
-      'max-snippet': -1
-    }
-  },
-  openGraph: {
-    type: 'website',
-    title: siteConfig.title,
-    description: siteConfig.description,
-    url: siteConfig.url,
-    siteName: siteConfig.title,
-    locale: localeToOpenGraph(DEFAULT_LOCALE),
-    images: [
-      {
-        url: siteConfig.ogImage,
-        width: 1200,
-        height: 630,
-        alt: siteConfig.title
-      }
-    ]
-  },
-  twitter: {
-    card: siteConfig.twitterCard,
-    creator: siteConfig.social.twitter || undefined,
-    title: siteConfig.title,
-    description: siteConfig.description,
-    images: [siteConfig.ogImage]
-  },
-  icons: {
-    icon: '/favicon.png',
-    apple: '/favicon.png'
-  },
-};
+      googleBot: {
+        index: true,
+        follow: true,
+        'max-video-preview': -1,
+        'max-image-preview': 'large',
+        'max-snippet': -1,
+      },
+    },
+    openGraph: {
+      type: 'website',
+      title: dictionary.brand.title,
+      description: dictionary.brand.description,
+      url: canonical,
+      siteName: dictionary.brand.title,
+      locale: localeToOpenGraph(locale),
+      images: [
+        {
+          url: siteConfig.ogImage,
+          width: 1200,
+          height: 630,
+          alt: dictionary.brand.title,
+        },
+      ],
+    },
+    twitter: {
+      card: siteConfig.twitterCard,
+      creator: siteConfig.social.twitter || undefined,
+      title: dictionary.brand.title,
+      description: dictionary.brand.description,
+      images: [siteConfig.ogImage],
+    },
+    icons: {
+      icon: '/favicon.png',
+      apple: '/favicon.png',
+    },
+  };
+}
 
 export function generateStaticParams(): { locale: Locale }[] {
   return locales.map((locale) => ({ locale }));
@@ -99,6 +111,7 @@ export default async function RootLayout({
 }) {
   const { locale } = await params;
   if (!isLocale(locale)) notFound();
+  const dictionary = getDictionary(locale);
   const theme = siteConfig.theme;
   const recentPosts = (await getAllPostsSorted(locale))
     .slice(0, 5)
@@ -107,8 +120,8 @@ export default async function RootLayout({
   const websiteSchema = {
     '@context': 'https://schema.org',
     '@type': 'WebSite',
-    name: siteConfig.title,
-    description: siteConfig.description,
+    name: dictionary.brand.title,
+    description: dictionary.brand.description,
     url: siteConfig.url,
     inLanguage: locale,
     author: {

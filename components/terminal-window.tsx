@@ -15,6 +15,7 @@ const ASCII_ART = [
 interface TerminalWindowProps {
   title: string;
   tagline: string;
+  ariaLabel: string;
   /** Skip typing animation, show all at once */
   reducedMotion?: boolean;
   /** Start the terminal text only after the Matrix intro has finished. */
@@ -36,6 +37,7 @@ type Phase =
 export function TerminalWindow({
   title,
   tagline,
+  ariaLabel,
   reducedMotion = false,
   startTyping = true,
   matrixVisible = true,
@@ -158,7 +160,7 @@ export function TerminalWindow({
     <div
       className={`relative flex h-[330px] flex-col overflow-hidden rounded-xl border border-slate-300 bg-slate-100 shadow-xl dark:border-slate-700/50 dark:bg-slate-900 sm:h-[365px] lg:h-[420px] ${className}`}
       role="img"
-      aria-label={`終端機：${title} - ${tagline}`}
+      aria-label={ariaLabel}
     >
       <div
         className="pointer-events-none absolute inset-0 opacity-20 transition-opacity duration-500 ease-out dark:opacity-30"

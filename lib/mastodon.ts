@@ -90,7 +90,7 @@ export function truncateText(text: string, maxLength: number = 180): string {
  * @param dateString - ISO date string
  * @returns Relative time string (e.g., "2小時前")
  */
-export function formatRelativeTime(dateString: string): string {
+export function formatRelativeTime(dateString: string, locale: 'zh-TW' | 'en' = 'zh-TW'): string {
   const now = new Date();
   const date = new Date(dateString);
   const diffMs = now.getTime() - date.getTime();
@@ -98,6 +98,16 @@ export function formatRelativeTime(dateString: string): string {
   const diffMin = Math.floor(diffSec / 60);
   const diffHour = Math.floor(diffMin / 60);
   const diffDay = Math.floor(diffHour / 24);
+
+  if (locale === 'en') {
+    if (diffSec < 60) return 'Just now';
+    if (diffMin < 60) return `${diffMin}m ago`;
+    if (diffHour < 24) return `${diffHour}h ago`;
+    if (diffDay < 7) return `${diffDay}d ago`;
+    if (diffDay < 30) return `${Math.floor(diffDay / 7)}w ago`;
+    if (diffDay < 365) return `${Math.floor(diffDay / 30)}mo ago`;
+    return `${Math.floor(diffDay / 365)}y ago`;
+  }
 
   if (diffSec < 60) return '剛剛';
   if (diffMin < 60) return `${diffMin}分鐘前`;

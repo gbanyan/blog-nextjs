@@ -13,12 +13,14 @@ export function PostToc({
   onLinkClick,
   contentKey,
   showTitle = true,
-  className
+  className,
+  title = 'Contents'
 }: {
   onLinkClick?: () => void;
   contentKey?: string;
   showTitle?: boolean;
   className?: string;
+  title?: string;
 }) {
   const [items, setItems] = useState<TocItem[]>([]);
   const [activeId, setActiveId] = useState<string | null>(null);
@@ -140,7 +142,7 @@ export function PostToc({
       {showTitle && (
         <div className="mb-2 inline-flex items-center gap-2 font-semibold text-slate-700 dark:text-slate-200">
           <FiList className="h-4 w-4 text-slate-400" />
-          目錄
+          {title}
         </div>
       )}
       <div className="relative pl-4">

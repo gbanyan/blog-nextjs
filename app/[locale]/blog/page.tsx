@@ -10,6 +10,7 @@ import { metadataForPath } from '@/lib/seo';
 import { absoluteUrl, isLocale, localizedPath, type Locale } from '@/lib/locales';
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
+import { getDictionary } from '@/lib/i18n/dictionaries';
 
 interface Props {
   params: Promise<{ locale: string }>;
@@ -18,9 +19,10 @@ interface Props {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale: rawLocale } = await params;
   if (!isLocale(rawLocale)) return { robots: { index: false, follow: false } };
+  const dictionary = getDictionary(rawLocale);
   return metadataForPath({
-    title: '所有文章',
-    description: '瀏覽所有文章，持續更新中。',
+    title: dictionary.common.allPosts,
+    description: dictionary.common.allPostsDescription,
     path: '/blog',
     locale: rawLocale,
   });
@@ -30,14 +32,15 @@ export default async function BlogIndexPage({ params }: Props) {
   const { locale: rawLocale } = await params;
   if (!isLocale(rawLocale)) return notFound();
   const locale: Locale = rawLocale;
+  const dictionary = getDictionary(locale);
   const posts = await getAllPostsSorted(locale);
   const { tags, aboutUrl, avatarSrc } = getSidebarData(locale);
 
   const blogSchema = {
     '@context': 'https://schema.org',
     '@type': 'Blog',
-    name: '所有文章',
-    description: '瀏覽所有文章，持續更新中。',
+    name: dictionary.common.allPosts,
+    description: dictionary.common.allPostsDescription,
     url: absoluteUrl(localizedPath('/blog', locale)),
     inLanguage: locale,
     blogPost: posts.slice(0, 10).map((post) => ({
@@ -56,18 +59,18 @@ export default async function BlogIndexPage({ params }: Props) {
   return (
     <section className="space-y-4">
       <JsonLd data={blogSchema} />
-      <SidebarLayout tags={tags} aboutUrl={aboutUrl} avatarSrc={avatarSrc}>
+      <SidebarLayout tags={tags} aboutUrl={aboutUrl} avatarSrc={avatarSrc} locale={locale}>
         <SectionDivider>
           <header className="space-y-1">
             <h1 className="type-title font-semibold text-slate-900 dark:text-slate-50">
-              所有文章
+              {dictionary.common.allPosts}
             </h1>
             <p className="type-small text-slate-500 dark:text-slate-400">
-              瀏覽所有文章，持續更新中。
+              {dictionary.common.allPostsDescription}
             </p>
           </header>
         </SectionDivider>
-        <PostListWithControls posts={posts} />
+        <PostListWithControls posts={posts} locale={locale} />
       </SidebarLayout>
     </section>
   );

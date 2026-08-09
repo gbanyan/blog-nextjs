@@ -25,6 +25,7 @@ import {
   isLocale,
   type Locale,
 } from '@/lib/locales';
+import { getDictionary } from '@/lib/i18n/dictionaries';
 
 export function generateStaticParams() {
   const params = allPagesByLocale.map((page) => ({
@@ -42,6 +43,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale: rawLocale, slug } = await params;
   if (!isLocale(rawLocale)) return { robots: { index: false, follow: false } };
   const locale: Locale = rawLocale;
+  const dictionary = getDictionary(locale);
   const page = getPageBySlug(slug, locale);
   if (!page) return { robots: { index: false, follow: false } };
 
@@ -64,6 +66,7 @@ export default async function StaticPage({ params }: Props) {
   const { locale: rawLocale, slug } = await params;
   if (!isLocale(rawLocale)) return notFound();
   const locale: Locale = rawLocale;
+  const dictionary = getDictionary(locale);
   const page = getPageBySlug(slug, locale);
 
   if (!page) return notFound();
@@ -72,7 +75,7 @@ export default async function StaticPage({ params }: Props) {
 
   // Declarative layout/hero metadata (TARGET #2) — no more slug string-matching.
   const isDevice = page.layout === 'device';
-  const heroByKey: Record<string, ComponentType> = {
+  const heroByKey: Record<string, ComponentType<{ ariaLabel: string }>> = {
     'dev-env': DevEnvDeviceHero,
     'homelab': HomeLabDeviceHero
   };
@@ -97,7 +100,7 @@ export default async function StaticPage({ params }: Props) {
     inLanguage: getDocumentLocale(page),
     isPartOf: {
       '@type': 'WebSite',
-      name: siteConfig.title,
+      name: dictionary.brand.title,
       url: siteConfig.url,
     },
     ...(page.published_at && {
@@ -112,7 +115,7 @@ export default async function StaticPage({ params }: Props) {
     <>
       <JsonLd data={webPageSchema} />
       <ReadingProgress />
-      <PostLayout hasToc={hasToc} contentKey={slug} wide={isDevice}>
+      <PostLayout hasToc={hasToc} contentKey={slug} wide={isDevice} locale={locale}>
         <div className={isDevice ? 'space-y-4' : 'space-y-8'}>
           {/* Main content area for Pagefind indexing */}
           <div data-pagefind-body>
@@ -153,7 +156,7 @@ export default async function StaticPage({ params }: Props) {
                   className="prose prose-lg prose-slate mx-auto max-w-none dark:prose-invert"
                 >
                   {Hero ? (
-                    <Hero />
+                  <Hero ariaLabel={page.hero === 'dev-env' ? dictionary.devices.devEnvAria : dictionary.devices.homeLabAria} />
                   ) : (
                     page.feature_image && (
                       <div className="-mx-4 mb-8 transition-all duration-500 sm:-mx-12 lg:-mx-20 group-[.toc-open]:lg:-mx-4">
@@ -172,7 +175,7 @@ export default async function StaticPage({ params }: Props) {
                   <div>
                     <MarkdownBody html={page.body.html} />
                   </div>
-                  <MermaidRenderer />
+                  <MermaidRenderer labels={dictionary.mermaid} />
                 </article>
               </ScrollReveal>
             </SectionDivider>
