@@ -1,5 +1,6 @@
 import type { Page as VelitePage, Post as VelitePost } from '../.velite/index.js';
 import { pages as velitePages, posts as velitePosts } from '../.velite/index.js';
+import { getDocumentLocale, localizedPath } from '@/lib/locales';
 
 /**
  * The stable shape consumed by the application. Dates intentionally retain
@@ -25,6 +26,8 @@ export interface MarkdownBody {
 interface SharedContentFields {
   title: string;
   slug?: string;
+  locale?: string;
+  translation_key?: string;
   description?: string;
   type?: string;
   ghost_id?: string;
@@ -109,7 +112,10 @@ function adaptDocument(document: VeliteDocument, collection: 'posts' | 'pages'):
     },
     __ignoredType: collection === 'posts' ? ('Post' as const) : ('Page' as const),
     flattenedPath,
-    url: `/${collection === 'posts' ? 'blog' : 'pages'}/${document.slug || flattenedPath}`
+    url: localizedPath(
+      `/${collection === 'posts' ? 'blog' : 'pages'}/${document.slug || flattenedPath}`,
+      getDocumentLocale(document)
+    )
   };
 
   return adapted as unknown as Post | Page;

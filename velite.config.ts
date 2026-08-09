@@ -48,6 +48,9 @@ const date = s.coerce.date().optional();
 
 const sharedFields = {
   slug: s.string().optional(),
+  // Optional, explicit locale pairing for the SEO/routing layer.
+  locale: s.string().optional(),
+  translation_key: s.string().optional(),
   description: s.string().optional(),
   type: s.string().optional(),
   ghost_id: s.string().optional(),

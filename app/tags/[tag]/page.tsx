@@ -9,10 +9,13 @@ import { ScrollReveal } from '@/components/scroll-reveal';
 import { FiTag } from 'react-icons/fi';
 import { siteConfig } from '@/lib/config';
 import { JsonLd } from '@/components/json-ld';
+import { metadataForPath } from '@/lib/seo';
+import { DEFAULT_LOCALE, getDocumentLocale } from '@/lib/locales';
 
 export function generateStaticParams() {
   const slugs = new Set<string>();
   for (const post of allPosts) {
+    if (getDocumentLocale(post) !== DEFAULT_LOCALE) continue;
     if (!post.tags) continue;
     for (const tag of post.tags) {
       slugs.add(getTagSlug(tag));
@@ -32,24 +35,18 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { tag: slug } = await params;
   const decodedSlug = decodeURIComponent(slug);
   const tag = allPosts
+    .filter((post) => getDocumentLocale(post) === DEFAULT_LOCALE)
     .flatMap((post) => post.tags ?? [])
     .find((t) => getTagSlug(t) === decodedSlug);
 
-  const tagUrl = `${siteConfig.url}/tags/${slug}`;
+  if (!tag) return { robots: { index: false, follow: false } };
 
-  return {
-    title: tag ? `標籤：${tag}` : '標籤',
-    description: tag ? `查看標籤為「${tag}」的所有文章` : '標籤索引',
-    alternates: {
-      canonical: tagUrl
-    },
-    openGraph: {
-      title: tag ? `標籤：${tag}` : '標籤',
-      description: tag ? `查看標籤為「${tag}」的所有文章` : '標籤索引',
-      url: tagUrl,
-      type: 'website'
-    }
-  };
+  return metadataForPath({
+    title: `標籤：${tag}`,
+    description: `查看標籤為「${tag}」的所有文章`,
+    path: `/tags/${slug}`,
+    locale: DEFAULT_LOCALE,
+  });
 }
 
 export default async function TagPage({ params }: Props) {
@@ -58,7 +55,7 @@ export default async function TagPage({ params }: Props) {
   const decodedSlug = decodeURIComponent(slug);
 
   const posts = allPosts.filter(
-    (post) => post.tags && post.tags.some((t) => getTagSlug(t) === decodedSlug)
+    (post) => getDocumentLocale(post) === DEFAULT_LOCALE && post.tags && post.tags.some((t) => getTagSlug(t) === decodedSlug)
   );
 
   const tagLabel =
@@ -71,7 +68,7 @@ export default async function TagPage({ params }: Props) {
     name: `標籤：${tagLabel}`,
     description: `查看標籤為「${tagLabel}」的所有文章`,
     url: `${siteConfig.url}/tags/${slug}`,
-    inLanguage: siteConfig.defaultLocale,
+    inLanguage: DEFAULT_LOCALE,
     about: {
       '@type': 'Thing',
       name: tagLabel

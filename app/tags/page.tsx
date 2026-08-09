@@ -8,14 +8,15 @@ import { SidebarLayout } from '@/components/sidebar-layout';
 import { getSidebarData } from '@/lib/sidebar-data';
 import { siteConfig } from '@/lib/config';
 import { JsonLd } from '@/components/json-ld';
+import { metadataForPath } from '@/lib/seo';
+import { DEFAULT_LOCALE } from '@/lib/locales';
 
-export const metadata: Metadata = {
+export const metadata: Metadata = metadataForPath({
   title: '標籤索引',
   description: '瀏覽所有標籤，探索不同主題的文章。',
-  alternates: {
-    canonical: `${siteConfig.url}/tags`
-  }
-};
+  path: '/tags',
+  locale: DEFAULT_LOCALE,
+});
 
 export default function TagIndexPage() {
   const { tags: sidebarTags, aboutUrl, avatarSrc } = getSidebarData();
@@ -35,7 +36,7 @@ export default function TagIndexPage() {
     name: '標籤索引',
     description: '瀏覽所有標籤，探索不同主題的文章。',
     url: `${siteConfig.url}/tags`,
-    inLanguage: siteConfig.defaultLocale,
+    inLanguage: DEFAULT_LOCALE,
     mainEntity: {
       '@type': 'ItemList',
       itemListElement: tags.map((tag, index) => ({

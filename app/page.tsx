@@ -7,6 +7,7 @@ import { SidebarLayout } from '@/components/sidebar-layout';
 import { getSidebarData } from '@/lib/sidebar-data';
 import { JsonLd } from '@/components/json-ld';
 import { HeroSection } from '@/components/hero-section';
+import { DEFAULT_LOCALE } from '@/lib/locales';
 
 export default async function HomePage() {
   const { tags, aboutUrl, avatarSrc } = getSidebarData();
@@ -19,7 +20,7 @@ export default async function HomePage() {
     name: `${siteConfig.name} 的最新動態`,
     description: siteConfig.description,
     url: siteConfig.url,
-    inLanguage: siteConfig.defaultLocale,
+    inLanguage: DEFAULT_LOCALE,
     isPartOf: {
       '@type': 'WebSite',
       name: siteConfig.title,

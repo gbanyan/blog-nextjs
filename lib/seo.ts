@@ -1,0 +1,281 @@
+import type { Metadata, MetadataRoute } from 'next';
+import { allPages, allPosts } from '@/lib/content';
+import type { Page, Post } from '@/lib/content';
+import {
+  absoluteUrl,
+  DEFAULT_LOCALE,
+  documentPath,
+  getDocumentLocale,
+  getTranslationKey,
+  localizedPath,
+  localeToOpenGraph,
+  type Locale,
+} from '@/lib/locales';
+import { siteConfig } from '@/lib/config';
+import { getTagSlug } from '@/lib/tags';
+
+export type ContentDocument = Post | Page;
+
+type LocalizedMetadataOptions = {
+  title: string;
+  description?: string;
+  path: string;
+  locale?: Locale;
+  documents?: ContentDocument[];
+  openGraph?: Partial<NonNullable<Metadata['openGraph']>>;
+  twitter?: Metadata['twitter'];
+};
+
+function published(document: ContentDocument): boolean {
+  return document.status === 'published';
+}
+
+function documentAlternates(
+  document: ContentDocument,
+  documents: ContentDocument[]
+): Record<string, string> {
+  const locale = getDocumentLocale(document);
+  const key = getTranslationKey(document);
+  const alternates: Record<string, string> = {
+    [locale]: absoluteUrl(documentPath(document, locale)),
+  };
+
+  if (key) {
+    for (const candidate of documents) {
+      if (!published(candidate) || getTranslationKey(candidate) !== key) continue;
+      const candidateLocale = getDocumentLocale(candidate);
+      alternates[candidateLocale] = absoluteUrl(documentPath(candidate, candidateLocale));
+    }
+  }
+
+  const defaultDocument = documents.find(
+    (candidate) =>
+      published(candidate) &&
+      getTranslationKey(candidate) === key &&
+      getDocumentLocale(candidate) === DEFAULT_LOCALE
+  );
+
+  if (locale === DEFAULT_LOCALE || (key && defaultDocument)) {
+    alternates['x-default'] = absoluteUrl(
+      defaultDocument ? documentPath(defaultDocument, DEFAULT_LOCALE) : documentPath(document, locale)
+    );
+  }
+
+  return alternates;
+}
+
+export function metadataForDocument(
+  document: ContentDocument,
+  documents: ContentDocument[] = document.__ignoredType === 'Page'
+    ? allPages
+    : allPosts
+): Metadata {
+  const locale = getDocumentLocale(document);
+  const url = absoluteUrl(documentPath(document, locale));
+  const description = document.description || document.custom_excerpt || document.title;
+
+  return {
+    title: document.title,
+    description,
+    metadataBase: new URL(siteConfig.url),
+    alternates: {
+      canonical: url,
+      languages: documentAlternates(document, documents),
+    },
+    openGraph: {
+      type: 'website',
+      title: document.title,
+      description,
+      url,
+      locale: localeToOpenGraph(locale),
+      images: [
+        document.feature_image
+          ? {
+              url: absoluteUrl(document.feature_image.replace('../assets', '/assets')),
+              alt: document.title,
+            }
+          : {
+              url: absoluteUrl(siteConfig.ogImage),
+              alt: document.title,
+            },
+      ],
+    },
+  };
+}
+
+export function metadataForPath({
+  title,
+  description,
+  path,
+  locale = DEFAULT_LOCALE,
+  openGraph,
+  twitter,
+}: LocalizedMetadataOptions): Metadata {
+  const url = absoluteUrl(localizedPath(path, locale));
+  const languages: Record<string, string> = {
+    [locale]: url,
+  };
+
+  if (locale === DEFAULT_LOCALE) languages['x-default'] = url;
+
+  return {
+    title,
+    description,
+    metadataBase: new URL(siteConfig.url),
+    alternates: {
+      canonical: url,
+      languages,
+    },
+    openGraph: {
+      type: 'website',
+      title,
+      description,
+      url,
+      locale: localeToOpenGraph(locale),
+      ...openGraph,
+    },
+    twitter,
+  };
+}
+
+function alternateDocuments(
+  document: ContentDocument,
+  documents: ContentDocument[]
+): ContentDocument[] {
+  const key = getTranslationKey(document);
+  if (!key) return [document];
+  return documents.filter(
+    (candidate) => published(candidate) && getTranslationKey(candidate) === key
+  );
+}
+
+function sitemapRecord(
+  document: ContentDocument,
+  documents: ContentDocument[],
+  changeFrequency: 'weekly' | 'monthly',
+  priority: number
+): MetadataRoute.Sitemap[number] {
+  const locale = getDocumentLocale(document);
+  const paired = alternateDocuments(document, documents);
+  const languages: Record<string, string> = {};
+
+  for (const candidate of paired) {
+    const candidateLocale = getDocumentLocale(candidate);
+    languages[candidateLocale] = absoluteUrl(documentPath(candidate, candidateLocale));
+  }
+
+  if (languages[DEFAULT_LOCALE]) languages['x-default'] = languages[DEFAULT_LOCALE];
+
+  return {
+    url: absoluteUrl(documentPath(document, locale)),
+    lastModified: new Date(
+      document.updated_at || document.published_at || document.created_at || Date.now()
+    ),
+    changeFrequency,
+    priority,
+    alternates: { languages },
+  };
+}
+
+export function localizedSitemapEntries(locale?: Locale): MetadataRoute.Sitemap {
+  const documents = [...allPosts, ...allPages].filter(published);
+  const contentEntries = documents
+    .filter((document) => !locale || getDocumentLocale(document) === locale)
+    .map((document) =>
+      sitemapRecord(
+        document,
+        documents,
+        document.__ignoredType === 'Post' ? 'weekly' : 'monthly',
+        document.__ignoredType === 'Post' ? 0.8 : 0.6
+      )
+    );
+
+  const staticEntries: MetadataRoute.Sitemap = locale && locale !== DEFAULT_LOCALE
+    ? []
+    : [
+        staticSitemapRecord('/', 1, 'daily'),
+        staticSitemapRecord('/blog', 0.9, 'daily'),
+        staticSitemapRecord('/tags', 0.7, 'weekly'),
+      ];
+
+  const tagEntries: MetadataRoute.Sitemap = locale && locale !== DEFAULT_LOCALE
+    ? []
+    : Array.from(
+        new Set(
+          allPosts
+            .filter((post) => published(post) && post.tags)
+            .flatMap((post) => post.tags || [])
+        )
+      ).map((tag) => staticSitemapRecord(`/tags/${encodeURIComponent(getTagSlug(tag))}`, 0.5, 'weekly'));
+
+  return [...staticEntries, ...contentEntries, ...tagEntries];
+}
+
+function staticSitemapRecord(
+  path: string,
+  priority: number,
+  changeFrequency: 'daily' | 'weekly' | 'monthly'
+): MetadataRoute.Sitemap[number] {
+  const url = absoluteUrl(path);
+  return {
+    url,
+    lastModified: new Date(),
+    changeFrequency,
+    priority,
+    alternates: {
+      languages: {
+        [DEFAULT_LOCALE]: url,
+        'x-default': url,
+      },
+    },
+  };
+}
+
+export function localizedSitemapXml(locale: Locale): string {
+  const entries = localizedSitemapEntries(locale);
+  const urls = entries
+    .map((entry) => {
+      const alternates = entry.alternates?.languages
+        ? Object.entries(entry.alternates.languages)
+            .map(
+              ([language, href]) =>
+                `<xhtml:link rel="alternate" hreflang="${escapeXml(language)}" href="${escapeXml(href || '')}"/>`
+            )
+            .join('')
+        : '';
+      return `<url><loc>${escapeXml(entry.url.toString())}</loc>${alternates}</url>`;
+    })
+    .join('');
+
+  return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">${urls}</urlset>`;
+}
+
+function escapeXml(value: string): string {
+  return value
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&apos;');
+}
+
+export function localeDocuments<T extends ContentDocument>(
+  documents: T[],
+  locale: Locale
+): T[] {
+  return documents.filter((document) => published(document) && getDocumentLocale(document) === locale);
+}
+
+export function documentLanguageLinks(
+  document: ContentDocument,
+  documents: ContentDocument[]
+): string[] {
+  const key = getTranslationKey(document);
+  if (!key) return [];
+  return alternateDocuments(document, documents)
+    .filter((candidate) => candidate._id !== document._id)
+    .map((candidate) => {
+      const locale = getDocumentLocale(candidate);
+      return `${locale}: ${absoluteUrl(documentPath(candidate, locale))}`;
+    });
+}

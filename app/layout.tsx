@@ -8,6 +8,7 @@ import { Playfair_Display, LXGW_WenKai_TC } from 'next/font/google';
 import { JsonLd } from '@/components/json-ld';
 import { WebVitals } from '@/components/web-vitals';
 import NextTopLoader from 'nextjs-toploader';
+import { DEFAULT_LOCALE, absoluteUrl, localeToOpenGraph } from '@/lib/locales';
 
 const playfair = Playfair_Display({
   subsets: ['latin'],
@@ -31,6 +32,16 @@ export const metadata: Metadata = {
   },
   description: siteConfig.description,
   metadataBase: new URL(siteConfig.url),
+  alternates: {
+    canonical: siteConfig.url,
+    languages: {
+      [DEFAULT_LOCALE]: siteConfig.url,
+      'x-default': siteConfig.url,
+    },
+    types: {
+      'application/rss+xml': absoluteUrl('/feed.xml')
+    }
+  },
   creator: siteConfig.author,
   robots: {
     index: true,
@@ -49,7 +60,7 @@ export const metadata: Metadata = {
     description: siteConfig.description,
     url: siteConfig.url,
     siteName: siteConfig.title,
-    locale: siteConfig.defaultLocale,
+    locale: localeToOpenGraph(DEFAULT_LOCALE),
     images: [
       {
         url: siteConfig.ogImage,
@@ -70,11 +81,6 @@ export const metadata: Metadata = {
     icon: '/favicon.png',
     apple: '/favicon.png'
   },
-  alternates: {
-    types: {
-      'application/rss+xml': `${siteConfig.url}/feed.xml`
-    }
-  }
 };
 
 export default async function RootLayout({
@@ -93,7 +99,7 @@ export default async function RootLayout({
     name: siteConfig.title,
     description: siteConfig.description,
     url: siteConfig.url,
-    inLanguage: siteConfig.defaultLocale,
+    inLanguage: DEFAULT_LOCALE,
     author: {
       '@type': 'Person',
       name: siteConfig.author,
@@ -125,7 +131,7 @@ export default async function RootLayout({
 
 
   return (
-    <html lang={siteConfig.defaultLocale} suppressHydrationWarning className={`${playfair.variable} ${lxgwWenKai.variable}`}>
+    <html lang={DEFAULT_LOCALE} suppressHydrationWarning className={`${playfair.variable} ${lxgwWenKai.variable}`}>
       <head>
         <link rel="font" href="https://fonts.googleapis.com" />
         <link rel="font" href="https://fonts.gstatic.com" />

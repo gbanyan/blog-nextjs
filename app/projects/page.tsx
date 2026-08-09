@@ -9,32 +9,24 @@ import { RepoCard } from '@/components/repo-card';
 import { siteConfig } from '@/lib/config';
 
 import { cacheLife } from 'next/cache';
+import { metadataForPath } from '@/lib/seo';
+import { DEFAULT_LOCALE, absoluteUrl } from '@/lib/locales';
 
-export const metadata = {
+export const metadata = metadataForPath({
   title: 'GitHub 專案',
   description: '從我的 GitHub 帳號自動抓取公開的程式庫與專案。',
-  alternates: {
-    canonical: `${siteConfig.url}/projects`
-  },
+  path: '/projects',
+  locale: DEFAULT_LOCALE,
   openGraph: {
-    title: 'GitHub 專案',
-    description: '從我的 GitHub 帳號自動抓取公開的程式庫與專案。',
-    url: `${siteConfig.url}/projects`,
-    type: 'website',
-    images: [
-      {
-        url: `${siteConfig.url}${siteConfig.ogImage}`,
-        alt: 'GitHub 專案'
-      }
-    ]
+    images: [{ url: absoluteUrl(siteConfig.ogImage), alt: 'GitHub 專案' }],
   },
   twitter: {
     card: siteConfig.twitterCard,
     title: 'GitHub 專案',
     description: '從我的 GitHub 帳號自動抓取公開的程式庫與專案。',
-    images: [siteConfig.ogImage]
-  }
-};
+    images: [siteConfig.ogImage],
+  },
+});
 
 export default async function ProjectsPage() {
   const { tags, aboutUrl, avatarSrc } = getSidebarData();
@@ -78,4 +70,3 @@ export default async function ProjectsPage() {
     </section>
   );
 }
-

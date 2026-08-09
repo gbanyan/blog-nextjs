@@ -17,9 +17,11 @@ import { JsonLd } from '@/components/json-ld';
 import { MermaidRenderer } from '@/components/mermaid-renderer';
 import { MarkdownBody } from '@/components/markdown-body';
 import { GiscusComments } from '@/components/giscus-comments';
+import { metadataForDocument } from '@/lib/seo';
+import { DEFAULT_LOCALE, localeToOpenGraph, getDocumentLocale } from '@/lib/locales';
 
 export function generateStaticParams() {
-  const params = allPosts.map((post) => ({
+  const params = allPosts.filter((post) => getDocumentLocale(post) === DEFAULT_LOCALE).map((post) => ({
     slug: post.slug || post.flattenedPath
   }));
   return params.length > 0 ? params : [{ slug: '__placeholder__' }];
@@ -32,7 +34,7 @@ interface Props {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const post = getPostBySlug(slug);
-  if (!post) return {};
+  if (!post) return { robots: { index: false, follow: false } };
 
   const ogImageUrl = new URL('/api/og', process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000');
   ogImageUrl.searchParams.set('title', post.title);
@@ -48,9 +50,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     ? `${siteConfig.url}${post.feature_image.replace('../assets', '/assets')}`
     : ogImageUrl.toString();
 
+  const baseMetadata = metadataForDocument(post, allPosts);
+
   return {
-    title: post.title,
-    description: post.description || post.title,
+    ...baseMetadata,
     authors: post.authors?.length ? post.authors.map(author => ({ name: author })) : [{ name: siteConfig.author }],
     robots: {
       index: true,
@@ -61,9 +64,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       },
     },
     openGraph: {
+      ...baseMetadata.openGraph,
       title: post.title,
       description: post.description || post.title,
       type: 'article',
+      locale: localeToOpenGraph(getDocumentLocale(post)),
       publishedTime: post.published_at
         ? new Date(post.published_at).toISOString()
         : undefined,
@@ -158,6 +163,7 @@ export default async function BlogPostPage({ params }: Props) {
       readingTime: `${readingTime} min read`,
     }),
     url: postUrl,
+    inLanguage: getDocumentLocale(post),
   };
 
   // Speakable Schema for AEO
@@ -217,7 +223,7 @@ export default async function BlogPostPage({ params }: Props) {
                 {post.published_at && (
                   <p className="type-small text-slate-500 dark:text-slate-500">
                     {new Date(post.published_at).toLocaleDateString(
-                      siteConfig.defaultLocale
+                      getDocumentLocale(post)
                     )}
                   </p>
                 )}

@@ -16,9 +16,11 @@ import { DevEnvDeviceHero } from '@/components/dev-env-device-hero';
 import { HomeLabDeviceHero } from '@/components/homelab-device-hero';
 import { MermaidRenderer } from '@/components/mermaid-renderer';
 import { MarkdownBody } from '@/components/markdown-body';
+import { metadataForDocument } from '@/lib/seo';
+import { DEFAULT_LOCALE, getDocumentLocale } from '@/lib/locales';
 
 export function generateStaticParams() {
-  const params = allPages.map((page) => ({
+  const params = allPages.filter((page) => getDocumentLocale(page) === DEFAULT_LOCALE).map((page) => ({
     slug: page.slug || page.flattenedPath
   }));
   return params.length > 0 ? params : [{ slug: '__placeholder__' }];
@@ -31,33 +33,10 @@ interface Props {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const page = getPageBySlug(slug);
-  if (!page) return {};
-
-  const pageUrl = `${siteConfig.url}${page.url}`;
+  if (!page) return { robots: { index: false, follow: false } };
 
   return {
-    title: page.title,
-    description: page.description || page.title,
-    alternates: {
-      canonical: pageUrl
-    },
-    openGraph: {
-      title: page.title,
-      description: page.description || page.title,
-      url: pageUrl,
-      type: 'website',
-      images: [
-        page.feature_image
-          ? {
-              url: `${siteConfig.url}${page.feature_image.replace('../assets', '/assets')}`,
-              alt: page.title
-            }
-          : {
-              url: `${siteConfig.url}${siteConfig.ogImage}`,
-              alt: page.title
-            }
-      ]
-    },
+    ...metadataForDocument(page, allPages),
     twitter: {
       card: siteConfig.twitterCard,
       title: page.title,
@@ -103,7 +82,7 @@ export default async function StaticPage({ params }: Props) {
     description: page.description || page.title,
     url: pageUrl,
     image: imageUrl,
-    inLanguage: siteConfig.defaultLocale,
+    inLanguage: getDocumentLocale(page),
     isPartOf: {
       '@type': 'WebSite',
       name: siteConfig.title,
@@ -131,7 +110,7 @@ export default async function StaticPage({ params }: Props) {
                   {page.published_at && (
                     <p className="type-small text-slate-500 dark:text-slate-500">
                       {new Date(page.published_at).toLocaleDateString(
-                        siteConfig.defaultLocale
+                        getDocumentLocale(page)
                       )}
                     </p>
                   )}

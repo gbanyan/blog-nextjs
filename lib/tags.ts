@@ -1,4 +1,5 @@
 import { allPosts } from '@/lib/content';
+import { DEFAULT_LOCALE, getDocumentLocale } from '@/lib/locales';
 
 /**
  * Normalize a tag into a URL-safe slug.
@@ -23,6 +24,7 @@ export function getTagSlug(tag: string): string {
 export function getAllTagsWithCount(): { tag: string; slug: string; count: number }[] {
   const map = new Map<string, number>();
   for (const post of allPosts) {
+    if (getDocumentLocale(post) !== DEFAULT_LOCALE) continue;
     if (!post.tags) continue;
     for (const postTag of post.tags) {
       map.set(postTag, (map.get(postTag) ?? 0) + 1);

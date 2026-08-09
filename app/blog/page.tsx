@@ -5,14 +5,15 @@ import { SidebarLayout } from '@/components/sidebar-layout';
 import { SectionDivider } from '@/components/section-divider';
 import { siteConfig } from '@/lib/config';
 import { JsonLd } from '@/components/json-ld';
+import { metadataForPath } from '@/lib/seo';
+import { DEFAULT_LOCALE } from '@/lib/locales';
 
-export const metadata = {
+export const metadata = metadataForPath({
   title: '所有文章',
   description: '瀏覽所有文章，持續更新中。',
-  alternates: {
-    canonical: `${siteConfig.url}/blog`
-  }
-};
+  path: '/blog',
+  locale: DEFAULT_LOCALE,
+});
 
 export default async function BlogIndexPage() {
   const posts = await getAllPostsSorted();
@@ -24,7 +25,7 @@ export default async function BlogIndexPage() {
     name: '所有文章',
     description: '瀏覽所有文章，持續更新中。',
     url: `${siteConfig.url}/blog`,
-    inLanguage: siteConfig.defaultLocale,
+    inLanguage: DEFAULT_LOCALE,
     blogPost: posts.slice(0, 10).map((post) => ({
       '@type': 'BlogPosting',
       headline: post.title,
