@@ -1,4 +1,5 @@
-import Link from 'next/link';
+// Locale-aware home page.
+import { LocalizedLink } from '@/components/localized-link';
 import { getAllPostsSorted } from '@/lib/posts';
 import { siteConfig } from '@/lib/config';
 import { PostListItem } from '@/components/post-list-item';
@@ -50,13 +51,13 @@ export default async function HomePage() {
             <h2 className="type-small font-semibold uppercase tracking-[0.4em] text-slate-500 dark:text-slate-400">
               最新文章
             </h2>
-            <Link
+            <LocalizedLink
               href="/blog"
               prefetch={true}
               className="text-xs text-accent hover:underline"
             >
               所有文章 →
-            </Link>
+            </LocalizedLink>
           </div>
           <TimelineWrapper>
             {posts.map((post, index) => (

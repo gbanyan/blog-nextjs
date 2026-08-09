@@ -1,6 +1,7 @@
 import { SiteHeader } from './site-header';
 import { SiteFooter } from './site-footer';
 import { BackToTop } from './back-to-top';
+import type { Locale } from '@/lib/i18n/config';
 
 /**
  * Server Component layout shell.
@@ -11,13 +12,15 @@ import { BackToTop } from './back-to-top';
 export function LayoutShell({
   children,
   recentPosts = [],
+  locale,
 }: {
   children: React.ReactNode;
   recentPosts?: { title: string; url: string }[];
+  locale: Locale;
 }) {
   return (
     <div className="flex min-h-screen flex-col">
-      <SiteHeader recentPosts={recentPosts} />
+      <SiteHeader recentPosts={recentPosts} locale={locale} />
       <main className="container mx-auto flex-1 px-4 py-6">{children}</main>
       <SiteFooter />
       <BackToTop />

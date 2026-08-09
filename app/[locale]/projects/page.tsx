@@ -1,3 +1,4 @@
+// Locale-aware projects page.
 'use cache';
 
 import { FaGithub } from 'react-icons/fa';
@@ -78,4 +79,3 @@ export default async function ProjectsPage() {
     </section>
   );
 }
-

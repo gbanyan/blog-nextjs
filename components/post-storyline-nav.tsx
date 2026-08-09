@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import { LocalizedLink } from '@/components/localized-link';
 import type { Post } from '@/lib/content';
 import { FiArrowLeft, FiArrowRight } from 'react-icons/fi';
 import { NAV_BACK, NAV_FORWARD } from '@/lib/navigation';
@@ -78,7 +78,7 @@ function Station({ station }: { station: StationConfig }) {
   }
 
   return (
-    <Link
+    <LocalizedLink
       href={post.url}
       rel={rel}
       transitionTypes={align === 'end' ? [...NAV_BACK] : [...NAV_FORWARD]}
@@ -99,6 +99,6 @@ function Station({ station }: { station: StationConfig }) {
         className={`mt-2 h-0.5 w-16 rounded-full bg-slate-200 transition group-hover:w-24 group-hover:bg-blue-400 dark:bg-slate-700 ${align === 'end' ? 'self-end' : 'self-start'
           }`}
       />
-    </Link>
+    </LocalizedLink>
   );
 }

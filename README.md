@@ -67,13 +67,20 @@ Configuration in `app/blog/[slug]/page.tsx`:
 
 ## Project Structure
 
+### Locale routing
+
+- `proxy.ts` rewrites the existing Chinese public paths (`/`, `/blog/*`, `/pages/*`, `/projects`, and `/tags/*`) internally to the `zh-TW` locale segment.
+- English routes are available under `/en/*`; the default Chinese URLs never require `/zh-TW` in the browser.
+- `app/[locale]/layout.tsx` validates the supported locales, provides `generateStaticParams`, and sets the document `lang` attribute from async route params.
+- `lib/i18n/` contains the typed locale list and small server-first dictionaries. API routes, metadata endpoints, assets, and static files are excluded from Proxy matching.
+
 - `app/` – Next.js App Router
-  - `app/page.tsx` – Home page (latest posts list)
-  - `app/blog/page.tsx` – Blog index with sort + pagination
-  - `app/blog/[slug]/page.tsx` – Single blog post (TOC + reading progress)
-  - `app/pages/[slug]/page.tsx` – Static content pages (e.g. 關於作者)
-  - `app/tags/page.tsx` – Tag index (all tags)
-  - `app/tags/[tag]/page.tsx` – Tag overview (posts for a given tag)
+  - `app/[locale]/page.tsx` – Home page (latest posts list)
+  - `app/[locale]/blog/page.tsx` – Blog index with sort + pagination
+  - `app/[locale]/blog/[slug]/page.tsx` – Single blog post (TOC + reading progress)
+  - `app/[locale]/pages/[slug]/page.tsx` – Static content pages (e.g. 關於作者)
+  - `app/[locale]/tags/page.tsx` – Tag index (all tags)
+  - `app/[locale]/tags/[tag]/page.tsx` – Tag overview (posts for a given tag)
 - `components/`
   - `layout-shell.tsx` – Global layout (header, sidebar, footer, back‑to‑top)
   - `site-header.tsx` – Navbar (title + Blog + pages from Velite)

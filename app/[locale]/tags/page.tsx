@@ -1,4 +1,5 @@
-import Link from 'next/link';
+// Locale-aware tag index.
+import { LocalizedLink } from '@/components/localized-link';
 import type { Metadata } from 'next';
 import { FiTag, FiTrendingUp } from 'react-icons/fi';
 import { getAllTagsWithCount } from '@/lib/tags';
@@ -80,7 +81,7 @@ export default function TagIndexPage() {
           {tags.map(({ tag, slug, count }, index) => {
             const color = colorClasses[index % colorClasses.length];
             return (
-              <Link
+              <LocalizedLink
                 key={tag}
                 href={`/tags/${slug}`}
                 className="motion-card group flex flex-col rounded-2xl border border-white/40 bg-white/60 p-5 shadow-sm backdrop-blur-md transition-all hover:-translate-y-1 hover:shadow-xl dark:border-white/10 dark:bg-slate-900/60"
@@ -98,7 +99,7 @@ export default function TagIndexPage() {
                   <FiTrendingUp className="h-3 w-3 text-orange-400" />
                   熱度 #{index + 1}
                 </span>
-              </Link>
+              </LocalizedLink>
             );
           })}
         </div>

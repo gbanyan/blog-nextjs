@@ -1,3 +1,4 @@
+// Locale-aware blog index.
 import { getAllPostsSorted } from '@/lib/posts';
 import { getSidebarData } from '@/lib/sidebar-data';
 import { PostListWithControls } from '@/components/post-list-with-controls';

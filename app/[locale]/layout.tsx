@@ -1,4 +1,4 @@
-import '../styles/globals.css';
+import '../../styles/globals.css';
 import type { Metadata } from 'next';
 import { siteConfig } from '@/lib/config';
 import { getAllPostsSorted } from '@/lib/posts';
@@ -8,6 +8,8 @@ import { Playfair_Display, LXGW_WenKai_TC } from 'next/font/google';
 import { JsonLd } from '@/components/json-ld';
 import { WebVitals } from '@/components/web-vitals';
 import NextTopLoader from 'nextjs-toploader';
+import { notFound } from 'next/navigation';
+import { isLocale, locales, type Locale } from '@/lib/i18n/config';
 
 const playfair = Playfair_Display({
   subsets: ['latin'],
@@ -77,11 +79,19 @@ export const metadata: Metadata = {
   }
 };
 
+export function generateStaticParams(): { locale: Locale }[] {
+  return locales.map((locale) => ({ locale }));
+}
+
 export default async function RootLayout({
-  children
+  children,
+  params,
 }: {
   children: React.ReactNode;
+  params: Promise<{ locale: string }>;
 }) {
+  const { locale } = await params;
+  if (!isLocale(locale)) notFound();
   const theme = siteConfig.theme;
   const recentPosts = (await getAllPostsSorted())
     .slice(0, 5)
@@ -93,7 +103,7 @@ export default async function RootLayout({
     name: siteConfig.title,
     description: siteConfig.description,
     url: siteConfig.url,
-    inLanguage: siteConfig.defaultLocale,
+    inLanguage: locale,
     author: {
       '@type': 'Person',
       name: siteConfig.author,
@@ -125,7 +135,7 @@ export default async function RootLayout({
 
 
   return (
-    <html lang={siteConfig.defaultLocale} suppressHydrationWarning className={`${playfair.variable} ${lxgwWenKai.variable}`}>
+    <html lang={locale} suppressHydrationWarning className={`${playfair.variable} ${lxgwWenKai.variable}`}>
       <head>
         <link rel="font" href="https://fonts.googleapis.com" />
         <link rel="font" href="https://fonts.gstatic.com" />
@@ -153,7 +163,7 @@ export default async function RootLayout({
             }}
            />
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-              <LayoutShell recentPosts={recentPosts}>{children}</LayoutShell>
+              <LayoutShell recentPosts={recentPosts} locale={locale}>{children}</LayoutShell>
           </ThemeProvider>
         <WebVitals />
       </body>

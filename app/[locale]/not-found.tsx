@@ -1,4 +1,5 @@
-import Link from 'next/link';
+// Locale-aware not-found boundary.
+import { LocalizedLink } from '@/components/localized-link';
 
 export default function NotFound() {
   return (
@@ -13,12 +14,12 @@ export default function NotFound() {
         <p className="mb-8 text-slate-600 dark:text-slate-400">
           您造訪的連結可能已失效或不存在。
         </p>
-        <Link
+        <LocalizedLink
           href="/"
           className="inline-flex items-center rounded-lg bg-slate-800 px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2 dark:bg-slate-200 dark:text-slate-900 dark:hover:bg-slate-300"
         >
           返回首頁
-        </Link>
+        </LocalizedLink>
       </div>
     </div>
   );

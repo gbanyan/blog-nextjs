@@ -1,6 +1,6 @@
 'use client';
 
-import Link from 'next/link';
+import { LocalizedLink } from '@/components/localized-link';
 import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
 import { FaGithub, FaMastodon, FaLinkedin } from 'react-icons/fa';
@@ -94,7 +94,7 @@ export function RightSidebarContent({
           <div className="pointer-events-none absolute -bottom-12 right-[-2.5rem] h-28 w-28 rounded-full bg-indigo-300/30 blur-3xl mix-blend-soft-light dark:bg-indigo-500/20" />
 
           <div className="relative flex flex-col items-center">
-            <Link
+            <LocalizedLink
               href={aboutUrl}
               aria-label="關於作者"
               className="mb-2 inline-block transition-transform duration-300 ease-out group-hover:-translate-y-0.5"
@@ -113,7 +113,7 @@ export function RightSidebarContent({
                   {siteConfig.name.charAt(0).toUpperCase()}
                 </div>
               )}
-            </Link>
+            </LocalizedLink>
             {socialItems.length > 0 && (
               <div className="mt-2 flex items-center gap-3 text-lg text-accent-textLight dark:text-accent-textDark">
                 {socialItems.map((item) => (
@@ -158,24 +158,24 @@ export function RightSidebarContent({
                 else if (count >= 3) sizeClass = 'font-medium';
 
                 return (
-                  <Link
+                  <LocalizedLink
                     key={tag}
                     href={`/tags/${slug}`}
                     className={`${sizeClass} tag-chip rounded-full bg-accent-soft px-2 py-0.5 text-accent-textLight transition hover:bg-accent hover:text-white dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700 dark:hover:text-white`}
                   >
                     {tag}
-                  </Link>
+                  </LocalizedLink>
                 );
               })}
             </div>
             <div className="mt-3 type-small text-slate-500 dark:text-slate-400">
-              <Link
+              <LocalizedLink
                 href="/tags"
                 className="motion-link inline-flex items-center gap-1 text-accent-textLight hover:text-accent dark:text-accent-textDark dark:hover:text-accent"
               >
                 所有標籤
                 <FiArrowRight className="h-3 w-3" />
-              </Link>
+              </LocalizedLink>
             </div>
           </section>
         )}

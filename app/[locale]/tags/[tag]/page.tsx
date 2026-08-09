@@ -1,3 +1,4 @@
+// Locale-aware tag archive.
 import type { Metadata } from 'next';
 import { allPosts } from '@/lib/content';
 import { PostListWithControls } from '@/components/post-list-with-controls';
