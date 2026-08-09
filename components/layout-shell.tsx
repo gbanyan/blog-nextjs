@@ -18,7 +18,7 @@ export function LayoutShell({
   return (
     <div className="flex min-h-screen flex-col">
       <SiteHeader recentPosts={recentPosts} />
-      <main className="flex-1">{children}</main>
+      <main className="container mx-auto flex-1 px-4 py-6">{children}</main>
       <SiteFooter />
       <BackToTop />
     </div>

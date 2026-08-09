@@ -17,7 +17,16 @@ interface Drop {
   speed: number;
   chars: string[];
   charIndex: number;
+  charTimer: number;
 }
+
+const FONT_SIZE = 14;
+const TRAIL_LENGTH = 7;
+const CHAR_CHANGE_INTERVAL = 0.08;
+const LEAD_COLOR = 'rgb(34, 197, 94)';
+const TRAIL_COLORS = Array.from({ length: TRAIL_LENGTH }, (_, index) =>
+  `rgba(34, 197, 94, ${(1 - (index + 1) * 0.12) * 0.4})`
+);
 
 export function MatrixRain({
   opacity = 1,
@@ -32,91 +41,86 @@ export function MatrixRain({
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
+    let width = 0;
+    let height = 0;
+    let drops: Drop[] = [];
+
     const resize = () => {
       const rect = canvas.getBoundingClientRect();
-      // Calculate DPR safely - use 1 as fallback
-      const dpr = (typeof window !== 'undefined' && 'devicePixelRatio' in window) 
-        ? Math.min(window.devicePixelRatio ?? 1, 2) 
-        : 1;
-      canvas.width = rect.width * dpr;
-      canvas.height = rect.height * dpr;
-      ctx.scale(dpr, dpr);
-      canvas.style.width = `${rect.width}px`;
-      canvas.style.height = `${rect.height}px`;
+      const nextWidth = Math.max(0, Math.floor(rect.width));
+      const nextHeight = Math.max(0, Math.floor(rect.height));
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+
+      if (nextWidth === width && nextHeight === height) return;
+
+      width = nextWidth;
+      height = nextHeight;
+      canvas.width = Math.max(1, Math.floor(width * dpr));
+      canvas.height = Math.max(1, Math.floor(height * dpr));
+      // Reset the transform after changing the backing dimensions. Using
+      // setTransform also prevents repeated resize events from compounding
+      // the scale and making the drawing drift outside the canvas.
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      ctx.font = `${FONT_SIZE}px "JetBrains Mono", "SF Mono", "Fira Code", monospace`;
+      ctx.textBaseline = 'top';
+
+      const columns = Math.ceil(width / FONT_SIZE);
+      drops = Array.from({ length: columns }, (_, index) => ({
+        x: index * FONT_SIZE,
+        y: Math.random() * -100,
+        speed: 0.15 + Math.random() * 0.4,
+        chars: Array.from({ length: 20 }, () =>
+          CHARS[Math.floor(Math.random() * CHARS.length)]
+        ),
+        charIndex: Math.floor(Math.random() * 20),
+        charTimer: Math.random() * CHAR_CHANGE_INTERVAL,
+      }));
     };
 
-      const handleResize = () => {
-        // Use requestAnimationFrame for smoother resizing
-        requestAnimationFrame(() => {
-          const rect = canvasRef.current?.getBoundingClientRect();
-          if (rect) {
-            const dpr = (typeof window !== 'undefined' && 'devicePixelRatio' in window) 
-              ? Math.min(window.devicePixelRatio ?? 1, 2) 
-              : 1;
-            canvasRef.current!.width = rect.width * dpr;
-            canvasRef.current!.height = rect.height * dpr;
-            if (ctx) {
-              ctx.scale(dpr, dpr);
-            }
-            canvasRef.current!.style.width = `${rect.width}px`;
-            canvasRef.current!.style.height = `${rect.height}px`;
-          }
-        });
-      };
-
-      resize();
-      window.addEventListener('resize', handleResize, { passive: true, signal: AbortSignal.timeout(60000) });
-
-    const fontSize = 14;
-    const columns = Math.floor(canvas.getBoundingClientRect().width / fontSize);
-    const drops: Drop[] = Array.from({ length: columns }, (_, i) => ({
-      x: i * fontSize,
-      y: Math.random() * -100,
-      speed: 0.15 + Math.random() * 0.4,
-      chars: Array.from({ length: 20 }, () =>
-        CHARS[Math.floor(Math.random() * CHARS.length)]
-      ),
-      charIndex: Math.floor(Math.random() * 20),
-    }));
+    resize();
+    const resizeObserver = new ResizeObserver(resize);
 
     let animationId: number;
     let lastTime: number | null = null;
 
     const draw = (timestamp: number) => {
-      const rect = canvas.getBoundingClientRect();
       const delta =
-        lastTime !== null ? (timestamp - lastTime) / 1000 : 1 / 60;
+        lastTime !== null
+          ? Math.min((timestamp - lastTime) / 1000, 0.05)
+          : 1 / 60;
       lastTime = timestamp;
 
       ctx.fillStyle = 'rgba(15, 23, 42, 0.05)';
-      ctx.fillRect(0, 0, rect.width, rect.height);
+      ctx.fillRect(0, 0, width, height);
 
-      ctx.font = `${fontSize}px "JetBrains Mono", "SF Mono", "Fira Code", monospace`;
+      // Batch each trail level so fillStyle changes happen once per level,
+      // instead of once per character on every frame.
+      ctx.fillStyle = LEAD_COLOR;
+      drops.forEach((drop) => {
+        ctx.fillText(drop.chars[drop.charIndex], drop.x, drop.y);
+      });
+
+      for (let trail = 1; trail <= TRAIL_LENGTH; trail += 1) {
+        ctx.fillStyle = TRAIL_COLORS[trail - 1];
+        drops.forEach((drop) => {
+          const index = (drop.charIndex - trail + 20) % 20;
+          ctx.fillText(drop.chars[index], drop.x, drop.y - trail * FONT_SIZE);
+        });
+      }
 
       drops.forEach((drop) => {
-        // Bright green for leading char
-        ctx.fillStyle = 'rgba(34, 197, 94, 1)';
-        ctx.fillText(drop.chars[drop.charIndex], drop.x, drop.y);
+        drop.y += drop.speed * FONT_SIZE * delta * 60;
+        drop.charTimer += delta;
 
-        // Dimmer trailing chars
-        for (let i = 1; i < 8; i++) {
-          const idx = (drop.charIndex - i + 20) % 20;
-          const alpha = 1 - i * 0.12;
-          ctx.fillStyle = `rgba(34, 197, 94, ${alpha * 0.4})`;
-          ctx.fillText(
-            drop.chars[idx],
-            drop.x,
-            drop.y - i * fontSize
-          );
+        if (drop.charTimer >= CHAR_CHANGE_INTERVAL) {
+          drop.charIndex =
+            (drop.charIndex + Math.floor(drop.charTimer / CHAR_CHANGE_INTERVAL)) % 20;
+          drop.charTimer %= CHAR_CHANGE_INTERVAL;
         }
 
-        // Frame-rate independent: scale by delta, 60fps as baseline
-        drop.y += drop.speed * fontSize * delta * 60;
-        if (drop.y > rect.height + 100) {
-          drop.y = -50;
-          drop.charIndex = (drop.charIndex + 1) % 20;
-        } else {
-          drop.charIndex = (drop.charIndex + 1) % 20;
+        if (drop.y > height + TRAIL_LENGTH * FONT_SIZE) {
+          drop.y = -Math.random() * 100;
+          drop.charIndex = Math.floor(Math.random() * 20);
         }
       });
 
@@ -127,7 +131,7 @@ export function MatrixRain({
 
     return () => {
       cancelAnimationFrame(animationId);
-      window.removeEventListener('resize', handleResize);
+      resizeObserver.disconnect();
     };
   }, []);
 
@@ -138,7 +142,7 @@ export function MatrixRain({
       style={{
         opacity,
         transition: 'opacity 0.6s ease-out',
-        background: 'rgb(15, 23, 42)',
+        display: 'block',
       }}
       aria-hidden="true"
       role="img"
