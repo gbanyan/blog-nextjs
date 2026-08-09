@@ -45,8 +45,11 @@ const markdown = {
 } satisfies Parameters<typeof s.markdown>[0];
 
 const date = s.coerce.date().optional();
+const locale = s.enum(['zh-TW', 'en']).default('zh-TW');
 
 const sharedFields = {
+  locale,
+  translation_id: s.string().optional(),
   slug: s.string().optional(),
   description: s.string().optional(),
   type: s.string().optional(),

@@ -1,5 +1,9 @@
-import { allPages, allPosts } from '@/lib/content';
-import type { Page, Post } from '@/lib/content';
+import {
+  DEFAULT_LOCALE,
+  getPagesByLocale,
+  getPostsByLocale,
+} from '@/lib/content';
+import type { ContentLocale, Page, Post } from '@/lib/content';
 
 /**
  * All posts sorted newest-first.
@@ -9,17 +13,20 @@ import type { Page, Post } from '@/lib/content';
  * module-level `_sortedCache` variable. This also lets the route be
  * statically prerendered under Partial Prerendering (PPR).
  */
-export async function getAllPostsSorted(): Promise<Post[]> {
+export async function getAllPostsSorted(locale: ContentLocale = DEFAULT_LOCALE): Promise<Post[]> {
   'use cache';
-  return [...allPosts].sort((a, b) => {
+  return [...getPostsByLocale(locale)].sort((a, b) => {
     const aDate = a.published_at ? new Date(a.published_at).getTime() : 0;
     const bDate = b.published_at ? new Date(b.published_at).getTime() : 0;
     return bDate - aDate;
   });
 }
 
-export function getPostBySlug(slug: string): Post | undefined {
-  return allPosts.find(
+export function getPostBySlug(
+  slug: string,
+  locale: ContentLocale = DEFAULT_LOCALE
+): Post | undefined {
+  return getPostsByLocale(locale).find(
     (post) =>
       post.flattenedPath === slug ||
       post.slug === slug ||
@@ -27,8 +34,11 @@ export function getPostBySlug(slug: string): Post | undefined {
   );
 }
 
-export function getPageBySlug(slug: string): Page | undefined {
-  return allPages.find(
+export function getPageBySlug(
+  slug: string,
+  locale: ContentLocale = DEFAULT_LOCALE
+): Page | undefined {
+  return getPagesByLocale(locale).find(
     (page) =>
       page.flattenedPath === slug ||
       page.slug === slug ||
@@ -42,7 +52,7 @@ export function getPageBySlug(slug: string): Page | undefined {
  */
 export async function getRelatedPosts(target: Post, limit = 3): Promise<Post[]> {
   'use cache';
-  const posts = await getAllPostsSorted();
+  const posts = await getAllPostsSorted(target.locale);
 
   const targetTags = new Set(target.tags?.map((tag) => tag.toLowerCase()) ?? []);
   const candidates = posts.filter((post) => post._id !== target._id);
@@ -94,7 +104,7 @@ export async function getPostNeighbors(target: Post): Promise<{
   older?: Post;
 }> {
   'use cache';
-  const posts = await getAllPostsSorted();
+  const posts = await getAllPostsSorted(target.locale);
 
   const index = posts.findIndex((post) => post._id === target._id);
   if (index === -1) return {};
