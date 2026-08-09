@@ -1,6 +1,7 @@
 import { ThemeToggle } from './theme-toggle';
 import { SiteHeaderSearch } from './site-header-search';
 import { NavMenu, NavLinkItem, IconKey } from './nav-menu';
+import { LanguageSwitcher } from './language-switcher';
 import { siteConfig } from '@/lib/config';
 import { allPages } from '@/lib/content';
 import { LocalizedLink } from '@/components/localized-link';
@@ -77,6 +78,7 @@ export function SiteHeader({ recentPosts = [], locale }: SiteHeaderProps) {
         <div className="flex items-center gap-3">
           <NavMenu items={navItems} />
           <SiteHeaderSearch recentPosts={recentPosts} />
+          <LanguageSwitcher />
           <ThemeToggle />
         </div>
       </div>
