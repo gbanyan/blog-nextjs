@@ -24,6 +24,7 @@ import {
   documentPath,
   getDocumentLocale,
   isLocale,
+  isPlaceholderDocument,
   localeToOpenGraph,
   type Locale,
 } from '@/lib/locales';
@@ -66,14 +67,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     ...baseMetadata,
     authors: post.authors?.length ? post.authors.map(author => ({ name: author })) : [{ name: siteConfig.author }],
-    robots: {
-      index: true,
-      follow: true,
-      googleBot: {
-        index: true,
-        follow: true,
-      },
-    },
+    robots: isPlaceholderDocument(post)
+      ? { index: false, follow: true, googleBot: { index: false, follow: true } }
+      : { index: true, follow: true, googleBot: { index: true, follow: true } },
     openGraph: {
       ...baseMetadata.openGraph,
       title: post.title,

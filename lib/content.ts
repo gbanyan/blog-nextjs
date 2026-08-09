@@ -38,6 +38,11 @@ interface SharedContentFields {
   translation_id?: string;
   slug?: string;
   translation_key?: string;
+  translation_status?: 'source' | 'placeholder';
+  is_placeholder?: boolean;
+  /** Derived, explicit SEO status for the bilingual placeholder phase. */
+  translationStatus: 'source' | 'placeholder';
+  isPlaceholder: boolean;
   description?: string;
   type?: string;
   ghost_id?: string;
@@ -126,9 +131,14 @@ function adaptDocument(document: VeliteDocument, collection: 'posts' | 'pages'):
 
   const { sourcePath: _sourcePath, raw: _rawBody, body: _body, ...fields } = document;
   const locale = (document.locale ?? DEFAULT_LOCALE) as ContentLocale;
+  const translationStatus =
+    document.translation_status ?? (locale === 'en' ? 'placeholder' : 'source');
+  const isPlaceholder = document.is_placeholder ?? translationStatus === 'placeholder';
   const adapted = {
     ...fields,
     locale,
+    translationStatus,
+    isPlaceholder,
     translationId: stableTranslationId,
     translationKey: stableTranslationId,
     pairing: { key: stableTranslationId, locale },

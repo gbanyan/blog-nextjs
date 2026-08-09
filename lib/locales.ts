@@ -16,6 +16,10 @@ export interface LocalizedDocumentLike {
   translationKey?: string;
   translation_id?: string;
   translationId?: string;
+  translation_status?: string;
+  translationStatus?: string;
+  is_placeholder?: boolean;
+  isPlaceholder?: boolean;
   url?: string;
   status?: string;
 }
@@ -40,6 +44,16 @@ export function getTranslationKey(document: LocalizedDocumentLike): string | und
     document.translationKey ||
     document.translation_id ||
     document.translationId
+  );
+}
+
+export function isPlaceholderDocument(document: LocalizedDocumentLike): boolean {
+  return (
+    document.isPlaceholder === true ||
+    document.is_placeholder === true ||
+    document.translationStatus === 'placeholder' ||
+    document.translation_status === 'placeholder' ||
+    getDocumentLocale(document) === 'en'
   );
 }
 

@@ -264,6 +264,12 @@ function normalizeRecord(raw, index) {
     locale,
     key,
     route,
+    placeholder:
+      raw.placeholder === true ||
+      raw.isPlaceholder === true ||
+      raw.is_placeholder === true ||
+      raw.translationStatus === 'placeholder' ||
+      raw.translation_status === 'placeholder',
     missingTranslation: raw.missingTranslation === true || raw.translationMissing === true,
   };
 }
@@ -380,6 +386,7 @@ function checkPayload(payload, options) {
       }
       if (!route.hreflang[route.locale]) fail(`hreflang on ${route.route} has no self link for ${route.locale}`);
     }
+
   }
 
   for (const [key, group] of groups) {
@@ -459,6 +466,10 @@ async function smokeTest(result, payload) {
     try {
       const { text } = await fetchText(url, `route ${route.route}`);
       const inspected = inspectHtml(text);
+      const routeRecord = result.groups.get(route.key)?.find((candidate) => candidate.locale === route.locale);
+      if (routeRecord?.placeholder && !/name=["']robots["'][^>]*content=["'][^"']*noindex/i.test(text)) {
+        fail(`placeholder route ${route.route} is missing a noindex robots directive`);
+      }
       if (!inspected.canonical) fail(`route ${route.route} has no canonical link`);
       else if (new URL(inspected.canonical, url).pathname.replace(/\/+$/, '') !== new URL(url).pathname.replace(/\/+$/, '')) {
         fail(`route ${route.route} canonical link points to ${inspected.canonical}`);
@@ -484,6 +495,8 @@ async function smokeTest(result, payload) {
       if (name === 'sitemap') {
         const locs = [...text.matchAll(/<loc>([^<]+)<\/loc>/gi)].map((match) => match[1]);
         for (const route of result.routes) {
+          const record = result.groups.get(route.key)?.find((candidate) => candidate.locale === route.locale);
+          if (record?.placeholder) continue;
           const expectedPath = new URL(pathFor(route), result.baseUrl).pathname;
           if (!locs.some((loc) => new URL(loc).pathname === expectedPath)) fail(`sitemap is missing ${route.route}`);
         }
@@ -497,6 +510,8 @@ async function smokeTest(result, payload) {
       }
       if (name === 'llms') {
         for (const route of result.routes.filter((candidate) => candidate.locale === 'en')) {
+          const record = result.groups.get(route.key)?.find((candidate) => candidate.locale === route.locale);
+          if (record?.placeholder) continue;
           const routePath = new URL(pathFor(route), result.baseUrl).pathname;
           if (!text.includes(routePath)) fail(`llms.txt is missing English route ${routePath}`);
         }

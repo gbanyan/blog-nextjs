@@ -27,7 +27,7 @@ export function LanguageSwitcher({ manifest }: LanguageSwitcherProps = {}) {
   const targetLocale = currentLocale === DEFAULT_LOCALE ? ENGLISH_LOCALE : DEFAULT_LOCALE;
   const target = resolveLocaleSwitchTarget(pathname, targetLocale, manifest);
   const isEnglish = currentLocale === ENGLISH_LOCALE;
-  const targetLabel = targetLocale === ENGLISH_LOCALE ? 'English' : '繁體中文';
+  const targetLabel = targetLocale === ENGLISH_LOCALE ? 'EN' : '繁中';
   const fallbackHint = target.isFallback
     ? isEnglish
       ? '; no translated page is available, so the section index will open'
@@ -40,26 +40,19 @@ export function LanguageSwitcher({ manifest }: LanguageSwitcherProps = {}) {
       role="group"
       aria-label={isEnglish ? 'Language switcher, current language English' : '語言切換，目前為繁體中文'}
     >
-      <span
-        className={`inline-flex h-7 min-w-8 items-center justify-center rounded-full px-1.5 transition-colors ${
-          currentLocale === DEFAULT_LOCALE
-            ? 'bg-accent-soft text-accent-textLight dark:text-accent-textDark'
-            : ''
-        }`}
-        aria-current={currentLocale === DEFAULT_LOCALE ? 'page' : undefined}
-      >
-        {LOCALE_LABELS[DEFAULT_LOCALE]}
+      <span className="inline-flex h-7 min-w-8 items-center justify-center rounded-full bg-accent-soft px-1.5 text-accent-textLight transition-colors dark:text-accent-textDark" aria-current="page">
+        {LOCALE_LABELS[currentLocale]}
       </span>
       <Link
         href={target.href}
         prefetch={true}
         transitionTypes={[...NAV_TRANSITION]}
         className={`inline-flex h-7 min-w-8 items-center justify-center rounded-full px-1.5 transition-colors hover:bg-accent-soft hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40 ${
-          currentLocale === ENGLISH_LOCALE
+          currentLocale === DEFAULT_LOCALE
             ? 'bg-accent-soft text-accent-textLight dark:text-accent-textDark'
             : ''
         }`}
-        aria-label={isEnglish ? `Switch to ${targetLabel}${fallbackHint}` : `切換至${targetLabel}${fallbackHint}`}
+        aria-label={isEnglish ? `切換至${targetLabel}${fallbackHint}` : `Switch to ${targetLabel}${fallbackHint}`}
         title={
           target.isFallback
             ? isEnglish
@@ -68,7 +61,7 @@ export function LanguageSwitcher({ manifest }: LanguageSwitcherProps = {}) {
             : undefined
         }
       >
-        {LOCALE_LABELS[ENGLISH_LOCALE]}
+        {LOCALE_LABELS[targetLocale]}
       </Link>
     </div>
   );

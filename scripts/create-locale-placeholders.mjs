@@ -26,7 +26,11 @@ for (const collection of collections) {
     }
 
     const translationId = `${collection}/${name.slice(0, -3)}`;
-    const metadata = `locale: en${newline}translation_id: ${JSON.stringify(translationId)}${newline}`;
+    const metadata =
+      `locale: en${newline}` +
+      `translation_id: ${JSON.stringify(translationId)}${newline}` +
+      `translation_status: placeholder${newline}` +
+      `is_placeholder: true${newline}`;
     await writeFile(targetPath, `${opening}${metadata}${source.slice(opening.length)}`);
   }
 }

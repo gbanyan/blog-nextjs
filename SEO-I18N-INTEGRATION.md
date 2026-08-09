@@ -17,6 +17,13 @@ The English document uses the same key and `locale: en`. A missing key or
 missing counterpart is intentionally treated as unpaired: no English URL,
 hreflang, sitemap entry, RSS item, or llms link is invented.
 
+English files are exact-copy placeholders in this phase. The parent Velite
+adapter exposes `translationStatus: "placeholder"` and `isPlaceholder: true`
+for every English document (the placeholder generator also writes those fields
+for newly generated copies). Placeholder routes remain browsable and paired,
+but their detail metadata is `noindex` and they are omitted from sitemap, RSS,
+and llms discovery output.
+
 ## Expected paths
 
 - zh-TW/default documents retain their existing paths.

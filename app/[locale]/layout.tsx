@@ -10,7 +10,7 @@ import { WebVitals } from '@/components/web-vitals';
 import NextTopLoader from 'nextjs-toploader';
 import { notFound } from 'next/navigation';
 import { isLocale, locales, type Locale } from '@/lib/i18n/config';
-import { DEFAULT_LOCALE, absoluteUrl, localeToOpenGraph } from '@/lib/locales';
+import { DEFAULT_LOCALE, absoluteUrl, localeToOpenGraph, localizedPath } from '@/lib/locales';
 
 const playfair = Playfair_Display({
   subsets: ['latin'],
@@ -100,7 +100,7 @@ export default async function RootLayout({
   const { locale } = await params;
   if (!isLocale(locale)) notFound();
   const theme = siteConfig.theme;
-  const recentPosts = (await getAllPostsSorted())
+  const recentPosts = (await getAllPostsSorted(locale))
     .slice(0, 5)
     .map((p) => ({ title: p.title, url: p.url }));
 
@@ -120,7 +120,7 @@ export default async function RootLayout({
       '@type': 'SearchAction',
       target: {
         '@type': 'EntryPoint',
-        urlTemplate: `${siteConfig.url}/blog?search={search_term_string}`,
+        urlTemplate: `${siteConfig.url}${localizedPath('/blog', locale)}?search={search_term_string}`,
       },
       'query-input': 'required name=search_term_string',
     },

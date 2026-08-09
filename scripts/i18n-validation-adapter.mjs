@@ -40,6 +40,8 @@ const records = documents.map(({ document, collection }) => ({
   locale: localeOf(document),
   translationKey: pairKey(document, collection),
   route: routeFor(document, collection),
+  translationStatus: localeOf(document) === 'en' ? 'placeholder' : 'source',
+  placeholder: localeOf(document) === 'en',
 }));
 
 const routes = documents.map(({ document, collection }) => {

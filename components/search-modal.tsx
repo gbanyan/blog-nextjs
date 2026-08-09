@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { Command } from 'cmdk';
 import {
   FiSearch,
@@ -12,6 +12,7 @@ import {
 } from 'react-icons/fi';
 import { cn } from '@/lib/utils';
 import { NAV_TRANSITION } from '@/lib/navigation';
+import { getLocaleFromPathname, type SupportedLocale } from '@/lib/locale-switcher';
 
 interface PagefindResult {
   url: string;
@@ -83,12 +84,42 @@ function normalizePagefindUrl(url: string): string {
   return path.startsWith('/') ? path : `/${path}`;
 }
 
+function localizeInternalUrl(url: string, locale: SupportedLocale): string {
+  if (!url.startsWith('/') || url.startsWith('//')) return url;
+
+  const normalized = normalizePagefindUrl(url);
+  const withoutDefaultPrefix =
+    normalized === '/zh-TW'
+      ? '/'
+      : normalized.startsWith('/zh-TW/')
+        ? normalized.slice('/zh-TW'.length)
+        : normalized;
+  const withoutEnglishPrefix =
+    withoutDefaultPrefix === '/en'
+      ? '/'
+      : withoutDefaultPrefix.startsWith('/en/')
+        ? withoutDefaultPrefix.slice('/en'.length)
+        : withoutDefaultPrefix;
+
+  if (locale === 'en') {
+    return withoutDefaultPrefix === '/en' || withoutDefaultPrefix.startsWith('/en/')
+      ? withoutDefaultPrefix
+      : withoutEnglishPrefix === '/'
+        ? '/en'
+        : `/en${withoutEnglishPrefix}`;
+  }
+
+  return withoutEnglishPrefix || '/';
+}
+
 export function SearchModal({
   isOpen,
   onClose,
   recentPosts = []
 }: SearchModalProps) {
   const router = useRouter();
+  const pathname = usePathname();
+  const locale = getLocaleFromPathname(pathname ?? '/');
   const [search, setSearch] = useState('');
   const [results, setResults] = useState<PagefindResult[]>([]);
   const [loading, setLoading] = useState(false);
@@ -156,14 +187,14 @@ export function SearchModal({
       setResults(
         items.map((item) => ({
           ...item,
-          url: normalizePagefindUrl(item.url),
+          url: localizeInternalUrl(item.url, locale),
         }))
       );
       setLoading(false);
     }, 300);
 
     return () => clearTimeout(timer);
-  }, [search, pagefindReady]);
+  }, [search, pagefindReady, locale]);
 
   const handleSelect = useCallback(
     (url: string) => {
@@ -174,17 +205,17 @@ export function SearchModal({
   );
 
   const navActions: QuickAction[] = [
-    { id: 'home', title: '首頁', url: '/', icon: <FiHome className="size-4" /> },
+    { id: 'home', title: '首頁', url: localizeInternalUrl('/', locale), icon: <FiHome className="size-4" /> },
     {
       id: 'blog',
       title: '部落格',
-      url: '/blog',
+      url: localizeInternalUrl('/blog', locale),
       icon: <FiFileText className="size-4" />
     },
     {
       id: 'tags',
       title: '標籤',
-      url: '/tags',
+      url: localizeInternalUrl('/tags', locale),
       icon: <FiTag className="size-4" />
     }
   ];
@@ -192,7 +223,7 @@ export function SearchModal({
   const recentPostActions: QuickAction[] = recentPosts.map((p) => ({
     id: `post-${p.url}`,
     title: p.title,
-    url: p.url,
+    url: localizeInternalUrl(p.url, locale),
     icon: <FiBook className="size-4" />
   }));
 

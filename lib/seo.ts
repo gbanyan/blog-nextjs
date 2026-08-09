@@ -12,6 +12,7 @@ import {
   documentPath,
   getDocumentLocale,
   getTranslationKey,
+  isPlaceholderDocument,
   localizedPath,
   localeToOpenGraph,
   SUPPORTED_LOCALES,
@@ -34,7 +35,16 @@ type LocalizedMetadataOptions = {
 
 function published(document: ContentDocument): boolean {
   // Legacy content predates the status field; an absent status is published.
-  return document.status == null || document.status === 'published';
+  const status = document.status?.toLowerCase();
+  const visibility = document.visibility?.toLowerCase();
+  return (
+    !['draft', 'private', 'unpublished', 'scheduled'].includes(status || '') &&
+    !['private', 'members', 'hidden', 'unlisted'].includes(visibility || '')
+  );
+}
+
+function indexable(document: ContentDocument): boolean {
+  return published(document) && !isPlaceholderDocument(document);
 }
 
 function documentAlternates(
@@ -107,6 +117,9 @@ export function metadataForDocument(
             },
       ],
     },
+    robots: isPlaceholderDocument(document)
+      ? { index: false, follow: true }
+      : { index: true, follow: true },
   };
 }
 
@@ -154,7 +167,7 @@ function alternateDocuments(
   const key = getTranslationKey(document);
   if (!key) return [document];
   return documents.filter(
-    (candidate) => published(candidate) && getTranslationKey(candidate) === key
+    (candidate) => indexable(candidate) && getTranslationKey(candidate) === key
   );
 }
 
@@ -187,7 +200,7 @@ function sitemapRecord(
 }
 
 export function localizedSitemapEntries(locale?: Locale): MetadataRoute.Sitemap {
-  const documents = [...allPostsByLocale, ...allPagesByLocale].filter(published);
+  const documents = [...allPostsByLocale, ...allPagesByLocale].filter(indexable);
   const contentEntries = documents
     .filter((document) => !locale || getDocumentLocale(document) === locale)
     .map((document) =>
@@ -295,7 +308,7 @@ export function localeDocuments<T extends ContentDocument>(
   documents: T[],
   locale: Locale
 ): T[] {
-  return documents.filter((document) => published(document) && getDocumentLocale(document) === locale);
+  return documents.filter((document) => indexable(document) && getDocumentLocale(document) === locale);
 }
 
 export function documentLanguageLinks(
