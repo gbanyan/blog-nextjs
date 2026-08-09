@@ -30,7 +30,13 @@ for (const collection of [posts, pages]) {
     assert.equal(english.status, source.status, english.sourcePath);
     assert.equal(String(english.published_at), String(source.published_at), english.sourcePath);
     assert.deepEqual(english.tags, source.tags, english.sourcePath);
-    assert.equal(english.raw, source.raw, english.sourcePath);
+    assert.equal(english.translation_status, 'translated', english.sourcePath);
+    // Translation changes prose and/or translated frontmatter while the
+    // routing and asset metadata below must remain paired with the source.
+    assert.ok(
+      english.raw !== source.raw || english.title !== source.title,
+      english.sourcePath
+    );
     assert.equal(english.feature_image, source.feature_image, english.sourcePath);
   }
 }

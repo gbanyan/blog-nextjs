@@ -48,13 +48,13 @@ export function getTranslationKey(document: LocalizedDocumentLike): string | und
 }
 
 export function isPlaceholderDocument(document: LocalizedDocumentLike): boolean {
-  return (
-    document.isPlaceholder === true ||
-    document.is_placeholder === true ||
-    document.translationStatus === 'placeholder' ||
-    document.translation_status === 'placeholder' ||
-    getDocumentLocale(document) === 'en'
-  );
+  if (document.isPlaceholder === true || document.is_placeholder === true) return true;
+
+  const translationStatus = document.translationStatus || document.translation_status;
+  if (translationStatus) return translationStatus === 'placeholder';
+
+  // Keep legacy English copies safe until they explicitly declare their status.
+  return getDocumentLocale(document) === 'en';
 }
 
 /**

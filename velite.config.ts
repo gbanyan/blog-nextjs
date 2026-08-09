@@ -53,7 +53,7 @@ const sharedFields = {
   slug: s.string().optional(),
   // Optional, explicit locale pairing for the SEO/routing layer.
   translation_key: s.string().optional(),
-  translation_status: s.enum(['source', 'placeholder']).optional(),
+  translation_status: s.enum(['source', 'placeholder', 'translated']).optional(),
   is_placeholder: s.boolean().optional(),
   description: s.string().optional(),
   type: s.string().optional(),

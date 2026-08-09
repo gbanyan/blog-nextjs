@@ -38,10 +38,10 @@ interface SharedContentFields {
   translation_id?: string;
   slug?: string;
   translation_key?: string;
-  translation_status?: 'source' | 'placeholder';
+  translation_status?: 'source' | 'placeholder' | 'translated';
   is_placeholder?: boolean;
   /** Derived, explicit SEO status for the bilingual placeholder phase. */
-  translationStatus: 'source' | 'placeholder';
+  translationStatus: 'source' | 'placeholder' | 'translated';
   isPlaceholder: boolean;
   description?: string;
   type?: string;
