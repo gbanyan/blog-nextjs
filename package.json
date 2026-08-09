@@ -4,12 +4,15 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "concurrently \"contentlayer2 dev\" \"next dev --turbo\"",
+    "dev": "npm run velite:build && concurrently \"npm run velite:watch\" \"contentlayer2 dev\" \"next dev --turbo\"",
+    "velite": "velite",
+    "velite:build": "velite --clean",
+    "velite:watch": "velite --watch",
     "sync-assets": "node scripts/sync-assets.mjs",
-    "build": "npm run sync-assets && contentlayer2 build && next build && npx pagefind --site .next/server/app --output-path public/_pagefind",
+    "build": "npm run sync-assets && npm run velite:build && contentlayer2 build && next build && npx pagefind --site .next/server/app --output-path public/_pagefind",
     "start": "next start",
     "lint": "next lint",
-    "contentlayer": "contentlayer build"
+    "contentlayer": "contentlayer2 build"
   },
   "keywords": [],
   "author": "",
@@ -45,7 +48,8 @@
     "remark-gfm": "^4.0.1",
     "shiki": "^4.3.1",
     "tailwind-merge": "^3.6.0",
-    "unist-util-visit": "^5.0.0"
+    "unist-util-visit": "^5.0.0",
+    "velite": "^0.4.0"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.3.3",

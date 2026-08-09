@@ -30,6 +30,7 @@ pnpm-debug.log*
 /.turbo
 .next-tmp
 .contentlayer
+/.velite
 
 # Vercel
 .vercel
