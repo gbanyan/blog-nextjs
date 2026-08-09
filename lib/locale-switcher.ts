@@ -58,8 +58,13 @@ function normalizePath(pathname: string): string {
 
 function stripLocalePrefix(pathname: string): string {
   const normalized = normalizePath(pathname);
-  if (normalized === '/en') return '/';
-  if (normalized.startsWith('/en/')) return normalized.slice(3) || '/';
+  for (const locale of [DEFAULT_LOCALE, ENGLISH_LOCALE]) {
+    const prefix = `/${locale}`;
+    if (normalized === prefix) return '/';
+    if (normalized.startsWith(`${prefix}/`)) {
+      return normalized.slice(prefix.length) || '/';
+    }
+  }
   return normalized;
 }
 

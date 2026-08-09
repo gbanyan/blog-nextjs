@@ -104,9 +104,9 @@ export default defineConfig({
   collections: { posts, pages },
   output: {
     data: '.velite',
-    // Keep asset synchronization independent so current public URLs remain
-    // owned by the existing sync-assets step.
-    assets: 'public/assets',
+    // Keep Velite's cleanable asset workspace away from public/assets. The
+    // existing sync-assets step owns the public URL mirror.
+    assets: '.velite/assets',
     base: '/assets/',
     clean: true,
   },

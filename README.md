@@ -278,7 +278,7 @@ Configuration in `app/blog/[slug]/page.tsx`:
    npm run sync-assets
    ```
 
-   This copies `content/assets` into `public/assets` so `/assets/...` continues to work; the build script already runs it before `next build`, but running it locally keeps your previews in sync.
+   This copies `content/assets` into `public/assets` so `/assets/...` continues to work. The build and dev scripts run Velite's clean generation first, then mirror the assets; running this command locally keeps previews in sync.
 
 6. **Run the development server**
 
@@ -321,7 +321,7 @@ Velite is configured in `velite.config.ts` to read from the `content` submodule.
   ```
 
 - At build time, a rehype plugin rewrites these to `/assets/my-image.jpg`.
-- `public/assets` is populated from `content/assets` before each build (and via `npm run sync-assets`) so `/assets/...` stays available without symlinks.
+- `public/assets` is populated from `content/assets` after Velite generation (and via `npm run sync-assets`) so `/assets/...` stays available without symlinks. Velite's cleanable asset workspace is `.velite/assets`, keeping the public mirror intact during watch rebuilds.
 - `feature_image` fields are also mapped from `../assets/...` → `/assets/...` and rendered above the article content via `next/image`.
 - All component-level imagery (list thumbnails, related posts, sidebar avatar, about page hero, etc.) now uses `next/image` for responsive sizing, blur placeholders, and better LCP.
 
@@ -366,7 +366,7 @@ This ensures your `content` folder matches the commit referenced in `blog-nextjs
 ## Available npm Scripts
 
 - `npm run dev` – Generate Velite data, then run the Velite watcher and Next.js dev server concurrently (with Turbopack).
-- `npm run build` – Sync assets, generate Velite data, build Next.js, and index the output with Pagefind.
+- `npm run build` – Generate Velite data, mirror and check assets, build Next.js, and index the output with Pagefind.
 - `npm run start` – Start the production server (after `npm run build`).
 - `npm run lint` – Run Next.js / ESLint linting.
 - `npm run sync-assets` – Copy `content/assets` to `public/assets`.
@@ -453,11 +453,12 @@ related-post, neighbor, and tag helpers.
 The pipeline preserves the existing public contract: source-relative paths,
 underscore slugs, optional frontmatter, rendered HTML, `/blog/*` and
 `/pages/*` URLs, and the separate publication filtering used by RSS, sitemap,
-and `llms.txt`. `scripts/sync-assets.mjs` remains an explicit build step so
-`content/assets` continues to populate `public/assets` without changing URLs.
+and `llms.txt`. `scripts/sync-assets.mjs` runs after Velite's clean generation,
+and `scripts/check-assets.mjs` verifies the public mirror before Next.js builds,
+so `content/assets` continues to populate `public/assets` without changing URLs.
 
-`npm run dev` performs an initial Velite generation and then watches content
-alongside Next.js. `npm run build` performs asset synchronization, Velite
+`npm run dev` performs an initial Velite generation and asset synchronization,
+then watches content alongside Next.js. `npm run build` performs Velite
 generation, the production Next.js build, and Pagefind indexing. No generated
 content data is committed.
 
