@@ -17,6 +17,11 @@ interface TerminalWindowProps {
   tagline: string;
   /** Skip typing animation, show all at once */
   reducedMotion?: boolean;
+  /** Start the terminal text only after the Matrix intro has finished. */
+  startTyping?: boolean;
+  /** Keep the Matrix layer mounted during its fade-out transition. */
+  matrixVisible?: boolean;
+  matrixOpacity?: number;
   className?: string;
 }
 
@@ -32,6 +37,9 @@ export function TerminalWindow({
   title,
   tagline,
   reducedMotion = false,
+  startTyping = true,
+  matrixVisible = true,
+  matrixOpacity = 1,
   className = '',
 }: TerminalWindowProps) {
   const [phase, setPhase] = useState<Phase>('prompt');
@@ -83,43 +91,44 @@ export function TerminalWindow({
   );
 
   useEffect(() => {
-    if (phase === 'prompt') {
+    if (!startTyping || phase !== 'prompt') return;
+
       const cleanup = typeString(prompt, setDisplayedPrompt, () => {
         setTimeout(() => setPhase('typing-line1'), lineDelay);
       });
       return cleanup;
-    }
-  }, [phase, prompt, typeString, lineDelay]);
+  }, [phase, prompt, typeString, lineDelay, startTyping]);
 
   useEffect(() => {
-    if (phase === 'typing-line1') {
+    if (!startTyping || phase !== 'typing-line1') return;
+
       const cleanup = typeString(line1, setDisplayedLine1, () => {
         setTimeout(() => setPhase('typing-line2'), lineDelay);
       });
       return cleanup;
-    }
-  }, [phase, line1, typeString, lineDelay]);
+  }, [phase, line1, typeString, lineDelay, startTyping]);
 
   useEffect(() => {
-    if (phase === 'typing-line2') {
+    if (!startTyping || phase !== 'typing-line2') return;
+
       const cleanup = typeString(line2, setDisplayedLine2, () => {
         setTimeout(() => setPhase('prompt2'), lineDelay);
       });
       return cleanup;
-    }
-  }, [phase, line2, typeString, lineDelay]);
+  }, [phase, line2, typeString, lineDelay, startTyping]);
 
   useEffect(() => {
-    if (phase === 'prompt2') {
+    if (!startTyping || phase !== 'prompt2') return;
+
       const cleanup = typeString(prompt2, setDisplayedPrompt2, () => {
         setTimeout(() => setPhase('typing-ascii'), lineDelay);
       });
       return cleanup;
-    }
-  }, [phase, prompt2, typeString, lineDelay]);
+  }, [phase, prompt2, typeString, lineDelay, startTyping]);
 
   useEffect(() => {
-    if (phase === 'typing-ascii') {
+    if (!startTyping || phase !== 'typing-ascii') return;
+
       if (reducedMotion) {
         setTimeout(() => setPhase('done'), lineDelay);
         return;
@@ -135,16 +144,15 @@ export function TerminalWindow({
         }
       }, asciiLineDelay);
       return () => clearInterval(id);
-    }
-  }, [phase, asciiLineDelay, lineDelay, reducedMotion]);
+  }, [phase, asciiLineDelay, lineDelay, reducedMotion, startTyping]);
 
   // Blinking cursor
   useEffect(() => {
-    if (!reducedMotion && phase !== 'done') {
+    if (startTyping && !reducedMotion && phase !== 'done') {
       const id = setInterval(() => setShowCursor((c) => !c), 530);
       return () => clearInterval(id);
     }
-  }, [phase, reducedMotion]);
+  }, [phase, reducedMotion, startTyping]);
 
   return (
     <div
@@ -152,8 +160,16 @@ export function TerminalWindow({
       role="img"
       aria-label={`終端機：${title} - ${tagline}`}
     >
-      <div className="pointer-events-none absolute inset-0 opacity-30 dark:opacity-25" aria-hidden="true">
-        {!reducedMotion && <MatrixRain className="h-full w-full" />}
+      <div
+        className="pointer-events-none absolute inset-0 opacity-20 transition-opacity duration-500 ease-out dark:opacity-30"
+        aria-hidden="true"
+      >
+        {matrixVisible && !reducedMotion && (
+          <MatrixRain
+            className="h-full w-full"
+            opacity={matrixOpacity}
+          />
+        )}
       </div>
       {/* macOS-style title bar */}
       <div className="relative z-10 flex items-center gap-2 border-b border-slate-200 px-4 py-2.5 dark:border-slate-700/50 sm:px-5 sm:py-3 lg:px-6 lg:py-3.5">
@@ -168,7 +184,8 @@ export function TerminalWindow({
       </div>
 
       {/* Terminal content */}
-      <div className="relative z-10 px-4 py-4 font-mono text-sm sm:px-5 sm:py-5 sm:text-base lg:px-6 lg:py-6 lg:text-lg">
+      <div className="relative z-10 min-h-[240px] px-4 py-4 font-mono text-sm sm:min-h-[280px] sm:px-5 sm:py-5 sm:text-base lg:min-h-[340px] lg:px-6 lg:py-6 lg:text-lg">
+        {startTyping && <>
         <div className="text-slate-600 dark:text-slate-300">
           <span className="text-emerald-600 dark:text-emerald-400">~</span>
           <span className="text-slate-500"> $ </span>
@@ -225,6 +242,7 @@ export function TerminalWindow({
             <span className="inline-block h-4 w-4 animate-pulse border-l-2 border-emerald-600 dark:border-emerald-400" />
           </div>
         )}
+        </>}
       </div>
     </div>
   );

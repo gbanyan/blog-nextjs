@@ -1,6 +1,7 @@
 'use client';
 
 import { useSyncExternalStore } from 'react';
+import { useEffect, useState } from 'react';
 import { TerminalWindow } from './terminal-window';
 
 interface HeroSectionProps {
@@ -9,6 +10,9 @@ interface HeroSectionProps {
 }
 
 const REDUCED_MOTION_QUERY = '(prefers-reduced-motion: reduce)';
+const MATRIX_DURATION = 1800;
+const MATRIX_FADE_DURATION = 500;
+type IntroPhase = 'matrix' | 'transition' | 'typing';
 
 function subscribeToReducedMotion(callback: () => void) {
   const mediaQuery = window.matchMedia(REDUCED_MOTION_QUERY);
@@ -26,6 +30,31 @@ export function HeroSection({ title, tagline }: HeroSectionProps) {
     getReducedMotion,
     () => false
   );
+  const [introPhase, setIntroPhase] = useState<IntroPhase>('matrix');
+
+  useEffect(() => {
+    if (reducedMotion || introPhase !== 'matrix') return;
+
+    const id = window.setTimeout(() => {
+      setIntroPhase('transition');
+    }, MATRIX_DURATION);
+
+    return () => window.clearTimeout(id);
+  }, [introPhase, reducedMotion]);
+
+  useEffect(() => {
+    if (introPhase !== 'transition') return;
+
+    const id = window.setTimeout(() => {
+      setIntroPhase('typing');
+    }, MATRIX_FADE_DURATION);
+
+    return () => window.clearTimeout(id);
+  }, [introPhase]);
+
+  const startTyping = reducedMotion || introPhase === 'typing';
+  const matrixVisible = !reducedMotion && introPhase !== 'typing';
+  const matrixOpacity = introPhase === 'matrix' ? 1 : 0;
 
   return (
     <div className="relative h-[360px] w-full overflow-hidden rounded-2xl sm:h-[400px] lg:h-[440px] xl:h-[480px]">
@@ -36,6 +65,9 @@ export function HeroSection({ title, tagline }: HeroSectionProps) {
           title={title}
           tagline={tagline}
           reducedMotion={reducedMotion}
+          startTyping={startTyping}
+          matrixVisible={matrixVisible}
+          matrixOpacity={matrixOpacity}
         />
       </div>
     </div>
