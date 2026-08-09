@@ -6,6 +6,7 @@ import remarkGfm from 'remark-gfm';
 import { visit } from 'unist-util-visit';
 
 import { rehypeCallouts } from './lib/rehype-callouts';
+import { rehypeLocalizeLinks } from './lib/rehype-localize-links';
 import { rehypeOptimizeImages } from './lib/rehype-optimize-images';
 
 // Velite 0.4 hard-codes remark-rehype's allowDangerousHtml=true. The existing
@@ -41,6 +42,7 @@ const markdown = {
     rehypeSlug,
     [rehypeAutolinkHeadings, { behavior: 'wrap' }],
     rehypeOptimizeImages,
+    rehypeLocalizeLinks,
   ],
 } satisfies Parameters<typeof s.markdown>[0];
 
