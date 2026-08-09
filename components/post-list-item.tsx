@@ -54,7 +54,7 @@ export function PostListItem({ post, priority = false }: Props) {
             </MetaItem>
           )}
         </div>
-        <h2 className="type-body font-semibold leading-snug hover:text-accent sm:type-title">
+        <h2 className="font-editorial type-body font-semibold leading-snug hover:text-accent sm:type-title">
           <LocalizedLink href={post.url} transitionTypes={[...NAV_TRANSITION]}>
             {post.title}
           </LocalizedLink>

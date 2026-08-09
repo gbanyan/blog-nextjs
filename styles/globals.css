@@ -16,8 +16,8 @@
   --color-accent-textDark: var(--color-accent-text-dark);
 
   /* Custom font families */
-  --font-serif-eng: var(--font-serif-eng), serif;
-  --font-serif-cn: var(--font-serif-cn), "Songti SC", "Noto Serif TC", "SimSun", serif;
+  --font-serif-eng: var(--font-display-latin), serif;
+  --font-serif-cn: var(--font-display-cjk), "Songti SC", "Noto Serif TC", "SimSun", serif;
 
   /* Custom transition timing */
   --ease-snappy: cubic-bezier(0.32, 0.72, 0, 1);
@@ -1663,7 +1663,7 @@ body {
   color: var(--color-ink-strong);
   font-weight: 700;
   letter-spacing: 0.01em; /* 手写风格字体需要稍微增加字间距 */
-  font-family: var(--font-serif-cn), var(--font-serif-eng), "Songti SC", serif;
+  font-family: var(--font-display-latin), var(--font-display-cjk), "Songti SC", serif;
 }
 
 .prose h2 {
@@ -1672,7 +1672,7 @@ body {
   color: var(--color-ink-strong);
   font-weight: 600;
   letter-spacing: 0.015em; /* 手写风格字体需要稍微增加字间距 */
-  font-family: var(--font-serif-cn), var(--font-serif-eng), "Songti SC", serif;
+  font-family: var(--font-display-latin), var(--font-display-cjk), "Songti SC", serif;
 }
 
 .prose h3 {
@@ -1857,7 +1857,7 @@ body {
     font-size: clamp(2.2rem, 1.6rem + 2.4vw, 3.5rem);
     line-height: 1.2;
     font-weight: var(--font-weight-semibold);
-    font-family: var(--font-serif-cn), var(--font-serif-eng), "Songti SC", serif;
+    font-family: var(--font-display-latin), var(--font-display-cjk), "Songti SC", serif;
     letter-spacing: 0.01em; /* 手写风格字体需要稍微增加字间距 */
   }
 
@@ -1865,7 +1865,7 @@ body {
     font-size: clamp(1.6rem, 1.1rem + 1.4vw, 2.6rem);
     line-height: 1.3;
     font-weight: var(--font-weight-semibold);
-    font-family: var(--font-serif-cn), var(--font-serif-eng), "Songti SC", serif;
+    font-family: var(--font-display-latin), var(--font-display-cjk), "Songti SC", serif;
     letter-spacing: 0.025em; /* 手写风格字体需要稍微增加字间距 */
   }
 
@@ -1873,7 +1873,7 @@ body {
     font-size: clamp(1.25rem, 0.9rem + 1vw, 1.9rem);
     line-height: 1.35;
     font-weight: var(--font-weight-medium);
-    font-family: var(--font-serif-cn), var(--font-serif-eng), "Songti SC", serif;
+    font-family: var(--font-display-latin), var(--font-display-cjk), "Songti SC", serif;
     letter-spacing: 0.02em; /* 保持原有字间距 */
   }
 
@@ -1889,16 +1889,10 @@ body {
     font-weight: var(--font-weight-regular);
   }
 
-  h1 {
-    font-weight: 700;
-    letter-spacing: 0.01em; /* 手写风格字体需要稍微增加字间距 */
-    font-family: var(--font-serif-cn), var(--font-serif-eng), "Songti SC", serif;
-  }
-
-  h2 {
-    font-weight: 600;
-    letter-spacing: 0.015em; /* 手写风格字体需要稍微增加字间距 */
-    font-family: var(--font-serif-cn), var(--font-serif-eng), "Songti SC", serif;
+  /* Cormorant ships only its Latin subset here, so CJK glyphs reliably fall
+     through to LXGW while mixed-language titles keep their intended faces. */
+  .font-editorial {
+    font-family: var(--font-display-latin), var(--font-display-cjk), "Songti SC", serif;
   }
 
   .type-nav {

@@ -50,7 +50,7 @@ export function PostCard({ post, showTags = true }: PostCardProps) {
             </MetaItem>
           )}
         </div>
-        <h2 className="text-lg font-semibold leading-snug">
+        <h2 className="font-editorial text-lg font-semibold leading-snug">
            <LocalizedLink
             href={post.url}
             transitionTypes={[...NAV_TRANSITION]}

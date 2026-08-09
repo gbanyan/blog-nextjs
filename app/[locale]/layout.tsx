@@ -4,7 +4,7 @@ import { siteConfig } from '@/lib/config';
 import { getAllPostsSorted } from '@/lib/posts';
 import { LayoutShell } from '@/components/layout-shell';
 import { ThemeProvider } from 'next-themes';
-import { Playfair_Display, LXGW_WenKai_TC } from 'next/font/google';
+import { Cormorant_Garamond, LXGW_WenKai_TC } from 'next/font/google';
 import { JsonLd } from '@/components/json-ld';
 import { WebVitals } from '@/components/web-vitals';
 import NextTopLoader from 'nextjs-toploader';
@@ -13,16 +13,17 @@ import { isLocale, locales, type Locale } from '@/lib/i18n/config';
 import { DEFAULT_LOCALE, absoluteUrl, localeToOpenGraph, localizedPath } from '@/lib/locales';
 import { getDictionary } from '@/lib/i18n/dictionaries';
 
-const playfair = Playfair_Display({
+const cormorantGaramond = Cormorant_Garamond({
+  weight: 'variable',
   subsets: ['latin'],
-  variable: '--font-serif-eng',
+  variable: '--font-display-latin',
   display: 'swap',
 });
 
 const lxgwWenKai = LXGW_WenKai_TC({
   weight: ['400', '700'],
   subsets: ['latin'],
-  variable: '--font-serif-cn',
+  variable: '--font-display-cjk',
   display: 'swap',
   preload: true,
   adjustFontFallback: false,
@@ -155,11 +156,7 @@ export default async function RootLayout({
 
 
   return (
-    <html lang={locale} suppressHydrationWarning className={`${playfair.variable} ${lxgwWenKai.variable}`}>
-      <head>
-        <link rel="font" href="https://fonts.googleapis.com" />
-        <link rel="font" href="https://fonts.gstatic.com" />
-      </head>
+    <html lang={locale} suppressHydrationWarning className={`${cormorantGaramond.variable} ${lxgwWenKai.variable}`}>
       <body>
         <NextTopLoader
           color={theme.accent}
