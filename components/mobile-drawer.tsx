@@ -1,11 +1,14 @@
 'use client';
 import { createPortal } from 'react-dom';
+import { useId } from 'react';
 import { clsx } from 'clsx';
 import { FiX } from 'react-icons/fi';
+import { useModalDialog } from '@/lib/use-modal-dialog';
 
 interface MobileDrawerProps {
   open: boolean;
   mounted: boolean;
+  id: string;
   onClose: () => void;
   title: string;
   icon: React.ReactNode;
@@ -27,6 +30,7 @@ interface MobileDrawerProps {
 export function MobileDrawer({
   open,
   mounted,
+  id,
   onClose,
   title,
   icon,
@@ -36,6 +40,9 @@ export function MobileDrawer({
   panelZ = 1110,
   children,
 }: MobileDrawerProps) {
+  const titleId = useId();
+  const { dialogRef, handleKeyDown } = useModalDialog(open, onClose);
+
   if (!mounted) return null;
   const fromRight = side === 'right';
 
@@ -51,6 +58,8 @@ export function MobileDrawer({
         aria-hidden="true"
       />
       <div
+        ref={dialogRef}
+        id={id}
         className={clsx(
           'fixed flex flex-col bg-white/95 shadow-2xl backdrop-blur-xl dark:bg-slate-900/95 lg:hidden',
           fromRight
@@ -63,20 +72,26 @@ export function MobileDrawer({
         )}
         style={{ zIndex: panelZ }}
         role="dialog"
-        aria-modal="true"
+        aria-modal={open ? 'true' : undefined}
+        aria-labelledby={titleId}
+        aria-hidden={!open}
+        inert={!open}
+        tabIndex={-1}
+        onKeyDown={handleKeyDown}
       >
         <div className="flex items-center justify-between border-b border-slate-200/50 px-6 py-4 dark:border-slate-700/50">
           <div className="flex items-center gap-2 font-semibold text-slate-900 dark:text-slate-100">
-            {icon}
-            <span>{title}</span>
+            <span aria-hidden="true">{icon}</span>
+            <span id={titleId}>{title}</span>
           </div>
           <button
             type="button"
             onClick={onClose}
+            data-dialog-initial-focus
             className="rounded-full p-1 text-slate-500 hover:bg-slate-100 hover:text-accent dark:hover:bg-slate-800 dark:hover:text-accent"
             aria-label={closeLabel}
           >
-            <FiX className="h-5 w-5" />
+            <FiX className="h-5 w-5" aria-hidden="true" />
           </button>
         </div>
         <div className="scroll-panel flex-1 px-6 py-6">{children}</div>

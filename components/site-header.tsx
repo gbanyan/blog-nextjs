@@ -99,6 +99,7 @@ export function SiteHeader({ recentPosts = [], locale }: SiteHeaderProps) {
             labels={{
               openMenu: dictionary.common.openMenu,
               closeMenu: dictionary.common.closeMenu,
+              navigationMenu: dictionary.common.navigationMenu,
             }}
           />
           <SiteHeaderSearch recentPosts={recentPosts} locale={locale} />

@@ -123,7 +123,7 @@ export default async function StaticPage({ params }: Props) {
               <ScrollReveal>
                 <header className={isDevice ? 'mb-4 space-y-3 text-center' : 'mb-6 space-y-4 text-center'}>
                   {page.published_at && (
-                    <p className="type-small text-slate-500 dark:text-slate-500">
+                    <p className="type-small text-slate-500 dark:text-slate-400">
                       {new Date(page.published_at).toLocaleDateString(
                         getDocumentLocale(page)
                       )}

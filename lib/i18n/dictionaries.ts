@@ -65,6 +65,7 @@ export type Dictionary = {
     switchToDark: string;
     openMenu: string;
     closeMenu: string;
+    navigationMenu: string;
   };
   search: {
     titleMatches: string;
@@ -202,6 +203,7 @@ const dictionaries: Record<Locale, Dictionary> = {
       switchToDark: '切換為深色主題',
       openMenu: '開啟選單',
       closeMenu: '關閉選單',
+      navigationMenu: '導覽選單',
     },
     search: {
       titleMatches: '標題相符',
@@ -322,6 +324,7 @@ const dictionaries: Record<Locale, Dictionary> = {
       switchToDark: 'Switch to dark theme',
       openMenu: 'Open menu',
       closeMenu: 'Close menu',
+      navigationMenu: 'Navigation menu',
     },
     search: {
       titleMatches: 'Title match',

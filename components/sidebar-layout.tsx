@@ -43,6 +43,7 @@ export function SidebarLayout({ children, tags, aboutUrl, avatarSrc, locale, var
       <MobileDrawer
         open={open}
         mounted={mounted}
+        id="mobile-sidebar-drawer"
         onClose={() => setOpen(false)}
         title={dictionary.common.sidebar}
         icon={<FiLayout className="h-5 w-5" />}
@@ -64,11 +65,13 @@ export function SidebarLayout({ children, tags, aboutUrl, avatarSrc, locale, var
         type="button"
         onClick={() => setOpen(true)}
         aria-label={dictionary.common.openSidebar}
+        aria-expanded={open}
+        aria-controls="mobile-sidebar-drawer"
         className={clsx(
           'fixed bottom-6 left-6 z-40 flex h-12 w-12 items-center justify-center rounded-full border border-slate-200 bg-white/90 text-slate-600 shadow-md backdrop-blur transition hover:bg-slate-100 hover:text-accent dark:border-slate-700 dark:bg-slate-900/90 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-slate-200 lg:hidden'
         )}
       >
-        <FiLayout className="h-5 w-5" />
+        <FiLayout className="h-5 w-5" aria-hidden="true" />
       </button>
     </>
   );

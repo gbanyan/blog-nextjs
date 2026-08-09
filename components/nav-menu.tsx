@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef, FocusEvent, useEffect } from 'react';
+import { useState, useRef, FocusEvent, useEffect, useId } from 'react';
 import { createPortal } from 'react-dom';
 import {
   FiMenu,
@@ -23,6 +23,7 @@ import { LocalizedLink } from '@/components/localized-link';
 import { usePathname } from 'next/navigation';
 import { NAV_TRANSITION } from '@/lib/navigation';
 import type { Dictionary } from '@/lib/i18n/dictionaries';
+import { useModalDialog } from '@/lib/use-modal-dialog';
 
 export type IconKey =
   | 'home'
@@ -61,7 +62,7 @@ export interface NavLinkItem {
 
 interface NavMenuProps {
   items: NavLinkItem[];
-  labels: Pick<Dictionary['common'], 'openMenu' | 'closeMenu'>;
+  labels: Pick<Dictionary['common'], 'openMenu' | 'closeMenu' | 'navigationMenu'>;
 }
 
 export function NavMenu({ items, labels }: NavMenuProps) {
@@ -71,6 +72,10 @@ export function NavMenu({ items, labels }: NavMenuProps) {
   const [mounted, setMounted] = useState(false);
   const closeTimer = useRef<number | null>(null);
   const pathname = usePathname();
+  const menuId = useId();
+  const mobileDialogId = `${menuId}-mobile-navigation`;
+  const close = () => setOpen(false);
+  const { dialogRef, handleKeyDown } = useModalDialog(open, close);
 
   useEffect(() => {
     setMounted(true);
@@ -94,7 +99,6 @@ export function NavMenu({ items, labels }: NavMenuProps) {
   }, [pathname]);
 
   const toggle = () => setOpen((val) => !val);
-  const close = () => setOpen(false);
 
   const handleBlur = (event: FocusEvent<HTMLDivElement>) => {
     if (!event.currentTarget.contains(event.relatedTarget as Node)) {
@@ -145,12 +149,16 @@ export function NavMenu({ items, labels }: NavMenuProps) {
     const Icon = ICON_MAP[item.iconKey] ?? FiFile;
     const hasChildren = item.children && item.children.length > 0;
     const isExpanded = expandedMobileItems.includes(item.key);
+    const groupId = `${menuId}-mobile-group-${depth}-${encodeURIComponent(item.key).replaceAll('%', '')}`;
 
     if (hasChildren) {
       return (
         <div key={item.key} className="flex flex-col">
           <button
+            type="button"
             onClick={() => toggleMobileItem(item.key)}
+            aria-expanded={isExpanded}
+            aria-controls={groupId}
             className="flex w-full items-center justify-between rounded-xl px-4 py-3 text-base font-medium text-slate-700 transition-colors active:bg-slate-100 dark:text-slate-200 dark:active:bg-slate-800 dark:hover:text-accent"
           >
             <div className="flex items-center gap-3">
@@ -162,6 +170,9 @@ export function NavMenu({ items, labels }: NavMenuProps) {
             />
           </button>
           <div
+            id={groupId}
+            aria-hidden={!isExpanded}
+            inert={!isExpanded}
             className={`grid transition-all duration-200 ease-in-out ${isExpanded ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'
               }`}
           >
@@ -197,6 +208,7 @@ export function NavMenu({ items, labels }: NavMenuProps) {
           className="relative z-50 inline-flex h-10 w-10 items-center justify-center rounded-full text-slate-600 transition-colors hover:bg-slate-100 hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40 dark:text-slate-200 dark:hover:bg-slate-800 dark:hover:text-accent sm:hidden"
         aria-label={open ? labels.closeMenu : labels.openMenu}
         aria-expanded={open}
+        aria-controls={mobileDialogId}
         onClick={toggle}
       >
         <div className="relative h-5 w-5">
@@ -218,8 +230,17 @@ export function NavMenu({ items, labels }: NavMenuProps) {
       {/* Mobile Menu Overlay - Portaled */}
       {mounted && createPortal(
         <div
+          ref={dialogRef}
+          id={mobileDialogId}
           className={`fixed inset-0 z-[100] flex flex-col bg-white/95 backdrop-blur-xl transition-all duration-300 ease-snappy dark:bg-gray-950/95 sm:hidden ${open ? 'visible opacity-100' : 'invisible opacity-0 pointer-events-none'
             }`}
+          role="dialog"
+          aria-modal={open ? 'true' : undefined}
+          aria-label={labels.navigationMenu}
+          aria-hidden={!open}
+          inert={!open}
+          tabIndex={-1}
+          onKeyDown={handleKeyDown}
         >
           {/* Close button area */}
           <div className="flex items-center justify-end px-4 py-3">
@@ -228,6 +249,7 @@ export function NavMenu({ items, labels }: NavMenuProps) {
               className="inline-flex h-10 w-10 items-center justify-center rounded-full text-slate-600 transition-colors hover:bg-slate-100 hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40 dark:text-slate-200 dark:hover:bg-slate-800 dark:hover:text-accent"
               onClick={close}
               aria-label={labels.closeMenu}
+              data-dialog-initial-focus
             >
               <div className="relative h-5 w-5">
                 <span className="absolute left-0 top-1/2 h-0.5 w-5 -translate-y-1/2 rotate-45 bg-current" />
@@ -237,9 +259,9 @@ export function NavMenu({ items, labels }: NavMenuProps) {
           </div>
 
           <div className="container mx-auto flex flex-1 flex-col px-4 pb-8">
-            <div className="scroll-panel flex flex-1 flex-col gap-2 pt-4">
+            <nav aria-label={labels.navigationMenu} className="scroll-panel flex flex-1 flex-col gap-2 pt-4">
               {items.map(item => renderMobileItem(item))}
-            </div>
+            </nav>
 
             <div className="mt-auto pt-8 text-center text-xs text-slate-400">
               <p>© {new Date().getFullYear()} All rights reserved.</p>
@@ -255,6 +277,7 @@ export function NavMenu({ items, labels }: NavMenuProps) {
           if (item.children && item.children.length > 0) {
             const Icon = ICON_MAP[item.iconKey] ?? FiFile;
             const isOpen = activeDropdown === item.key;
+            const dropdownId = `${menuId}-desktop-group-${encodeURIComponent(item.key).replaceAll('%', '')}`;
             return (
               <div
                 key={item.key}
@@ -269,6 +292,7 @@ export function NavMenu({ items, labels }: NavMenuProps) {
                   className="motion-link type-nav inline-flex shrink-0 items-center gap-1.5 rounded-full px-3 py-1 text-slate-600 hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40 dark:text-slate-200 dark:hover:text-accent"
                    aria-haspopup="menu"
                   aria-expanded={isOpen}
+                  aria-controls={dropdownId}
                 >
                   <Icon className="h-3.5 w-3.5 shrink-0 text-slate-400 transition group-hover:text-accent dark:group-hover:text-accent" />
                   <span className="whitespace-nowrap">{item.label}</span>
@@ -276,10 +300,13 @@ export function NavMenu({ items, labels }: NavMenuProps) {
                 </button>
 
                 <div
+                  id={dropdownId}
                   className={`absolute left-0 top-full z-50 hidden min-w-[12rem] rounded-2xl border border-slate-200 bg-white p-2 shadow-lg transition duration-200 ease-snappy dark:border-slate-800 dark:bg-slate-900 sm:block ${isOpen ? 'pointer-events-auto translate-y-2 opacity-100' : 'pointer-events-none translate-y-1 opacity-0'
                     }`}
                   role="menu"
                   aria-label={item.label}
+                  aria-hidden={!isOpen}
+                  inert={!isOpen}
                 >
                   <div className="flex flex-col gap-1">
                     {item.children.map((child) => renderDesktopChild(child))}

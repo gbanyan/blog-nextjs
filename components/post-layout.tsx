@@ -24,6 +24,7 @@ export function PostLayout({ children, hasToc = true, contentKey, wide, locale }
         <MobileDrawer
             open={isTocOpen}
             mounted={mounted}
+            id="mobile-post-toc"
             onClose={() => setIsTocOpen(false)}
             title={labels.tableOfContents}
             icon={<FiList className="h-5 w-5 text-slate-500" />}
@@ -44,8 +45,10 @@ export function PostLayout({ children, hasToc = true, contentKey, wide, locale }
                 isTocOpen ? "opacity-0 pointer-events-none" : "opacity-100"
               )}
             aria-label={labels.openTableOfContents}
+            aria-expanded={isTocOpen}
+            aria-controls="mobile-post-toc"
         >
-            <FiList className="h-4 w-4" />
+            <FiList className="h-4 w-4" aria-hidden="true" />
             <span>{labels.tableOfContents}</span>
         </button>
     ) : null;
@@ -57,8 +60,10 @@ export function PostLayout({ children, hasToc = true, contentKey, wide, locale }
                 "fixed bottom-6 right-16 z-40 hidden h-9 items-center gap-2 rounded-full border border-slate-200 bg-white/90 px-3 text-sm font-medium text-slate-600 shadow-md backdrop-blur-sm transition hover:bg-slate-50 hover:text-accent dark:border-slate-700 dark:bg-slate-900/90 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-accent lg:flex",
               )}
             aria-label={isDesktopTocOpen ? labels.closeTableOfContents : labels.openTableOfContents}
+            aria-expanded={isDesktopTocOpen}
+            aria-controls="desktop-post-toc"
         >
-            <FiList className="h-4 w-4" />
+            <FiList className="h-4 w-4" aria-hidden="true" />
             <span>{isDesktopTocOpen ? labels.hideTableOfContents : labels.showTableOfContents}</span>
         </button>
     ) : null;
@@ -77,7 +82,7 @@ export function PostLayout({ children, hasToc = true, contentKey, wide, locale }
                 </div>
 
                 {/* Desktop Sidebar (TOC) */}
-                <aside className="hidden lg:block">
+                <aside id="desktop-post-toc" className="hidden lg:block">
                     <div className="sticky top-24 h-[calc(100vh-6rem)] overflow-hidden">
                         {isDesktopTocOpen && hasToc && (
                             <div className="toc-sidebar scroll-panel h-full pr-2">
