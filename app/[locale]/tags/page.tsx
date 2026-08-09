@@ -1,4 +1,5 @@
-import Link from 'next/link';
+// Locale-aware tag index.
+import { LocalizedLink } from '@/components/localized-link';
 import type { Metadata } from 'next';
 import { FiTag, FiTrendingUp } from 'react-icons/fi';
 import { getAllTagsWithCount } from '@/lib/tags';
@@ -8,18 +9,31 @@ import { SidebarLayout } from '@/components/sidebar-layout';
 import { getSidebarData } from '@/lib/sidebar-data';
 import { siteConfig } from '@/lib/config';
 import { JsonLd } from '@/components/json-ld';
+import { metadataForPath } from '@/lib/seo';
+import { absoluteUrl, isLocale, localizedPath, type Locale } from '@/lib/locales';
+import { notFound } from 'next/navigation';
 
-export const metadata: Metadata = {
-  title: '標籤索引',
-  description: '瀏覽所有標籤，探索不同主題的文章。',
-  alternates: {
-    canonical: `${siteConfig.url}/tags`
-  }
-};
+interface Props {
+  params: Promise<{ locale: string }>;
+}
 
-export default function TagIndexPage() {
-  const { tags: sidebarTags, aboutUrl, avatarSrc } = getSidebarData();
-  const tags = getAllTagsWithCount();
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { locale: rawLocale } = await params;
+  if (!isLocale(rawLocale)) return { robots: { index: false, follow: false } };
+  return metadataForPath({
+    title: '標籤索引',
+    description: '瀏覽所有標籤，探索不同主題的文章。',
+    path: '/tags',
+    locale: rawLocale,
+  });
+}
+
+export default async function TagIndexPage({ params }: Props) {
+  const { locale: rawLocale } = await params;
+  if (!isLocale(rawLocale)) return notFound();
+  const locale: Locale = rawLocale;
+  const { tags: sidebarTags, aboutUrl, avatarSrc } = getSidebarData(locale);
+  const tags = getAllTagsWithCount(locale);
   const topTags = tags.slice(0, 3);
 
   const colorClasses = [
@@ -34,15 +48,15 @@ export default function TagIndexPage() {
     '@type': 'CollectionPage',
     name: '標籤索引',
     description: '瀏覽所有標籤，探索不同主題的文章。',
-    url: `${siteConfig.url}/tags`,
-    inLanguage: siteConfig.defaultLocale,
+    url: absoluteUrl(localizedPath('/tags', locale)),
+    inLanguage: locale,
     mainEntity: {
       '@type': 'ItemList',
       itemListElement: tags.map((tag, index) => ({
         '@type': 'ListItem',
         position: index + 1,
         name: tag.tag,
-        url: `${siteConfig.url}/tags/${tag.slug}`,
+        url: absoluteUrl(localizedPath(`/tags/${tag.slug}`, locale)),
         item: {
           '@type': 'Thing',
           name: tag.tag,
@@ -80,7 +94,7 @@ export default function TagIndexPage() {
           {tags.map(({ tag, slug, count }, index) => {
             const color = colorClasses[index % colorClasses.length];
             return (
-              <Link
+              <LocalizedLink
                 key={tag}
                 href={`/tags/${slug}`}
                 className="motion-card group flex flex-col rounded-2xl border border-white/40 bg-white/60 p-5 shadow-sm backdrop-blur-md transition-all hover:-translate-y-1 hover:shadow-xl dark:border-white/10 dark:bg-slate-900/60"
@@ -98,7 +112,7 @@ export default function TagIndexPage() {
                   <FiTrendingUp className="h-3 w-3 text-orange-400" />
                   熱度 #{index + 1}
                 </span>
-              </Link>
+              </LocalizedLink>
             );
           })}
         </div>

@@ -1,4 +1,5 @@
-import Link from 'next/link';
+// Locale-aware home page.
+import { LocalizedLink } from '@/components/localized-link';
 import { getAllPostsSorted } from '@/lib/posts';
 import { siteConfig } from '@/lib/config';
 import { PostListItem } from '@/components/post-list-item';
@@ -7,10 +8,32 @@ import { SidebarLayout } from '@/components/sidebar-layout';
 import { getSidebarData } from '@/lib/sidebar-data';
 import { JsonLd } from '@/components/json-ld';
 import { HeroSection } from '@/components/hero-section';
+import { absoluteUrl, isLocale, localizedPath, type Locale } from '@/lib/locales';
+import { metadataForPath } from '@/lib/seo';
+import { notFound } from 'next/navigation';
+import type { Metadata } from 'next';
 
-export default async function HomePage() {
-  const { tags, aboutUrl, avatarSrc } = getSidebarData();
-  const posts = (await getAllPostsSorted()).slice(0, siteConfig.postsPerPage);
+interface Props {
+  params: Promise<{ locale: string }>;
+}
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { locale: rawLocale } = await params;
+  if (!isLocale(rawLocale)) return { robots: { index: false, follow: false } };
+  return metadataForPath({
+    title: `${siteConfig.name} 的最新動態`,
+    description: siteConfig.description,
+    path: '/',
+    locale: rawLocale,
+  });
+}
+
+export default async function HomePage({ params }: Props) {
+  const { locale: rawLocale } = await params;
+  if (!isLocale(rawLocale)) return notFound();
+  const locale: Locale = rawLocale;
+  const { tags, aboutUrl, avatarSrc } = getSidebarData(locale);
+  const posts = (await getAllPostsSorted(locale)).slice(0, siteConfig.postsPerPage);
 
   // CollectionPage Schema for homepage
   const collectionPageSchema = {
@@ -18,12 +41,12 @@ export default async function HomePage() {
     '@type': 'CollectionPage',
     name: `${siteConfig.name} 的最新動態`,
     description: siteConfig.description,
-    url: siteConfig.url,
-    inLanguage: siteConfig.defaultLocale,
+    url: absoluteUrl(localizedPath('/', locale)),
+    inLanguage: locale,
     isPartOf: {
       '@type': 'WebSite',
       name: siteConfig.title,
-      url: siteConfig.url,
+      url: absoluteUrl(localizedPath('/', locale)),
     },
     about: {
       '@type': 'Blog',
@@ -50,13 +73,13 @@ export default async function HomePage() {
             <h2 className="type-small font-semibold uppercase tracking-[0.4em] text-slate-500 dark:text-slate-400">
               最新文章
             </h2>
-            <Link
+            <LocalizedLink
               href="/blog"
               prefetch={true}
               className="text-xs text-accent hover:underline"
             >
               所有文章 →
-            </Link>
+            </LocalizedLink>
           </div>
           <TimelineWrapper>
             {posts.map((post, index) => (

@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import { LocalizedLink } from '@/components/localized-link';
 import Image from 'next/image';
 import type { Post } from '@/lib/content';
 import { siteConfig } from '@/lib/config';
@@ -51,13 +51,13 @@ export function PostCard({ post, showTags = true }: PostCardProps) {
           )}
         </div>
         <h2 className="text-lg font-semibold leading-snug">
-           <Link
+           <LocalizedLink
             href={post.url}
             transitionTypes={[...NAV_TRANSITION]}
             className="hover:text-accent dark:hover:text-accent"
           >
             {post.title}
-          </Link>
+          </LocalizedLink>
         </h2>
         {post.description && (
           <p className="line-clamp-3 text-sm text-slate-600 dark:text-slate-300">

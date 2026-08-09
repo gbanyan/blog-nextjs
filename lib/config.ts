@@ -1,3 +1,11 @@
+import {
+  defaultLocale as fallbackLocale,
+  isLocale,
+  type Locale,
+} from '@/lib/i18n/config';
+
+const configuredLocale = process.env.NEXT_PUBLIC_DEFAULT_LOCALE;
+
 export const siteConfig = {
   name: process.env.NEXT_PUBLIC_SITE_NAME || 'Your Name',
   title: process.env.NEXT_PUBLIC_SITE_TITLE || 'Your Personal Site',
@@ -13,7 +21,9 @@ export const siteConfig = {
     Number(process.env.NEXT_PUBLIC_POSTS_PER_PAGE) > 0
       ? Number(process.env.NEXT_PUBLIC_POSTS_PER_PAGE)
       : 5,
-  defaultLocale: process.env.NEXT_PUBLIC_DEFAULT_LOCALE || 'zh-TW',
+  defaultLocale: (isLocale(configuredLocale)
+    ? configuredLocale
+    : fallbackLocale) as Locale,
   avatar: process.env.NEXT_PUBLIC_SITE_AVATAR_URL || '',
   aboutShort:
     process.env.NEXT_PUBLIC_SITE_ABOUT_SHORT ||

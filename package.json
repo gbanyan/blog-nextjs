@@ -4,12 +4,13 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "npm run velite:build && concurrently \"npm run velite:watch\" \"next dev --turbo\"",
+    "dev": "npm run velite:build && npm run sync-assets && concurrently \"npm run velite:watch\" \"next dev --turbo\"",
     "velite": "velite",
     "velite:build": "velite --clean",
     "velite:watch": "velite --watch",
     "sync-assets": "node scripts/sync-assets.mjs",
-    "build": "npm run sync-assets && npm run velite:build && next build && npx pagefind --site .next/server/app --output-path public/_pagefind",
+    "check-assets": "node scripts/check-assets.mjs",
+    "build": "npm run velite:build && npm run sync-assets && npm run check-assets && next build && npx pagefind --site .next/server/app --output-path public/_pagefind",
     "start": "next start",
     "lint": "next lint"
   },

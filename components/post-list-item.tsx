@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import { LocalizedLink } from '@/components/localized-link';
 import Image from 'next/image';
 import type { Post } from '@/lib/content';
 import { siteConfig } from '@/lib/config';
@@ -55,9 +55,9 @@ export function PostListItem({ post, priority = false }: Props) {
           )}
         </div>
         <h2 className="type-body font-semibold leading-snug hover:text-accent sm:type-title">
-          <Link href={post.url} transitionTypes={[...NAV_TRANSITION]}>
+          <LocalizedLink href={post.url} transitionTypes={[...NAV_TRANSITION]}>
             {post.title}
-          </Link>
+          </LocalizedLink>
         </h2>
         {excerpt && (
           <p className="line-clamp-2 text-sm text-slate-600 dark:text-slate-300">

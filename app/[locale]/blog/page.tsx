@@ -1,3 +1,4 @@
+// Locale-aware blog index.
 import { getAllPostsSorted } from '@/lib/posts';
 import { getSidebarData } from '@/lib/sidebar-data';
 import { PostListWithControls } from '@/components/post-list-with-controls';
@@ -5,30 +6,44 @@ import { SidebarLayout } from '@/components/sidebar-layout';
 import { SectionDivider } from '@/components/section-divider';
 import { siteConfig } from '@/lib/config';
 import { JsonLd } from '@/components/json-ld';
+import { metadataForPath } from '@/lib/seo';
+import { absoluteUrl, isLocale, localizedPath, type Locale } from '@/lib/locales';
+import { notFound } from 'next/navigation';
+import type { Metadata } from 'next';
 
-export const metadata = {
-  title: '所有文章',
-  description: '瀏覽所有文章，持續更新中。',
-  alternates: {
-    canonical: `${siteConfig.url}/blog`
-  }
-};
+interface Props {
+  params: Promise<{ locale: string }>;
+}
 
-export default async function BlogIndexPage() {
-  const posts = await getAllPostsSorted();
-  const { tags, aboutUrl, avatarSrc } = getSidebarData();
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { locale: rawLocale } = await params;
+  if (!isLocale(rawLocale)) return { robots: { index: false, follow: false } };
+  return metadataForPath({
+    title: '所有文章',
+    description: '瀏覽所有文章，持續更新中。',
+    path: '/blog',
+    locale: rawLocale,
+  });
+}
+
+export default async function BlogIndexPage({ params }: Props) {
+  const { locale: rawLocale } = await params;
+  if (!isLocale(rawLocale)) return notFound();
+  const locale: Locale = rawLocale;
+  const posts = await getAllPostsSorted(locale);
+  const { tags, aboutUrl, avatarSrc } = getSidebarData(locale);
 
   const blogSchema = {
     '@context': 'https://schema.org',
     '@type': 'Blog',
     name: '所有文章',
     description: '瀏覽所有文章，持續更新中。',
-    url: `${siteConfig.url}/blog`,
-    inLanguage: siteConfig.defaultLocale,
+    url: absoluteUrl(localizedPath('/blog', locale)),
+    inLanguage: locale,
     blogPost: posts.slice(0, 10).map((post) => ({
       '@type': 'BlogPosting',
       headline: post.title,
-      url: `${siteConfig.url}${post.url}`,
+      url: absoluteUrl(localizedPath(post.url, locale)),
       datePublished: post.published_at,
       dateModified: post.updated_at || post.published_at,
       author: {

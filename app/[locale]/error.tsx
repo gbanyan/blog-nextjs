@@ -1,3 +1,4 @@
+// Locale-aware error boundary.
 'use client';
 
 import { useEffect } from 'react';

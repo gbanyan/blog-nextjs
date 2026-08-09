@@ -19,7 +19,7 @@ import {
   FiChevronDown,
   FiChevronRight
 } from 'react-icons/fi';
-import Link from 'next/link';
+import { LocalizedLink } from '@/components/localized-link';
 import { usePathname } from 'next/navigation';
 import { NAV_TRANSITION } from '@/lib/navigation';
 
@@ -126,7 +126,7 @@ export function NavMenu({ items }: NavMenuProps) {
   const renderDesktopChild = (item: NavLinkItem) => {
     const Icon = ICON_MAP[item.iconKey] ?? FiFile;
     return item.href ? (
-        <Link
+        <LocalizedLink
         key={item.key}
         href={item.href}
         transitionTypes={[...NAV_TRANSITION]}
@@ -135,7 +135,7 @@ export function NavMenu({ items }: NavMenuProps) {
       >
         <Icon className="h-4 w-4 shrink-0 text-slate-400" />
         <span className="whitespace-nowrap">{item.label}</span>
-      </Link>
+      </LocalizedLink>
     ) : null;
   };
 
@@ -174,7 +174,7 @@ export function NavMenu({ items }: NavMenuProps) {
     }
 
     return item.href ? (
-        <Link
+        <LocalizedLink
         key={item.key}
         href={item.href}
         transitionTypes={[...NAV_TRANSITION]}
@@ -183,7 +183,7 @@ export function NavMenu({ items }: NavMenuProps) {
       >
         <Icon className="h-5 w-5 shrink-0 text-slate-400" />
         <span className="whitespace-nowrap">{item.label}</span>
-      </Link>
+      </LocalizedLink>
     ) : null;
   };
 
@@ -290,7 +290,7 @@ export function NavMenu({ items }: NavMenuProps) {
           const Icon = ICON_MAP[item.iconKey] ?? FiFile;
 
           return item.href ? (
-            <Link
+            <LocalizedLink
               key={item.key}
               href={item.href}
               transitionTypes={[...NAV_TRANSITION]}
@@ -300,7 +300,7 @@ export function NavMenu({ items }: NavMenuProps) {
               <Icon className="h-3.5 w-3.5 shrink-0 text-slate-400 transition group-hover:text-accent" />
               <span className="whitespace-nowrap">{item.label}</span>
               <span className="absolute inset-x-3 -bottom-0.5 h-px origin-left scale-x-0 bg-accent transition duration-180 ease-snappy group-hover:scale-x-100" aria-hidden="true" />
-            </Link>
+            </LocalizedLink>
           ) : null;
         })}
       </nav>

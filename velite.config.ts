@@ -45,9 +45,16 @@ const markdown = {
 } satisfies Parameters<typeof s.markdown>[0];
 
 const date = s.coerce.date().optional();
+const locale = s.enum(['zh-TW', 'en']).default('zh-TW');
 
 const sharedFields = {
+  locale,
+  translation_id: s.string().optional(),
   slug: s.string().optional(),
+  // Optional, explicit locale pairing for the SEO/routing layer.
+  translation_key: s.string().optional(),
+  translation_status: s.enum(['source', 'placeholder']).optional(),
+  is_placeholder: s.boolean().optional(),
   description: s.string().optional(),
   type: s.string().optional(),
   ghost_id: s.string().optional(),
@@ -97,9 +104,9 @@ export default defineConfig({
   collections: { posts, pages },
   output: {
     data: '.velite',
-    // Keep asset synchronization independent so current public URLs remain
-    // owned by the existing sync-assets step.
-    assets: 'public/assets',
+    // Keep Velite's cleanable asset workspace away from public/assets. The
+    // existing sync-assets step owns the public URL mirror.
+    assets: '.velite/assets',
     base: '/assets/',
     clean: true,
   },

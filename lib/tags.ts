@@ -1,4 +1,5 @@
-import { allPosts } from '@/lib/content';
+import { getPostsByLocale } from '@/lib/content';
+import type { ContentLocale } from '@/lib/content';
 
 /**
  * Normalize a tag into a URL-safe slug.
@@ -20,9 +21,11 @@ export function getTagSlug(tag: string): string {
  * Tags with post counts, sorted by count descending.
  * Synchronous — safe to call from the client-side sidebar.
  */
-export function getAllTagsWithCount(): { tag: string; slug: string; count: number }[] {
+export function getAllTagsWithCount(
+  locale?: ContentLocale
+): { tag: string; slug: string; count: number }[] {
   const map = new Map<string, number>();
-  for (const post of allPosts) {
+  for (const post of getPostsByLocale(locale)) {
     if (!post.tags) continue;
     for (const postTag of post.tags) {
       map.set(postTag, (map.get(postTag) ?? 0) + 1);

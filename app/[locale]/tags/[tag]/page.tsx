@@ -1,5 +1,6 @@
+// Locale-aware tag archive.
 import type { Metadata } from 'next';
-import { allPosts } from '@/lib/content';
+import { getPostsByLocale, allPostsByLocale } from '@/lib/content';
 import { PostListWithControls } from '@/components/post-list-with-controls';
 import { getTagSlug } from '@/lib/tags';
 import { SidebarLayout } from '@/components/sidebar-layout';
@@ -9,55 +10,55 @@ import { ScrollReveal } from '@/components/scroll-reveal';
 import { FiTag } from 'react-icons/fi';
 import { siteConfig } from '@/lib/config';
 import { JsonLd } from '@/components/json-ld';
+import { metadataForPath } from '@/lib/seo';
+import { absoluteUrl, isLocale, localizedPath, type Locale } from '@/lib/locales';
+import { notFound } from 'next/navigation';
 
 export function generateStaticParams() {
-  const slugs = new Set<string>();
-  for (const post of allPosts) {
-    if (!post.tags) continue;
-    for (const tag of post.tags) {
-      slugs.add(getTagSlug(tag));
-    }
-  }
-  const params = Array.from(slugs).map((slug) => ({
-    tag: slug
-  }));
-  return params.length > 0 ? params : [{ tag: '__placeholder__' }];
+  const params = new Set<string>();
+  return allPostsByLocale.flatMap((post) =>
+    (post.tags ?? []).map((tag) => {
+      const key = `${post.locale}:${getTagSlug(tag)}`;
+      if (params.has(key)) return null;
+      params.add(key);
+      return { locale: post.locale, tag: getTagSlug(tag) };
+    })
+  ).filter((param): param is { locale: 'zh-TW' | 'en'; tag: string } => param !== null);
 }
 
 interface Props {
-  params: Promise<{ tag: string }>;
+  params: Promise<{ locale: string; tag: string }>;
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { tag: slug } = await params;
+  const { locale: rawLocale, tag: slug } = await params;
+  if (!isLocale(rawLocale)) return { robots: { index: false, follow: false } };
+  const locale: Locale = rawLocale;
+  const posts = getPostsByLocale(locale);
   const decodedSlug = decodeURIComponent(slug);
-  const tag = allPosts
+  const tag = posts
     .flatMap((post) => post.tags ?? [])
     .find((t) => getTagSlug(t) === decodedSlug);
 
-  const tagUrl = `${siteConfig.url}/tags/${slug}`;
+  if (!tag) return { robots: { index: false, follow: false } };
 
-  return {
-    title: tag ? `標籤：${tag}` : '標籤',
-    description: tag ? `查看標籤為「${tag}」的所有文章` : '標籤索引',
-    alternates: {
-      canonical: tagUrl
-    },
-    openGraph: {
-      title: tag ? `標籤：${tag}` : '標籤',
-      description: tag ? `查看標籤為「${tag}」的所有文章` : '標籤索引',
-      url: tagUrl,
-      type: 'website'
-    }
-  };
+  return metadataForPath({
+    title: `標籤：${tag}`,
+    description: `查看標籤為「${tag}」的所有文章`,
+    path: `/tags/${slug}`,
+    locale,
+  });
 }
 
 export default async function TagPage({ params }: Props) {
-  const { tags, aboutUrl, avatarSrc } = getSidebarData();
-  const { tag: slug } = await params;
+  const { locale: rawLocale, tag: slug } = await params;
+  if (!isLocale(rawLocale)) return notFound();
+  const locale: Locale = rawLocale;
+  const { tags, aboutUrl, avatarSrc } = getSidebarData(locale);
+  const postsForLocale = getPostsByLocale(locale);
   const decodedSlug = decodeURIComponent(slug);
 
-  const posts = allPosts.filter(
+  const posts = postsForLocale.filter(
     (post) => post.tags && post.tags.some((t) => getTagSlug(t) === decodedSlug)
   );
 
@@ -70,8 +71,8 @@ export default async function TagPage({ params }: Props) {
     '@type': 'CollectionPage',
     name: `標籤：${tagLabel}`,
     description: `查看標籤為「${tagLabel}」的所有文章`,
-    url: `${siteConfig.url}/tags/${slug}`,
-    inLanguage: siteConfig.defaultLocale,
+    url: absoluteUrl(localizedPath(`/tags/${slug}`, locale)),
+    inLanguage: locale,
     about: {
       '@type': 'Thing',
       name: tagLabel
@@ -81,7 +82,7 @@ export default async function TagPage({ params }: Props) {
       blogPost: posts.slice(0, 10).map((post) => ({
         '@type': 'BlogPosting',
         headline: post.title,
-        url: `${siteConfig.url}${post.url}`,
+        url: absoluteUrl(localizedPath(post.url, locale)),
         datePublished: post.published_at,
         dateModified: post.updated_at || post.published_at,
         author: {
