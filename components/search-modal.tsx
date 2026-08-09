@@ -37,7 +37,10 @@ interface SearchModalProps {
   onClose: () => void;
   recentPosts?: { title: string; url: string }[];
   labels: Dictionary['search'];
+  errorLabel: Dictionary['errors']['errorTitle'];
 }
+
+type PagefindStatus = 'idle' | 'ready' | 'error';
 
 function escapeHtml(text: string): string {
   return text
@@ -114,6 +117,7 @@ export function SearchModal({
   onClose,
   recentPosts = [],
   labels,
+  errorLabel,
 }: SearchModalProps) {
   const router = useRouter();
   const pathname = usePathname();
@@ -121,7 +125,7 @@ export function SearchModal({
   const [search, setSearch] = useState('');
   const [results, setResults] = useState<PagefindResult[]>([]);
   const [loading, setLoading] = useState(false);
-  const [pagefindReady, setPagefindReady] = useState(false);
+  const [pagefindStatus, setPagefindStatus] = useState<PagefindStatus>('idle');
   const pagefindRef = useRef<{
     init: () => void;
     options: (opts: { bundlePath: string }) => Promise<void>;
@@ -136,6 +140,7 @@ export function SearchModal({
   // Initialize Pagefind when modal opens (read-only consumer — does not alter index)
   useEffect(() => {
     if (!isOpen) return;
+    let cancelled = false;
 
     const loadPagefind = async () => {
       try {
@@ -143,19 +148,22 @@ export function SearchModal({
         const pagefind = await import(/* webpackIgnore: true */ pagefindUrl);
         // bundlePath must match public/_pagefind copy from build script
         await pagefind.options({ bundlePath: '/_pagefind/' });
+        if (cancelled) return;
         pagefind.init();
         pagefindRef.current = pagefind;
-        setPagefindReady(true);
+        setPagefindStatus('ready');
       } catch (error) {
         console.error('Failed to load Pagefind:', error);
+        if (!cancelled) setPagefindStatus('error');
       }
     };
 
     loadPagefind();
 
     return () => {
+      cancelled = true;
       pagefindRef.current = null;
-      setPagefindReady(false);
+      setPagefindStatus('idle');
       setSearch('');
       setResults([]);
     };
@@ -164,35 +172,49 @@ export function SearchModal({
   // Debounced search when user types
   useEffect(() => {
     const query = search.trim();
-    if (!query || !pagefindRef.current) {
+    if (!query || pagefindStatus !== 'ready' || !pagefindRef.current) {
       setResults([]);
       setLoading(false);
       return;
     }
 
+    let cancelled = false;
     setLoading(true);
-    pagefindRef.current.preload(query);
 
     const timer = setTimeout(async () => {
       const pagefind = pagefindRef.current;
       if (!pagefind) return;
 
-      const searchResult = await pagefind.debouncedSearch(query, {}, 300);
-      if (searchResult === null) return; // Superseded by newer search
+      try {
+        pagefind.preload(query);
+        const searchResult = await pagefind.debouncedSearch(query, {}, 300);
+        if (searchResult === null || cancelled) return; // Superseded by newer search
 
-      const dataPromises = searchResult.results.slice(0, 10).map((r) => r.data());
-      const items = await Promise.all(dataPromises);
-      setResults(
-        items.map((item) => ({
-          ...item,
-          url: localizeInternalUrl(item.url, locale),
-        }))
-      );
-      setLoading(false);
+        const dataPromises = searchResult.results.slice(0, 10).map((r) => r.data());
+        const items = await Promise.all(dataPromises);
+        if (cancelled) return;
+        setResults(
+          items.map((item) => ({
+            ...item,
+            url: localizeInternalUrl(item.url, locale),
+          }))
+        );
+        setLoading(false);
+      } catch (error) {
+        console.error('Pagefind search failed:', error);
+        if (!cancelled) {
+          setResults([]);
+          setLoading(false);
+          setPagefindStatus('error');
+        }
+      }
     }, 300);
 
-    return () => clearTimeout(timer);
-  }, [search, pagefindReady, locale]);
+    return () => {
+      cancelled = true;
+      clearTimeout(timer);
+    };
+  }, [search, pagefindStatus, locale]);
 
   const handleSelect = useCallback(
     (url: string) => {
@@ -244,10 +266,16 @@ export function SearchModal({
       </div>
 
       <Command.List className="scroll-panel max-h-[min(60vh,400px)] p-2">
-        {loading && (
+        {search.trim() && (pagefindStatus === 'idle' || loading) && (
           <Command.Loading className="flex items-center justify-center py-8 text-sm text-slate-500 dark:text-slate-400">
             {labels.searching}
           </Command.Loading>
+        )}
+
+        {search.trim() && pagefindStatus === 'error' && (
+          <div className="py-8 text-center text-sm text-slate-500 dark:text-slate-400" role="status">
+            {errorLabel}
+          </div>
         )}
 
         {!loading && !search.trim() && (
@@ -295,7 +323,7 @@ export function SearchModal({
           </>
         )}
 
-        {!loading && search.trim() && results.length > 0 && (
+        {!loading && pagefindStatus === 'ready' && search.trim() && results.length > 0 && (
           <Command.Group heading={labels.searchResults} className="[&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:py-1.5 [&_[cmdk-group-heading]]:text-xs [&_[cmdk-group-heading]]:font-medium [&_[cmdk-group-heading]]:text-slate-500 [&_[cmdk-group-heading]]:dark:text-slate-400">
             {results.map((result, i) => {
               const title = result.meta?.title ?? result.url;
@@ -347,9 +375,11 @@ export function SearchModal({
           </Command.Group>
         )}
 
-        <Command.Empty className="py-8 text-center text-sm text-slate-500 dark:text-slate-400">
-          {labels.noResults}
-        </Command.Empty>
+        {!loading && pagefindStatus === 'ready' && search.trim() && results.length === 0 && (
+          <Command.Empty className="py-8 text-center text-sm text-slate-500 dark:text-slate-400">
+            {labels.noResults}
+          </Command.Empty>
+        )}
       </Command.List>
 
       <div className="border-t border-slate-200 px-4 py-2 text-xs text-slate-500 dark:border-slate-700 dark:text-slate-400">

@@ -14,6 +14,7 @@ import { getDictionary } from '@/lib/i18n/dictionaries';
 
 interface Props {
   params: Promise<{ locale: string }>;
+  searchParams: Promise<{ search?: string | string[] }>;
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -28,8 +29,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   });
 }
 
-export default async function BlogIndexPage({ params }: Props) {
+export default async function BlogIndexPage({ params, searchParams }: Props) {
   const { locale: rawLocale } = await params;
+  const { search } = await searchParams;
   if (!isLocale(rawLocale)) return notFound();
   const locale: Locale = rawLocale;
   const dictionary = getDictionary(locale);
@@ -70,7 +72,11 @@ export default async function BlogIndexPage({ params }: Props) {
             </p>
           </header>
         </SectionDivider>
-        <PostListWithControls posts={posts} locale={locale} />
+        <PostListWithControls
+          posts={posts}
+          locale={locale}
+          initialSearch={Array.isArray(search) ? search[0] ?? '' : search ?? ''}
+        />
       </SidebarLayout>
     </section>
   );

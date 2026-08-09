@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import type { Post } from '@/lib/content';
 import { FiArrowDown, FiArrowUp, FiSearch, FiList } from 'react-icons/fi';
 import { siteConfig } from '@/lib/config';
@@ -13,15 +13,16 @@ interface Props {
   posts: Post[];
   pageSize?: number;
   locale: Locale;
+  initialSearch?: string;
 }
 
 type SortOrder = 'new' | 'old';
 
-export function PostListWithControls({ posts, pageSize, locale }: Props) {
+export function PostListWithControls({ posts, pageSize, locale, initialSearch = '' }: Props) {
   const labels = getDictionary(locale).common;
   const [sortOrder, setSortOrder] = useState<SortOrder>('new');
   const [page, setPage] = useState(1);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState(initialSearch);
 
   const size = pageSize ?? siteConfig.postsPerPage ?? 5;
 
@@ -63,13 +64,26 @@ export function PostListWithControls({ posts, pageSize, locale }: Props) {
   const start = (currentPage - 1) * size;
   const currentPosts = sortedPosts.slice(start, start + size);
 
-  useEffect(() => {
-    setPage(1);
-  }, [normalizedQuery]);
-
   const handleChangeSort = (order: SortOrder) => {
     setSortOrder(order);
     setPage(1);
+  };
+
+  const updateSearchTerm = (value: string) => {
+    setSearchTerm(value);
+    setPage(1);
+
+    const url = new URL(window.location.href);
+    if (value.trim()) {
+      url.searchParams.set('search', value);
+    } else {
+      url.searchParams.delete('search');
+    }
+    window.history.replaceState(
+      window.history.state,
+      '',
+      `${url.pathname}${url.search}${url.hash}`
+    );
   };
 
   const goToPage = (p: number) => {
@@ -119,7 +133,7 @@ export function PostListWithControls({ posts, pageSize, locale }: Props) {
               type="search"
               placeholder={labels.searchPlaceholder}
               value={searchTerm}
-              onChange={(event) => setSearchTerm(event.target.value)}
+              onChange={(event) => updateSearchTerm(event.target.value)}
               className="w-full rounded-full border border-slate-200 bg-white py-1.5 pl-9 pr-3 text-sm text-slate-700 shadow-sm transition duration-180 ease-snappy focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:focus:border-accent dark:focus:ring-accent/30"
             />
           </div>
@@ -134,7 +148,7 @@ export function PostListWithControls({ posts, pageSize, locale }: Props) {
         {normalizedQuery && sortedPosts.length === 0 && (
           <button
             type="button"
-            onClick={() => setSearchTerm('')}
+            onClick={() => updateSearchTerm('')}
             className="text-blue-600 underline-offset-2 hover:underline dark:text-blue-400"
           >
             {labels.clearSearch}

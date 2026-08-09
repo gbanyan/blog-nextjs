@@ -1,10 +1,8 @@
 'use client';
 
-import { useState, useRef, FocusEvent, useEffect, useId } from 'react';
+import { useState, useRef, FocusEvent, useEffect, useId, useSyncExternalStore } from 'react';
 import { createPortal } from 'react-dom';
 import {
-  FiMenu,
-  FiX,
   FiHome,
   FiFileText,
   FiFile,
@@ -65,21 +63,48 @@ interface NavMenuProps {
   labels: Pick<Dictionary['common'], 'openMenu' | 'closeMenu' | 'navigationMenu'>;
 }
 
+function normalizeRoutePath(path: string): string {
+  return path
+    .split(/[?#]/, 1)[0]
+    .replace(/^\/(?:zh-TW|en)(?=\/|$)/, '')
+    .replace(/\/$/, '') || '/';
+}
+
+const subscribeToClientMount = () => () => {};
+
 export function NavMenu({ items, labels }: NavMenuProps) {
-  const [open, setOpen] = useState(false);
+  const [openPathname, setOpenPathname] = useState<string | null>(null);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const [expandedMobileItems, setExpandedMobileItems] = useState<string[]>([]);
-  const [mounted, setMounted] = useState(false);
   const closeTimer = useRef<number | null>(null);
   const pathname = usePathname();
   const menuId = useId();
   const mobileDialogId = `${menuId}-mobile-navigation`;
-  const close = () => setOpen(false);
+  const routeKey = pathname ?? '/';
+  const open = openPathname === routeKey;
+  const mounted = useSyncExternalStore(subscribeToClientMount, () => true, () => false);
+  const currentPath = normalizeRoutePath(pathname ?? '/');
+  const close = () => setOpenPathname(null);
   const { dialogRef, handleKeyDown } = useModalDialog(open, close);
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  const isRouteActive = (href?: string) => {
+    if (!href) return false;
+    const targetPath = normalizeRoutePath(href);
+
+    return targetPath === '/'
+      ? currentPath === '/'
+      : currentPath === targetPath || currentPath.startsWith(`${targetPath}/`);
+  };
+
+  const getAriaCurrent = (href?: string): 'page' | 'location' | undefined => {
+    if (!href) return undefined;
+    const targetPath = normalizeRoutePath(href);
+    if (currentPath === targetPath) return 'page';
+    return isRouteActive(href) ? 'location' : undefined;
+  };
+
+  const isGroupActive = (item: NavLinkItem) =>
+    item.children?.some((child) => isRouteActive(child.href)) ?? false;
 
   // Lock body scroll when menu is open
   useEffect(() => {
@@ -93,12 +118,7 @@ export function NavMenu({ items, labels }: NavMenuProps) {
     };
   }, [open]);
 
-  // Close menu on route change
-  useEffect(() => {
-    setOpen(false);
-  }, [pathname]);
-
-  const toggle = () => setOpen((val) => !val);
+  const toggle = () => setOpenPathname((value) => value === routeKey ? null : routeKey);
 
   const handleBlur = (event: FocusEvent<HTMLDivElement>) => {
     if (!event.currentTarget.contains(event.relatedTarget as Node)) {
@@ -131,15 +151,20 @@ export function NavMenu({ items, labels }: NavMenuProps) {
 
   const renderDesktopChild = (item: NavLinkItem) => {
     const Icon = ICON_MAP[item.iconKey] ?? FiFile;
+    const isActive = isRouteActive(item.href);
     return item.href ? (
-        <LocalizedLink
+      <LocalizedLink
         key={item.key}
         href={item.href}
         transitionTypes={[...NAV_TRANSITION]}
-        className="motion-link inline-flex items-center gap-2 rounded-xl px-3 py-2 text-sm text-slate-600 hover:bg-slate-100 hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40 dark:text-slate-200 dark:hover:bg-slate-800 dark:hover:text-accent"
+        aria-current={getAriaCurrent(item.href)}
+        className={`motion-link inline-flex items-center gap-2 rounded-xl px-3 py-2 text-sm hover:bg-slate-100 hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40 dark:hover:bg-slate-800 dark:hover:text-accent ${isActive
+          ? 'bg-accent-soft text-accent-textLight dark:bg-slate-800 dark:text-accent'
+          : 'text-slate-600 dark:text-slate-200'
+          }`}
         onClick={close}
       >
-        <Icon className="h-4 w-4 shrink-0 text-slate-400" />
+        <Icon className={`h-4 w-4 shrink-0 ${isActive ? 'text-accent' : 'text-slate-400'}`} />
         <span className="whitespace-nowrap">{item.label}</span>
       </LocalizedLink>
     ) : null;
@@ -150,6 +175,7 @@ export function NavMenu({ items, labels }: NavMenuProps) {
     const hasChildren = item.children && item.children.length > 0;
     const isExpanded = expandedMobileItems.includes(item.key);
     const groupId = `${menuId}-mobile-group-${depth}-${encodeURIComponent(item.key).replaceAll('%', '')}`;
+    const isActive = hasChildren ? isGroupActive(item) : isRouteActive(item.href);
 
     if (hasChildren) {
       return (
@@ -157,12 +183,15 @@ export function NavMenu({ items, labels }: NavMenuProps) {
           <button
             type="button"
             onClick={() => toggleMobileItem(item.key)}
+            className={`flex w-full items-center justify-between rounded-xl px-4 py-3 text-base font-medium transition-colors active:bg-slate-100 dark:active:bg-slate-800 dark:hover:text-accent ${isActive
+              ? 'bg-accent-soft text-accent-textLight dark:bg-slate-800 dark:text-accent'
+              : 'text-slate-700 dark:text-slate-200'
+              }`}
             aria-expanded={isExpanded}
             aria-controls={groupId}
-            className="flex w-full items-center justify-between rounded-xl px-4 py-3 text-base font-medium text-slate-700 transition-colors active:bg-slate-100 dark:text-slate-200 dark:active:bg-slate-800 dark:hover:text-accent"
           >
             <div className="flex items-center gap-3">
-              <Icon className="h-5 w-5 shrink-0 text-slate-400" />
+              <Icon className={`h-5 w-5 shrink-0 ${isActive ? 'text-accent' : 'text-slate-400'}`} />
               <span className="whitespace-nowrap">{item.label}</span>
             </div>
             <FiChevronRight
@@ -187,14 +216,18 @@ export function NavMenu({ items, labels }: NavMenuProps) {
     }
 
     return item.href ? (
-        <LocalizedLink
+      <LocalizedLink
         key={item.key}
         href={item.href}
         transitionTypes={[...NAV_TRANSITION]}
-        className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-base font-medium text-slate-700 transition-colors active:bg-slate-100 dark:text-slate-200 dark:active:bg-slate-800 dark:hover:text-accent"
+        aria-current={getAriaCurrent(item.href)}
+        className={`flex w-full items-center gap-3 rounded-xl px-4 py-3 text-base font-medium transition-colors active:bg-slate-100 dark:active:bg-slate-800 dark:hover:text-accent ${isActive
+          ? 'bg-accent-soft text-accent-textLight dark:bg-slate-800 dark:text-accent'
+          : 'text-slate-700 dark:text-slate-200'
+          }`}
         onClick={close}
       >
-        <Icon className="h-5 w-5 shrink-0 text-slate-400" />
+        <Icon className={`h-5 w-5 shrink-0 ${isActive ? 'text-accent' : 'text-slate-400'}`} />
         <span className="whitespace-nowrap">{item.label}</span>
       </LocalizedLink>
     ) : null;
@@ -205,7 +238,7 @@ export function NavMenu({ items, labels }: NavMenuProps) {
       {/* Mobile Menu Trigger */}
       <button
         type="button"
-          className="relative z-50 inline-flex h-10 w-10 items-center justify-center rounded-full text-slate-600 transition-colors hover:bg-slate-100 hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40 dark:text-slate-200 dark:hover:bg-slate-800 dark:hover:text-accent sm:hidden"
+          className="relative z-50 inline-flex h-10 w-10 items-center justify-center rounded-full text-slate-600 transition-colors hover:bg-slate-100 hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40 dark:text-slate-200 dark:hover:bg-slate-800 dark:hover:text-accent lg:hidden"
         aria-label={open ? labels.closeMenu : labels.openMenu}
         aria-expanded={open}
         aria-controls={mobileDialogId}
@@ -232,7 +265,7 @@ export function NavMenu({ items, labels }: NavMenuProps) {
         <div
           ref={dialogRef}
           id={mobileDialogId}
-          className={`fixed inset-0 z-[100] flex flex-col bg-white/95 backdrop-blur-xl transition-all duration-300 ease-snappy dark:bg-gray-950/95 sm:hidden ${open ? 'visible opacity-100' : 'invisible opacity-0 pointer-events-none'
+          className={`fixed inset-0 z-[100] flex flex-col bg-white/95 backdrop-blur-xl transition-all duration-300 ease-snappy dark:bg-gray-950/95 lg:hidden ${open ? 'visible opacity-100' : 'invisible opacity-0 pointer-events-none'
             }`}
           role="dialog"
           aria-modal={open ? 'true' : undefined}
@@ -272,12 +305,13 @@ export function NavMenu({ items, labels }: NavMenuProps) {
       )}
 
       {/* Desktop Menu */}
-      <nav className="hidden sm:flex sm:items-center sm:gap-3">
+      <nav className="hidden lg:flex lg:items-center lg:gap-3">
         {items.map((item) => {
           if (item.children && item.children.length > 0) {
             const Icon = ICON_MAP[item.iconKey] ?? FiFile;
             const isOpen = activeDropdown === item.key;
             const dropdownId = `${menuId}-desktop-group-${encodeURIComponent(item.key).replaceAll('%', '')}`;
+            const isActive = isGroupActive(item);
             return (
               <div
                 key={item.key}
@@ -289,7 +323,10 @@ export function NavMenu({ items, labels }: NavMenuProps) {
               >
                   <button
                   type="button"
-                  className="motion-link type-nav inline-flex shrink-0 items-center gap-1.5 rounded-full px-3 py-1 text-slate-600 hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40 dark:text-slate-200 dark:hover:text-accent"
+                  className={`motion-link type-nav inline-flex shrink-0 items-center gap-1.5 rounded-full px-3 py-1 hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40 dark:hover:text-accent ${isActive
+                    ? 'bg-accent-soft text-accent-textLight dark:bg-slate-800 dark:text-accent'
+                    : 'text-slate-600 dark:text-slate-200'
+                    }`}
                    aria-haspopup="menu"
                   aria-expanded={isOpen}
                   aria-controls={dropdownId}
@@ -301,7 +338,7 @@ export function NavMenu({ items, labels }: NavMenuProps) {
 
                 <div
                   id={dropdownId}
-                  className={`absolute left-0 top-full z-50 hidden min-w-[12rem] rounded-2xl border border-slate-200 bg-white p-2 shadow-lg transition duration-200 ease-snappy dark:border-slate-800 dark:bg-slate-900 sm:block ${isOpen ? 'pointer-events-auto translate-y-2 opacity-100' : 'pointer-events-none translate-y-1 opacity-0'
+                  className={`absolute left-0 top-full z-50 hidden min-w-[12rem] rounded-2xl border border-slate-200 bg-white p-2 shadow-lg transition duration-200 ease-snappy dark:border-slate-800 dark:bg-slate-900 lg:block ${isOpen ? 'pointer-events-auto translate-y-2 opacity-100' : 'pointer-events-none translate-y-1 opacity-0'
                     }`}
                   role="menu"
                   aria-label={item.label}
@@ -317,18 +354,23 @@ export function NavMenu({ items, labels }: NavMenuProps) {
           }
 
           const Icon = ICON_MAP[item.iconKey] ?? FiFile;
+          const isActive = isRouteActive(item.href);
 
           return item.href ? (
             <LocalizedLink
               key={item.key}
               href={item.href}
               transitionTypes={[...NAV_TRANSITION]}
-               className="motion-link type-nav group relative inline-flex shrink-0 items-center gap-1.5 rounded-full px-3 py-1 text-slate-600 hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40 dark:text-slate-200 dark:hover:text-accent"
+              aria-current={getAriaCurrent(item.href)}
+              className={`motion-link type-nav group relative inline-flex shrink-0 items-center gap-1.5 rounded-full px-3 py-1 hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40 dark:hover:text-accent ${isActive
+                ? 'bg-accent-soft text-accent-textLight dark:bg-slate-800 dark:text-accent'
+                : 'text-slate-600 dark:text-slate-200'
+                }`}
               onClick={close}
             >
-              <Icon className="h-3.5 w-3.5 shrink-0 text-slate-400 transition group-hover:text-accent" />
+              <Icon className={`h-3.5 w-3.5 shrink-0 transition group-hover:text-accent ${isActive ? 'text-accent' : 'text-slate-400'}`} />
               <span className="whitespace-nowrap">{item.label}</span>
-              <span className="absolute inset-x-3 -bottom-0.5 h-px origin-left scale-x-0 bg-accent transition duration-180 ease-snappy group-hover:scale-x-100" aria-hidden="true" />
+              <span className={`absolute inset-x-3 -bottom-0.5 h-px origin-left bg-accent transition duration-180 ease-snappy group-hover:scale-x-100 ${isActive ? 'scale-x-100' : 'scale-x-0'}`} aria-hidden="true" />
             </LocalizedLink>
           ) : null;
         })}

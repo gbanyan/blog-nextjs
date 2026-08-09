@@ -25,6 +25,7 @@ export function SiteHeaderSearch({
 }) {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const labels = getDictionary(locale).search;
+  const errorLabel = getDictionary(locale).errors.errorTitle;
 
   return (
     <>
@@ -34,6 +35,7 @@ export function SiteHeaderSearch({
         onClose={() => setIsSearchOpen(false)}
         recentPosts={recentPosts}
         labels={labels}
+        errorLabel={errorLabel}
       />
     </>
   );

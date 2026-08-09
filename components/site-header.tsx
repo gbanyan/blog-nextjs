@@ -65,6 +65,8 @@ export function SiteHeader({ recentPosts = [], locale }: SiteHeaderProps) {
 
   const navItems: NavLinkItem[] = [
     { key: 'home', href: '/', label: dictionary.navigation.home, iconKey: 'home' },
+    { key: 'blog', href: '/blog', label: dictionary.search.blog, iconKey: 'blog' },
+    { key: 'tags', href: '/tags', label: dictionary.search.tags, iconKey: 'tags' },
     {
       key: 'about',
       href: aboutChildren[0]?.href,
