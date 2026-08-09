@@ -21,7 +21,7 @@ export function PostListItem({ post, priority = false }: Props) {
     post.description || post.custom_excerpt || post.body?.raw?.slice(0, 120);
 
   return (
-    <article className="motion-card group relative flex gap-4 rounded-2xl border border-white/40 bg-white/60 p-5 shadow-lg backdrop-blur-md transition-all hover:scale-[1.01] hover:shadow-xl dark:border-white/10 dark:bg-slate-900/60">
+    <article className="motion-card group relative flex gap-4 rounded-2xl border border-white/40 bg-white/90 p-5 shadow-lg transition-all hover:scale-[1.01] hover:shadow-xl dark:border-white/10 dark:bg-slate-900/90">
       <div className="pointer-events-none absolute inset-x-0 top-0 h-0.5 origin-left scale-x-0 bg-accent opacity-80 transition-transform duration-300 ease-out group-hover:scale-x-100" />
       {cover && (
         <div className="relative flex h-24 w-24 flex-none overflow-hidden rounded-md bg-slate-100 dark:bg-slate-800 sm:h-auto sm:w-40">

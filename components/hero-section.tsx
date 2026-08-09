@@ -57,7 +57,7 @@ export function HeroSection({ title, tagline }: HeroSectionProps) {
   const matrixOpacity = introPhase === 'matrix' ? 1 : 0;
 
   return (
-    <div className="relative h-[360px] w-full overflow-hidden rounded-2xl sm:h-[400px] lg:h-[440px] xl:h-[480px]">
+    <div className="relative w-full overflow-hidden rounded-2xl">
       {/* The terminal owns the clipped Matrix layer so the rain cannot spill
           into the hero or outside the window. */}
       <div className="relative z-10 mx-auto w-full max-w-2xl px-4 py-6 sm:max-w-3xl lg:max-w-4xl xl:max-w-5xl">

@@ -1324,41 +1324,54 @@
 
 
 @keyframes mastodon-shimmer {
-  0% { background-position: -200% 0; }
-  100% { background-position: 200% 0; }
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
 }
 
 .mastodon-skeleton-shimmer {
+  position: relative;
+  overflow: hidden;
+  background: #e2e8f0;
+}
+
+.mastodon-skeleton-shimmer::after {
+  position: absolute;
+  inset: 0;
+  content: '';
   background: linear-gradient(
     110deg,
-    #e2e8f0 0%,
-    #e2e8f0 35%,
+    transparent 35%,
     rgba(255, 255, 255, 0.6) 50%,
-    #e2e8f0 65%,
-    #e2e8f0 100%
+    transparent 65%
   );
-  background-size: 200% 100%;
-  background-position: -200% 0;
+  transform: translateX(-100%);
   animation: mastodon-shimmer 2.2s ease-in-out infinite;
 }
 
 .dark .mastodon-skeleton-shimmer {
+  background: #1e293b;
+}
+
+.dark .mastodon-skeleton-shimmer::after {
   background: linear-gradient(
     110deg,
-    #1e293b 0%,
-    #1e293b 35%,
+    transparent 35%,
     rgba(167, 139, 250, 0.3) 50%,
-    #1e293b 65%,
-    #1e293b 100%
+    transparent 65%
   );
 }
 
 @media (prefers-reduced-motion: reduce) {
   .mastodon-skeleton-shimmer {
-    animation: none;
-    background-position: 0 0;
     background: #e2e8f0;
   }
+
+  .mastodon-skeleton-shimmer::after {
+    animation: none;
+    transform: translateX(0);
+    background: none;
+  }
+
   .dark .mastodon-skeleton-shimmer {
     background: #1e293b;
   }

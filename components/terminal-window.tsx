@@ -156,7 +156,7 @@ export function TerminalWindow({
 
   return (
     <div
-      className={`relative overflow-hidden rounded-xl border border-slate-300 bg-slate-100 shadow-xl dark:border-slate-700/50 dark:bg-slate-900 ${className}`}
+      className={`relative flex h-[330px] flex-col overflow-hidden rounded-xl border border-slate-300 bg-slate-100 shadow-xl dark:border-slate-700/50 dark:bg-slate-900 sm:h-[365px] lg:h-[420px] ${className}`}
       role="img"
       aria-label={`終端機：${title} - ${tagline}`}
     >
@@ -184,7 +184,7 @@ export function TerminalWindow({
       </div>
 
       {/* Terminal content */}
-      <div className="relative z-10 min-h-[240px] px-4 py-4 font-mono text-sm sm:min-h-[280px] sm:px-5 sm:py-5 sm:text-base lg:min-h-[340px] lg:px-6 lg:py-6 lg:text-lg">
+      <div className="relative z-10 min-h-0 flex-1 overflow-hidden px-4 py-4 font-mono text-sm sm:px-5 sm:py-5 sm:text-base lg:px-6 lg:py-6 lg:text-lg">
         {startTyping && <>
         <div className="text-slate-600 dark:text-slate-300">
           <span className="text-emerald-600 dark:text-emerald-400">~</span>

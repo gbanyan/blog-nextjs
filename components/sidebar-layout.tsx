@@ -30,7 +30,14 @@ export function SidebarLayout({ children, tags, aboutUrl, avatarSrc }: { childre
         icon={<FiLayout className="h-5 w-5" />}
         closeLabel="關閉側邊欄"
       >
-        <RightSidebarContent tags={tags} aboutUrl={aboutUrl} avatarSrc={avatarSrc} />
+        {open && (
+          <RightSidebarContent
+            tags={tags}
+            aboutUrl={aboutUrl}
+            avatarSrc={avatarSrc}
+            forceLoadFeed
+          />
+        )}
       </MobileDrawer>
 
       <button
