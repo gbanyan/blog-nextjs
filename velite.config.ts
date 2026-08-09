@@ -8,8 +8,9 @@ import { visit } from 'unist-util-visit';
 import { rehypeCallouts } from './lib/rehype-callouts';
 import { rehypeOptimizeImages } from './lib/rehype-optimize-images';
 
-// Velite 0.4 hard-codes remark-rehype's allowDangerousHtml=true. Contentlayer
-// drops raw HTML blocks, so remove them before Velite's internal conversion.
+// Velite 0.4 hard-codes remark-rehype's allowDangerousHtml=true. The existing
+// rendered-content contract drops raw HTML blocks, so remove them before
+// Velite's internal conversion.
 const remarkRemoveRawHtml = () => (tree: any) => {
   visit(tree, 'html', (_node, index, parent) => {
     if (!parent || typeof index !== 'number') return;
@@ -96,8 +97,8 @@ export default defineConfig({
   collections: { posts, pages },
   output: {
     data: '.velite',
-    // Keep asset synchronization independent for this lane; Contentlayer's
-    // existing sync-assets step remains the source of current public URLs.
+    // Keep asset synchronization independent so current public URLs remain
+    // owned by the existing sync-assets step.
     assets: 'public/assets',
     base: '/assets/',
     clean: true,

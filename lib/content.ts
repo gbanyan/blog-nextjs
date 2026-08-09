@@ -2,9 +2,8 @@ import type { Page as VelitePage, Post as VelitePost } from '../.velite/index.js
 import { pages as velitePages, posts as velitePosts } from '../.velite/index.js';
 
 /**
- * The shape consumed by the application while Contentlayer is being phased
- * out. Dates intentionally retain the value emitted by Velite (or a Date
- * supplied by a future loader) instead of being normalized to a new value.
+ * The stable shape consumed by the application. Dates intentionally retain
+ * the value emitted by Velite instead of being normalized to a new value.
  */
 export type ContentDate = Date | string;
 

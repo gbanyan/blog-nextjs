@@ -26,10 +26,9 @@ pnpm-debug.log*
 # Testing / coverage
 /coverage
 
-# Misc tool caches
+# Misc tool caches and generated content data
 /.turbo
 .next-tmp
-.contentlayer
 /.velite
 
 # Vercel
