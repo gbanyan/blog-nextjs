@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Post } from 'contentlayer2/generated';
+import type { Post } from '@/lib/content';
 import { FiArrowLeft, FiArrowRight } from 'react-icons/fi';
 import { NAV_BACK, NAV_FORWARD } from '@/lib/navigation';
 

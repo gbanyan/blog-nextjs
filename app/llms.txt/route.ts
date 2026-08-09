@@ -1,5 +1,5 @@
 import { siteConfig } from '@/lib/config';
-import { allPosts, allPages } from 'contentlayer2/generated';
+import { allPages, allPosts } from '@/lib/content';
 
 /**
  * llms.txt - A proposed standard for providing LLM-readable site information

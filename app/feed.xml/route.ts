@@ -1,5 +1,5 @@
 import { cacheLife } from 'next/cache';
-import { allPosts } from 'contentlayer2/generated';
+import { allPosts } from '@/lib/content';
 import { siteConfig } from '@/lib/config';
 
 /**

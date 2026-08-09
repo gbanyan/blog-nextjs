@@ -2,7 +2,7 @@ import { ThemeToggle } from './theme-toggle';
 import { SiteHeaderSearch } from './site-header-search';
 import { NavMenu, NavLinkItem, IconKey } from './nav-menu';
 import { siteConfig } from '@/lib/config';
-import { allPages } from 'contentlayer2/generated';
+import { allPages } from '@/lib/content';
 import Link from 'next/link';
 import { NAV_TRANSITION } from '@/lib/navigation';
 

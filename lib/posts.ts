@@ -1,4 +1,5 @@
-import { allPosts, allPages, Post, Page } from 'contentlayer2/generated';
+import { allPages, allPosts } from '@/lib/content';
+import type { Page, Post } from '@/lib/content';
 
 /**
  * All posts sorted newest-first.

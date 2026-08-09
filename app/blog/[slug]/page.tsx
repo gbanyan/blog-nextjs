@@ -2,7 +2,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
-import { allPosts } from 'contentlayer2/generated';
+import { allPosts } from '@/lib/content';
 import { getPostBySlug, getRelatedPosts, getPostNeighbors } from '@/lib/posts';
 import { getTagSlug } from '@/lib/tags';
 import { siteConfig } from '@/lib/config';
@@ -64,7 +64,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       title: post.title,
       description: post.description || post.title,
       type: 'article',
-      publishedTime: post.published_at,
+      publishedTime: post.published_at
+        ? new Date(post.published_at).toISOString()
+        : undefined,
       authors: post.authors?.length ? post.authors : [siteConfig.author],
       tags: post.tags,
       images: [
