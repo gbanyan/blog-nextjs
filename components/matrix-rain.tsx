@@ -23,6 +23,7 @@ interface Drop {
 const FONT_SIZE = 14;
 const TRAIL_LENGTH = 7;
 const CHAR_CHANGE_INTERVAL = 0.08;
+const MAX_CANVAS_DPR = 1;
 
 const LIGHT_PALETTE = {
   // White clears the previous frame without building a gray overlay on the
@@ -77,7 +78,9 @@ export function MatrixRain({
       const rect = canvas.getBoundingClientRect();
       const nextWidth = Math.max(0, Math.floor(rect.width));
       const nextHeight = Math.max(0, Math.floor(rect.height));
-      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      // This is a low-opacity decorative layer, so rendering above 1x DPR
+      // adds raster work without a meaningful visual improvement.
+      const dpr = Math.min(window.devicePixelRatio || 1, MAX_CANVAS_DPR);
 
       if (nextWidth === width && nextHeight === height) return;
 
@@ -125,14 +128,19 @@ export function MatrixRain({
       // instead of once per character on every frame.
       ctx.fillStyle = palette.lead;
       drops.forEach((drop) => {
-        ctx.fillText(drop.chars[drop.charIndex], drop.x, drop.y);
+        if (drop.y >= -FONT_SIZE && drop.y <= height) {
+          ctx.fillText(drop.chars[drop.charIndex], drop.x, drop.y);
+        }
       });
 
       for (let trail = 1; trail <= TRAIL_LENGTH; trail += 1) {
         ctx.fillStyle = palette.trails[trail - 1];
         drops.forEach((drop) => {
           const index = (drop.charIndex - trail + 20) % 20;
-          ctx.fillText(drop.chars[index], drop.x, drop.y - trail * FONT_SIZE);
+          const trailY = drop.y - trail * FONT_SIZE;
+          if (trailY >= -FONT_SIZE && trailY <= height) {
+            ctx.fillText(drop.chars[index], drop.x, trailY);
+          }
         });
       }
 
