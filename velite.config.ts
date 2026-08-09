@@ -3,14 +3,28 @@ import rehypeAutolinkHeadings from 'rehype-autolink-headings';
 import rehypePrettyCode from 'rehype-pretty-code';
 import rehypeSlug from 'rehype-slug';
 import remarkGfm from 'remark-gfm';
+import { visit } from 'unist-util-visit';
 
 import { rehypeCallouts } from './lib/rehype-callouts';
 import { rehypeOptimizeImages } from './lib/rehype-optimize-images';
 
+// Velite 0.4 hard-codes remark-rehype's allowDangerousHtml=true. Contentlayer
+// drops raw HTML blocks, so remove them before Velite's internal conversion.
+const remarkRemoveRawHtml = () => (tree: any) => {
+  visit(tree, 'html', (_node, index, parent) => {
+    if (!parent || typeof index !== 'number') return;
+    parent.children.splice(index, 1);
+    return ['skip', index];
+  });
+};
+
 const markdown = {
   // Keep this explicit even though Velite enables GFM by default.
   gfm: true,
-  remarkPlugins: [remarkGfm],
+  // Asset URLs and dimensions are owned by our existing rehype plugin and
+  // sync-assets step; do not let Velite copy or rewrite linked files.
+  copyLinkedFiles: false,
+  remarkPlugins: [remarkGfm, remarkRemoveRawHtml],
   rehypePlugins: [
     rehypeCallouts,
     [
