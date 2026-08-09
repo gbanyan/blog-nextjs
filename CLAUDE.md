@@ -4,8 +4,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Commands
 
-- `npm run dev` - Start dev server (runs Contentlayer2 + Next.js with Turbopack concurrently)
-- `npm run build` - Full production build: sync-assets → contentlayer2 build → next build → pagefind indexing → copy pagefind to public
+- `npm run dev` - Generate Velite data, then run the Velite watcher + Next.js with Turbopack concurrently
+- `npm run build` - Full production build: sync-assets → Velite generation → next build → Pagefind indexing → copy Pagefind to public
 - `npm run lint` - ESLint via `next lint`
 - `npm run sync-assets` - Copy `content/assets/` to `public/assets/` (also runs automatically before build)
 
@@ -13,7 +13,7 @@ No test framework is configured.
 
 ## Architecture
 
-**Content pipeline**: `content/` git submodule (MDX/Markdown) → Contentlayer2 (`contentlayer.config.ts`) → typed `Post`/`Page` objects imported from `contentlayer2/generated` → consumed by pages and `lib/posts.ts` helpers.
+**Content pipeline**: `content/` git submodule (Markdown) → Velite (`velite.config.ts`) → ignored typed data in `.velite/` → server-side adapter in `lib/content.ts` → pages and `lib/posts.ts` helpers.
 
 **Routing** (App Router):
 - `/` — Home page with latest posts
@@ -26,13 +26,14 @@ No test framework is configured.
 
 **Key data flow**:
 - `lib/config.ts` — `siteConfig` object built from `NEXT_PUBLIC_*` env vars (all site metadata, social links, accent colors, pagination)
+- `lib/content.ts` — Server-side boundary for Velite's generated `Post`/`Page` records
 - `lib/posts.ts` — Query helpers: `getAllPostsSorted()`, `getPostBySlug()`, `getPageBySlug()`, `getAllTagsWithCount()`, `getRelatedPosts()`, `getPostNeighbors()`
 - `lib/mastodon.ts` — Mastodon API client for sidebar feed widget
 - `lib/rehype-callouts.ts` — Custom rehype plugin for GitHub-style `[!NOTE]` callout blocks
 
 **Layout hierarchy**: `app/layout.tsx` (fonts, theme CSS vars, ThemeProvider, JSON-LD) → `components/layout-shell.tsx` (header, sidebar, footer, back-to-top) → page content.
 
-**Markdown processing** (configured in `contentlayer.config.ts`):
+**Markdown processing** (configured in `velite.config.ts`):
 - Remark: GFM
 - Rehype: callouts → pretty-code (shiki, dual theme) → slug → autolink-headings → image path rewriter (`../assets/` → `/assets/`)
 - Image paths in markdown are relative (`../assets/foo.jpg`); a rehype plugin rewrites them to `/assets/foo.jpg` at build time
@@ -53,7 +54,7 @@ The `content/` directory is a git submodule pointing to a separate `personal-blo
 
 ## Path Aliases
 
-`@/*` maps to project root (configured in `tsconfig.json`). Contentlayer generated types at `.contentlayer/generated` are aliased as `contentlayer2/generated`.
+`@/*` maps to project root (configured in `tsconfig.json`). Velite's generated data lives in ignored `.velite/`; application code imports it through `lib/content.ts`.
 
 ## Deployment
 

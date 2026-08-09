@@ -6,7 +6,7 @@ import { BackToTop } from './back-to-top';
  * Server Component layout shell.
  *
  * BackToTop is a small client island — rendering it from here (instead of a
- * `'use client'` shell) keeps Contentlayer/state out of the shared layout bundle.
+ * `'use client'` shell) keeps content/state out of the shared layout bundle.
  */
 export function LayoutShell({
   children,

@@ -1,4 +1,4 @@
-import { allPosts } from 'contentlayer2/generated';
+import { allPosts } from '@/lib/content';
 
 /**
  * Normalize a tag into a URL-safe slug.

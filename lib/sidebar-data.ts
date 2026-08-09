@@ -1,12 +1,13 @@
 /**
  * Server-only sidebar data preparation.
  *
- * Pulling Contentlayer records into a client bundle (via `getAllTagsWithCount`
- * or `allPages`) is what bloated the initial JS. Computing this once on the
- * server and passing only tiny serializable props keeps the client bundle lean.
+ * Pulling the full content records into a client bundle (via
+ * `getAllTagsWithCount` or `allPages`) bloats the initial JS. Computing this
+ * once on the server and passing only tiny serializable props keeps the client
+ * bundle lean.
  */
 import { getAllTagsWithCount } from '@/lib/tags';
-import { allPages } from 'contentlayer2/generated';
+import { allPages } from '@/lib/content';
 import { siteConfig } from '@/lib/config';
 
 export interface TagItem {

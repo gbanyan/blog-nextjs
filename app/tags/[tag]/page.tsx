@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { allPosts } from 'contentlayer2/generated';
+import { allPosts } from '@/lib/content';
 import { PostListWithControls } from '@/components/post-list-with-controls';
 import { getTagSlug } from '@/lib/tags';
 import { SidebarLayout } from '@/components/sidebar-layout';

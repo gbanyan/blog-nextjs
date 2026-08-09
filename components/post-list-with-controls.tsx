@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
-import { Post, Page } from 'contentlayer2/generated';
+import type { Post } from '@/lib/content';
 import { FiArrowDown, FiArrowUp, FiSearch, FiList } from 'react-icons/fi';
 import { siteConfig } from '@/lib/config';
 import { PostListItem } from './post-list-item';

@@ -1,8 +1,8 @@
-# Personal Blog (Next.js + Contentlayer)
+# Personal Blog (Next.js + Velite)
 
-This is a personal blog built with **Next.js 16 (App Router)**, **Contentlayer2**, and **Tailwind CSS**.
+This is a personal blog built with **Next.js 16 (App Router)**, **Velite**, and **Tailwind CSS**.
 Markdown content (posts & pages) lives in a separate repository and is consumed via a git submodule.
-Recent updates include upgrading to Next.js 16 with Turbopack, migrating to Contentlayer2, and implementing React 19 features.
+Recent updates include upgrading to Next.js 16 with Turbopack, migrating to Velite, and implementing React 19 features.
 
 ## Tech Stack
 
@@ -10,7 +10,7 @@ Recent updates include upgrading to Next.js 16 with Turbopack, migrating to Cont
 - **Language**: TypeScript
 - **Runtime**: React 19
 - **Styling**: Tailwind CSS + Typography plugin
-- **Content**: Markdown via Contentlayer2 (`contentlayer2/source-files`)
+- **Content**: Markdown via Velite (`velite.config.ts`)
 - **Search**: Pagefind for full-text search
 - **Theming**: `next-themes` (light/dark), env‑driven accent color system
 - **Content source**: Git submodule `content` → [`personal-blog`](https://gitea.gbanyan.net/gbanyan/personal-blog.git)
@@ -76,7 +76,7 @@ Configuration in `app/blog/[slug]/page.tsx`:
   - `app/tags/[tag]/page.tsx` – Tag overview (posts for a given tag)
 - `components/`
   - `layout-shell.tsx` – Global layout (header, sidebar, footer, back‑to‑top)
-  - `site-header.tsx` – Navbar (title + Blog + pages from contentlayer)
+  - `site-header.tsx` – Navbar (title + Blog + pages from Velite)
   - `right-sidebar.tsx` – Sticky sidebar (avatar, services icons, short about, hot tags)
   - `post-list-item.tsx` – Article list row with thumbnail, tags, excerpt
   - `post-list-with-controls.tsx` – List with sort + pagination controls
@@ -86,19 +86,20 @@ Configuration in `app/blog/[slug]/page.tsx`:
   - `hero.tsx` – (currently unused) hero section using accent colors
 - `lib/`
   - `config.ts` – Site configuration derived from env (name, URLs, avatar, accent colors, etc.)
-  - `posts.ts` – Helpers for querying posts/pages and tags from Contentlayer
+  - `content.ts` – Velite output adapter for posts/pages
+  - `posts.ts` – Helpers for querying posts/pages and tags from the adapter
 - `content/` – **Git submodule** pointing to `personal-blog`
   - `posts/` – Blog posts (`.md`)
   - `pages/` – Static pages (`.md`)
   - `assets/` – Images referenced from markdown
 - `public/assets` – Copy of `content/assets` that is refreshed via `npm run sync-assets` (and automatically before `npm run build`) so Next.js can serve `/assets/...` without relying on symlinks.
-- `contentlayer.config.ts` – Contentlayer document types and markdown pipeline
+- `velite.config.ts` – Velite collections and markdown pipeline
 
 ## UI Overview
 
 - **Navbar**
   - Left: site title (from env).
-  - Right: `Blog` + links for each `Page` from Contentlayer (`content/pages`), plus a theme toggle.
+  - Right: `Blog` + links for each `Page` from Velite (`content/pages`), plus a theme toggle.
   - Links use the accent palette on hover/focus.
 
 - **Home page** (`/`)
@@ -282,7 +283,7 @@ Configuration in `app/blog/[slug]/page.tsx`:
 
 ## Content Model
 
-Contentlayer is configured in `contentlayer.config.ts` to read from the `content` submodule:
+Velite is configured in `velite.config.ts` to read from the `content` submodule. It generates ignored data in `.velite/`, and the server-side adapter in `lib/content.ts` is the only application-facing content boundary:
 
 - **Posts**
   - Path: `content/posts/**/*.md`
@@ -343,7 +344,7 @@ git commit -m "Update content submodule to latest main"
 git push
 ```
 
-Next.js + Contentlayer will pick up the changes automatically on the next `npm run dev` or `npm run build`.
+Velite + Next.js will pick up the changes automatically through the Velite watcher in `npm run dev`, or during the next `npm run build`.
 
 ### Cloning with submodule updates
 
@@ -357,8 +358,8 @@ This ensures your `content` folder matches the commit referenced in `blog-nextjs
 
 ## Available npm Scripts
 
-- `npm run dev` – Start Contentlayer and Next.js dev server concurrently (with Turbopack).
-- `npm run build` – Build content and production bundle (`contentlayer2 build && next build`).
+- `npm run dev` – Generate Velite data, then run the Velite watcher and Next.js dev server concurrently (with Turbopack).
+- `npm run build` – Sync assets, generate Velite data, build Next.js, and index the output with Pagefind.
 - `npm run start` – Start the production server (after `npm run build`).
 - `npm run lint` – Run Next.js / ESLint linting.
 - `npm run sync-assets` – Copy `content/assets` to `public/assets`.
@@ -425,7 +426,7 @@ Follow the same process as above, but create the file in `content/pages/` instea
   - Any Node.js host running `npm run build && npm run start`
 - Make sure to:
   - Provide the same environment variables in your hosting environment as in `.env.local`.
-  - Initialize/update the `content` submodule in your deployment pipeline (or vendor `.contentlayer` if you prefer).
+  - Initialize/update the `content` submodule in your deployment pipeline. Velite data is generated as part of the build and is not committed.
 
 ## License
 
@@ -434,21 +435,24 @@ This is a personal project. No explicit open-source license is provided; all rig
 
 ## Architecture Notes
 
-### Content pipeline: `contentlayer2` (unmaintained — migration candidate)
+### Content pipeline: Velite
 
-The content pipeline is built on **`contentlayer2`** (and its predecessor
-`contentlayer`), which is **unmaintained**. We keep it because the existing
-pipeline works, but it requires several workarounds (see the header comment in
-`contentlayer.config.ts`):
+Velite reads `content/posts/**/*.md` and `content/pages/**/*.md` using the
+collections and Markdown plugin pipeline in `velite.config.ts`. It generates
+typed records into the ignored `.velite/` directory. `lib/content.ts` adapts
+those records for the app, while `lib/posts.ts` provides sorting, lookup,
+related-post, neighbor, and tag helpers.
 
-- `disableImportAliasWarning: true` and `typeFieldName` workarounds.
-- A custom `scripts/sync-assets` step because the package's built-in asset
-  handling is buggy.
-- Build-time generation of `contentlayer2/generated` types.
+The pipeline preserves the existing public contract: source-relative paths,
+underscore slugs, optional frontmatter, rendered HTML, `/blog/*` and
+`/pages/*` URLs, and the separate publication filtering used by RSS, sitemap,
+and `llms.txt`. `scripts/sync-assets.mjs` remains an explicit build step so
+`content/assets` continues to populate `public/assets` without changing URLs.
 
-**This is a migration candidate.** If the package breaks, the natural
-replacement is `@content-collections` or a small hand-rolled markdown pipeline
-(remark/rehype + glob), removing the dependency entirely.
+`npm run dev` performs an initial Velite generation and then watches content
+alongside Next.js. `npm run build` performs asset synchronization, Velite
+generation, the production Next.js build, and Pagefind indexing. No generated
+content data is committed.
 
 ### TARGET #1 — single-pass markdown image handling
 

@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import type { Post } from 'contentlayer2/generated';
+import type { Post } from '@/lib/content';
 import { siteConfig } from '@/lib/config';
 import { FiCalendar, FiTag } from 'react-icons/fi';
 import { MetaItem } from './meta-item';

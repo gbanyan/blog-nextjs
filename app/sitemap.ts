@@ -1,5 +1,5 @@
 import { MetadataRoute } from 'next';
-import { allPosts, allPages } from 'contentlayer2/generated';
+import { allPages, allPosts } from '@/lib/content';
 import { getTagSlug } from '@/lib/tags';
 
 export default function sitemap(): MetadataRoute.Sitemap {
