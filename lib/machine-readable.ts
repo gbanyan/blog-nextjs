@@ -61,8 +61,7 @@ export function generateLlms(locale: Locale): string {
       const dateA = a.published_at ? new Date(a.published_at).getTime() : 0;
       const dateB = b.published_at ? new Date(b.published_at).getTime() : 0;
       return dateB - dateA;
-    })
-    .slice(0, 50);
+    });
   const pages = localeDocuments(allPagesByLocale, locale);
   const documents = [...allPostsByLocale, ...allPagesByLocale];
   const tags = Array.from(

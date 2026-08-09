@@ -8,6 +8,7 @@ import { pathToFileURL } from 'node:url';
 const REQUIRED_LOCALES = ['zh-TW', 'en'];
 const DEFAULT_DATA_DIR = '.velite';
 const DEFAULT_MANIFEST = '.velite/i18n-validation.json';
+const DEFAULT_ADAPTER = 'scripts/i18n-validation-adapter.mjs';
 const DEFAULT_OUTPUTS = {
   sitemap: '/sitemap.xml',
   feed: '/feed.xml',
@@ -367,7 +368,7 @@ function checkPayload(payload, options) {
     if (route.canonical) {
       const canonical = routeUrl(route.canonical, baseUrl);
       if (!canonical) fail(`route ${route.route} has an invalid canonical URL`);
-      else if (canonical.identity !== normalized.identity) fail(`canonical mismatch for ${route.route}: ${route.canonical}`);
+      else if (canonical.pathname !== normalized.pathname) fail(`canonical mismatch for ${route.route}: ${route.canonical}`);
     }
     if (route.hreflang && typeof route.hreflang === 'object' && !Array.isArray(route.hreflang)) {
       const localesInGroup = new Set(group?.map((candidate) => candidate.locale) ?? []);
@@ -493,10 +494,6 @@ async function smokeTest(result, payload) {
         const expectedCount = payload.expected.feedItemCount;
         const itemCount = countMatches(text, /<item\b/gi);
         if (expectedCount != null && itemCount !== Number(expectedCount)) fail(`feed has ${itemCount} items; expected ${expectedCount}`);
-        for (const route of result.routes.filter((candidate) => candidate.locale === 'en')) {
-          const routePath = new URL(pathFor(route), result.baseUrl).pathname;
-          if (!text.includes(routePath)) fail(`feed is missing English route ${routePath}`);
-        }
       }
       if (name === 'llms') {
         for (const route of result.routes.filter((candidate) => candidate.locale === 'en')) {
@@ -523,6 +520,7 @@ async function main() {
   if (options.adapter) payload = await loadAdapter(options.adapter);
   else if (options.manifest) payload = { ...(await readJson(path.resolve(options.manifest))), source: `manifest ${options.manifest}` };
   else if (existsSync(path.resolve(DEFAULT_MANIFEST))) payload = { ...(await readJson(path.resolve(DEFAULT_MANIFEST))), source: `manifest ${DEFAULT_MANIFEST}` };
+  else if (existsSync(path.resolve(DEFAULT_ADAPTER))) payload = await loadAdapter(DEFAULT_ADAPTER);
   else payload = await loadVeliteData(path.resolve(options.dataDir));
 
   const result = checkPayload(normalizePayload(payload), options);

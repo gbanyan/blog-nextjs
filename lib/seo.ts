@@ -33,7 +33,8 @@ type LocalizedMetadataOptions = {
 };
 
 function published(document: ContentDocument): boolean {
-  return document.status === 'published';
+  // Legacy content predates the status field; an absent status is published.
+  return document.status == null || document.status === 'published';
 }
 
 function documentAlternates(

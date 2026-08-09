@@ -6,8 +6,10 @@ Run the dependency-free validator after Velite has generated data:
 node scripts/check-i18n.mjs
 ```
 
-The script discovers arrays in `.velite/*.json`. The integrated i18n adapter
-may instead provide either a JSON snapshot or an ESM module:
+The command uses `scripts/i18n-validation-adapter.mjs` when present. The adapter
+reads generated Velite records and projects them into the stable locale/content
+contract. A deployment-specific integration may instead provide either a JSON
+snapshot or another ESM module:
 
 ```bash
 node scripts/check-i18n.mjs --manifest .velite/i18n-validation.json

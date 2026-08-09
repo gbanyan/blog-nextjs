@@ -37,7 +37,6 @@ interface SharedContentFields {
   /** Original frontmatter field, retained for data consumers. */
   translation_id?: string;
   slug?: string;
-  locale?: string;
   translation_key?: string;
   description?: string;
   type?: string;

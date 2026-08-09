@@ -3,11 +3,13 @@ import { SiteHeaderSearch } from './site-header-search';
 import { NavMenu, NavLinkItem, IconKey } from './nav-menu';
 import { LanguageSwitcher } from './language-switcher';
 import { siteConfig } from '@/lib/config';
-import { allPages } from '@/lib/content';
+import { allPagesByLocale, allPostsByLocale, getPagesByLocale } from '@/lib/content';
 import { LocalizedLink } from '@/components/localized-link';
 import { NAV_TRANSITION } from '@/lib/navigation';
 import { getDictionary } from '@/lib/i18n/dictionaries';
 import type { Locale } from '@/lib/i18n/config';
+import { LOCALE_ROUTE_MANIFEST, type LocaleRouteManifest } from '@/lib/locale-switcher';
+import { documentPath } from '@/lib/locales';
 
 interface SiteHeaderProps {
   recentPosts?: { title: string; url: string }[];
@@ -16,9 +18,25 @@ interface SiteHeaderProps {
 
 export function SiteHeader({ recentPosts = [], locale }: SiteHeaderProps) {
   const dictionary = getDictionary(locale);
-  const pages = allPages
+  const pages = getPagesByLocale(locale)
     .slice()
     .sort((a, b) => (a.title || '').localeCompare(b.title || ''));
+
+  const localeManifest: LocaleRouteManifest = { ...LOCALE_ROUTE_MANIFEST };
+  for (const document of [...allPagesByLocale, ...allPostsByLocale]) {
+    if (document.locale !== 'zh-TW') continue;
+    const translation = [...allPagesByLocale, ...allPostsByLocale].find(
+      (candidate) =>
+        candidate.locale === 'en' && candidate.translationId === document.translationId
+    );
+    if (translation) {
+      const defaultPath = documentPath(document, 'zh-TW');
+      localeManifest[defaultPath] = {
+        defaultPath,
+        en: documentPath(translation, 'en'),
+      };
+    }
+  }
 
 
   // Nav groups are driven by declarative frontmatter (TARGET #2): pages
@@ -78,7 +96,7 @@ export function SiteHeader({ recentPosts = [], locale }: SiteHeaderProps) {
         <div className="flex items-center gap-3">
           <NavMenu items={navItems} />
           <SiteHeaderSearch recentPosts={recentPosts} />
-          <LanguageSwitcher />
+          <LanguageSwitcher manifest={localeManifest} />
           <ThemeToggle />
         </div>
       </div>

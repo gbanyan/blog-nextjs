@@ -12,7 +12,6 @@ import { JsonLd } from '@/components/json-ld';
 import { metadataForPath } from '@/lib/seo';
 import { absoluteUrl, isLocale, localizedPath, type Locale } from '@/lib/locales';
 import { notFound } from 'next/navigation';
-import type { Metadata } from 'next';
 
 interface Props {
   params: Promise<{ locale: string }>;
