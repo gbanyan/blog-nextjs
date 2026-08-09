@@ -6,6 +6,8 @@ import { pages as velitePages, posts as velitePosts } from '../.velite/index.js'
  * the value emitted by Velite instead of being normalized to a new value.
  */
 export type ContentDate = Date | string;
+export const DEFAULT_LOCALE = 'zh-TW' as const;
+export type ContentLocale = typeof DEFAULT_LOCALE | 'en';
 
 export interface RawDocumentData {
   sourceFilePath: string;
@@ -24,6 +26,11 @@ export interface MarkdownBody {
 
 interface SharedContentFields {
   title: string;
+  locale: ContentLocale;
+  /** Stable key shared by the source document and its translations. */
+  translationId: string;
+  /** Original frontmatter field, retained for data consumers. */
+  translation_id?: string;
   slug?: string;
   description?: string;
   type?: string;
@@ -82,6 +89,21 @@ function sourceFileDir(path: string) {
   return separator === -1 ? '' : path.slice(0, separator);
 }
 
+function translationId(
+  sourcePath: string,
+  collection: 'posts' | 'pages',
+  explicitId?: string
+) {
+  if (explicitId) return explicitId;
+
+  const contentPath = removeMarkdownExtension(sourcePath);
+  const relativePath = removeCollectionPrefix(contentPath, collection);
+  const segments = relativePath.split('/');
+  const localeSegment = segments[0];
+  const stablePath = localeSegment === 'en' ? segments.slice(1).join('/') : relativePath;
+  return `${collection}/${stablePath}`;
+}
+
 function adaptDocument(document: VelitePost, collection: 'posts'): Post;
 function adaptDocument(document: VelitePage, collection: 'pages'): Page;
 function adaptDocument(document: VeliteDocument, collection: 'posts' | 'pages'): Post | Page {
@@ -92,8 +114,11 @@ function adaptDocument(document: VeliteDocument, collection: 'posts' | 'pages'):
   const htmlBody = document.body;
 
   const { sourcePath: _sourcePath, raw: _rawBody, body: _body, ...fields } = document;
+  const locale = (document.locale ?? DEFAULT_LOCALE) as ContentLocale;
   const adapted = {
     ...fields,
+    locale,
+    translationId: translationId(document.sourcePath, collection, document.translation_id),
     body: {
       raw: rawBody,
       html: htmlBody,
@@ -115,5 +140,50 @@ function adaptDocument(document: VeliteDocument, collection: 'posts' | 'pages'):
   return adapted as unknown as Post | Page;
 }
 
-export const allPosts: Post[] = velitePosts.map((post) => adaptDocument(post, 'posts'));
-export const allPages: Page[] = velitePages.map((page) => adaptDocument(page, 'pages'));
+export const allPostsByLocale: Post[] = velitePosts.map((post) => adaptDocument(post, 'posts'));
+export const allPagesByLocale: Page[] = velitePages.map((page) => adaptDocument(page, 'pages'));
+
+/** Existing exports remain the default Chinese content for route compatibility. */
+export const allPosts: Post[] = allPostsByLocale.filter(
+  (post) => post.locale === DEFAULT_LOCALE
+);
+export const allPages: Page[] = allPagesByLocale.filter(
+  (page) => page.locale === DEFAULT_LOCALE
+);
+
+export function getPostsByLocale(locale: ContentLocale = DEFAULT_LOCALE): Post[] {
+  return allPostsByLocale.filter((post) => post.locale === locale);
+}
+
+export function getPagesByLocale(locale: ContentLocale = DEFAULT_LOCALE): Page[] {
+  return allPagesByLocale.filter((page) => page.locale === locale);
+}
+
+export interface TranslationPair<T extends Post | Page> {
+  source: T;
+  translation?: T;
+}
+
+export function getTranslationPair<T extends Post | Page>(
+  document: T,
+  documents: readonly T[]
+): TranslationPair<T> {
+  const source = documents.find(
+    (candidate) =>
+      candidate.translationId === document.translationId && candidate.locale === DEFAULT_LOCALE
+  );
+  const translation = documents.find(
+    (candidate) =>
+      candidate.translationId === document.translationId && candidate.locale !== DEFAULT_LOCALE
+  );
+
+  return { source: source ?? document, translation };
+}
+
+export function getPostTranslationPair(post: Post): TranslationPair<Post> {
+  return getTranslationPair(post, allPostsByLocale);
+}
+
+export function getPageTranslationPair(page: Page): TranslationPair<Page> {
+  return getTranslationPair(page, allPagesByLocale);
+}
