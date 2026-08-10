@@ -193,9 +193,19 @@ export async function GET(request: NextRequest) {
         'Cache-Control': 'public, max-age=31536000, s-maxage=31536000, immutable',
       },
     });
-  } catch (e: any) {
+  } catch (e: unknown) {
+    // The build (PPR) attempts to prerender this dynamic route; re-throw the
+    // control-flow interruption so Next bails out cleanly instead of logging
+    // it as a real error.
+    const interrupt =
+      typeof e === 'object' &&
+      e !== null &&
+      'digest' in e &&
+      e.digest === 'NEXT_PRERENDER_INTERRUPTED';
+    if (interrupt) throw e;
+    const message = e instanceof Error ? e.message : String(e);
     console.error('Error generating OG image:', e);
-    return new Response(`Failed to generate image: ${e.message}`, {
+    return new Response(`Failed to generate image: ${message}`, {
       status: 500,
     });
   }
