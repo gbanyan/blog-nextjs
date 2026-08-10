@@ -101,7 +101,7 @@ export function PostListWithControls({ posts, pageSize, locale, initialSearch = 
             type="button"
             onClick={() => handleChangeSort('new')}
             className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 transition duration-180 ease-snappy ${sortOrder === 'new'
-              ? 'bg-blue-600 text-white dark:bg-blue-500'
+              ? 'bg-blue-600 text-white dark:bg-blue-600'
               : 'bg-white text-slate-600 hover:bg-slate-200 dark:bg-slate-900 dark:text-slate-300 dark:hover:bg-slate-700'
               }`}
           >
@@ -112,7 +112,7 @@ export function PostListWithControls({ posts, pageSize, locale, initialSearch = 
             type="button"
             onClick={() => handleChangeSort('old')}
             className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 transition duration-180 ease-snappy ${sortOrder === 'old'
-              ? 'bg-blue-600 text-white dark:bg-blue-500'
+              ? 'bg-blue-600 text-white dark:bg-blue-600'
               : 'bg-white text-slate-600 hover:bg-slate-200 dark:bg-slate-900 dark:text-slate-300 dark:hover:bg-slate-700'
               }`}
           >
@@ -188,7 +188,7 @@ export function PostListWithControls({ posts, pageSize, locale, initialSearch = 
                   type="button"
                   onClick={() => goToPage(p)}
                   className={`h-7 w-7 rounded text-xs ${isActive
-                    ? 'bg-blue-600 text-white dark:bg-blue-500'
+                    ? 'bg-blue-600 text-white dark:bg-blue-600'
                     : 'hover:bg-slate-100 dark:hover:bg-slate-800'
                     }`}
                 >

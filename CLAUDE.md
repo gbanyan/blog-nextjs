@@ -8,43 +8,50 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - `npm run build` - Full production build: sync-assets → Velite generation → next build → Pagefind indexing → copy Pagefind to public
 - `npm run lint` - ESLint via `eslint .` (flat config)
 - `npm test` - Unit tests for lib contracts via Vitest
+- `npm run check-i18n` / `npm run check-i18n-content` - Validate locale pairing of generated Velite records (also run during build)
 - `npm run sync-assets` - Copy `content/assets/` to `public/assets/` (also runs automatically before build)
-
-No test framework is configured.
 
 ## Architecture
 
 **Content pipeline**: `content/` git submodule (Markdown) → Velite (`velite.config.ts`) → ignored typed data in `.velite/` → server-side adapter in `lib/content.ts` → pages and `lib/posts.ts` helpers.
 
-**Routing** (App Router):
-- `/` — Home page with latest posts
+**Routing** (App Router, bilingual with `zh-TW` as the unprefixed default):
+- `proxy.ts` rewrites unprefixed paths (`/`, `/blog/*`, `/pages/*`, `/projects`, `/tags/*`) to the `zh-TW` locale segment and sets `x-locale`; `/en/*` passes through. All pages live under `app/[locale]/` with `generateStaticParams` covering both locales.
+- `/` — Home page with latest posts (`/en` for the English section)
 - `/blog` — Blog index with search, sort, pagination
-- `/blog/[slug]` — Single post with TOC, reading progress, prev/next navigation
+- `/blog/[slug]` — Single post with TOC, reading progress, prev/next, related posts
 - `/pages/[slug]` — Static content pages (from `content/pages/`)
 - `/tags`, `/tags/[tag]` — Tag index and per-tag post lists
-- `/api/og` — Dynamic OG image generation (`@vercel/og`)
-- `/feed.xml` — RSS feed (route handler)
+- `/projects` — GitHub repo cards (server fetch, cached 1h)
+- `/api/og` — Dynamic OG image generation (`@vercel/og`, CJK fonts)
+- `/api/mastodon` — Mastodon status feed proxy (cached 60s)
+- Machine-readable: `/feed.xml`, `/llms.txt`, `/[locale]/feed.xml`, `/[locale]/llms.txt`, `/[locale]/sitemap.xml`, `/robots.txt`, `/sitemap.xml`, `/ai.txt`
 
 **Key data flow**:
 - `lib/config.ts` — `siteConfig` object built from `NEXT_PUBLIC_*` env vars (all site metadata, social links, accent colors, pagination)
 - `lib/content.ts` — Server-side boundary for Velite's generated `Post`/`Page` records
-- `lib/posts.ts` — Query helpers: `getAllPostsSorted()`, `getPostBySlug()`, `getPageBySlug()`, `getAllTagsWithCount()`, `getRelatedPosts()`, `getPostNeighbors()`
+- `lib/posts.ts` — Query helpers: `getAllPostsSorted()`, `getPostBySlug()`, `getPageBySlug()`, `getRelatedPosts()`, `getPostNeighbors()` (Async `"use cache"`-backed, PPR-compatible)
+- `lib/tags.ts` — Synchronous tag helpers (`getTagSlug()`, `getAllTagsWithCount()`); kept split from the `"use cache"` module so the client sidebar stays bundle-lean
+- `lib/seo.ts` — `metadataForDocument()` / `metadataForPath()`, hreflang/x-default pairing, sitemap entry helpers
+- `lib/og.ts`, `lib/reading-time.ts` — Shared social-image/OG-card URLs; CJK-aware word count and reading-time estimate
 - `lib/mastodon.ts` — Mastodon API client for sidebar feed widget
 - `lib/rehype-callouts.ts` — Custom rehype plugin for GitHub-style `[!NOTE]` callout blocks
 
-**Layout hierarchy**: `app/layout.tsx` (fonts, theme CSS vars, ThemeProvider, JSON-LD) → `components/layout-shell.tsx` (header, sidebar, footer, back-to-top) → page content.
+**Layout hierarchy**: `app/[locale]/layout.tsx` (fonts, theme CSS vars, ThemeProvider, JSON-LD) → `components/layout-shell.tsx` (header, sidebar, footer, back-to-top) → page content. UI strings come from `lib/i18n/dictionaries.ts`; path/alternate helpers from `lib/locales.ts`.
 
 **Markdown processing** (configured in `velite.config.ts`):
-- Remark: GFM
-- Rehype: callouts → pretty-code (shiki, dual theme) → slug → autolink-headings → image path rewriter (`../assets/` → `/assets/`)
-- Image paths in markdown are relative (`../assets/foo.jpg`); a rehype plugin rewrites them to `/assets/foo.jpg` at build time
+- Remark: GFM, plus a raw-HTML remover (`remarkRemoveRawHtml` — raw HTML blocks are dropped by contract)
+- Rehype: callouts → pretty-code (shiki, dual theme) → slug → autolink-headings → image optimizer → link localizer
+  - `lib/rehype-optimize-images.ts` rewrites `../assets/` → `/assets/` and attaches intrinsic width/height + `loading=lazy` + `sizes`
+  - `lib/rehype-localize-links.ts` prefixes `/en` to internal routes in English-source documents
+- Built HTML is rendered verbatim by `components/markdown-body.tsx` (no runtime re-parse)
 
 ## Styling
 
 - Tailwind CSS v4 with CSS-first configuration (no `tailwind.config.cjs`)
 - Dark mode via `@custom-variant dark` in `styles/globals.css` (class-based, toggled by `next-themes`)
 - Theme customization via `@theme` block in `styles/globals.css`: colors, fonts, easing, durations, shadows, keyframes, animations
-- Accent color system via CSS variables set in `app/layout.tsx` from env vars: `--color-accent`, `--color-accent-soft`, `--color-accent-text-light`, `--color-accent-text-dark`
+- Accent color system via CSS variables set in `app/[locale]/layout.tsx` from env vars: `--color-accent`, `--color-accent-soft`, `--color-accent-text-light`, `--color-accent-text-dark`
 - Typography plugin (`@tailwindcss/typography`) loaded via `@plugin` directive; prose dark mode handled by custom `.dark .prose` CSS overrides
 - English headings use Playfair Display serif (`--font-serif-eng`); body uses Inter + CJK fallback stack
 - PostCSS config: `postcss.config.mjs` using `@tailwindcss/postcss`

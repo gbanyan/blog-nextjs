@@ -29,7 +29,8 @@ export async function GET(request: NextRequest) {
     const localeParam = searchParams.get('locale');
     const brandTitle = isLocale(localeParam ?? undefined) ? getDictionary(localeParam as 'zh-TW' | 'en').brand.title : 'Personal blog';
 
-    // Load CJK font for Chinese text rendering
+    // Load CJK font for Chinese text rendering. Keep WOFF: the @vercel/og
+    // version bundled with Next 16 rejects the WOFF2 signature (wOF2).
     const fontData = loadFontSync('noto-400.woff');
     const fontBoldData = loadFontSync('noto-700.woff');
 
