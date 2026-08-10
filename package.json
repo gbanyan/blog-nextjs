@@ -14,7 +14,8 @@
     "check-i18n-content": "node scripts/check-i18n-content.mjs",
     "build": "npm run velite:build && npm run sync-assets && npm run check-i18n-content && npm run check-assets && next build && npx pagefind --site .next/server/app --output-path public/_pagefind",
     "start": "next start",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "test": "vitest run"
   },
   "keywords": [],
   "author": "",
@@ -63,6 +64,7 @@
     "pagefind": "^1.5.2",
     "postcss": "^8.5.22",
     "tailwindcss": "^4.3.3",
-    "typescript": "^6.0.3"
+    "typescript": "^6.0.3",
+    "vitest": "^4.1.10"
   }
 }

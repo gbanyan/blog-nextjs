@@ -9,10 +9,10 @@ jobs:
   check:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           submodules: recursive
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: 22
           cache: npm
@@ -25,6 +25,8 @@ jobs:
         run: npm run check-assets
       - name: Validate i18n pairing
         run: npm run check-i18n-content && npm run check-i18n
+      - name: Unit tests
+        run: npm test
       - name: Lint
         run: npm run lint
       - name: Typecheck

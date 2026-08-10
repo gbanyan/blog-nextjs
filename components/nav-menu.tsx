@@ -159,7 +159,7 @@ export function NavMenu({ items, labels }: NavMenuProps) {
         transitionTypes={[...NAV_TRANSITION]}
         aria-current={getAriaCurrent(item.href)}
         className={`motion-link inline-flex items-center gap-2 rounded-xl px-3 py-2 text-sm hover:bg-slate-100 hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40 dark:hover:bg-slate-800 dark:hover:text-accent ${isActive
-          ? 'bg-accent-soft text-accent-textLight dark:bg-slate-800 dark:text-accent'
+          ? 'bg-accent-soft text-accent-textLight dark:bg-slate-800 dark:text-accent-textDark'
           : 'text-slate-600 dark:text-slate-200'
           }`}
         onClick={close}
@@ -184,7 +184,7 @@ export function NavMenu({ items, labels }: NavMenuProps) {
             type="button"
             onClick={() => toggleMobileItem(item.key)}
             className={`flex w-full items-center justify-between rounded-xl px-4 py-3 text-base font-medium transition-colors active:bg-slate-100 dark:active:bg-slate-800 dark:hover:text-accent ${isActive
-              ? 'bg-accent-soft text-accent-textLight dark:bg-slate-800 dark:text-accent'
+              ? 'bg-accent-soft text-accent-textLight dark:bg-slate-800 dark:text-accent-textDark'
               : 'text-slate-700 dark:text-slate-200'
               }`}
             aria-expanded={isExpanded}
@@ -222,7 +222,7 @@ export function NavMenu({ items, labels }: NavMenuProps) {
         transitionTypes={[...NAV_TRANSITION]}
         aria-current={getAriaCurrent(item.href)}
         className={`flex w-full items-center gap-3 rounded-xl px-4 py-3 text-base font-medium transition-colors active:bg-slate-100 dark:active:bg-slate-800 dark:hover:text-accent ${isActive
-          ? 'bg-accent-soft text-accent-textLight dark:bg-slate-800 dark:text-accent'
+          ? 'bg-accent-soft text-accent-textLight dark:bg-slate-800 dark:text-accent-textDark'
           : 'text-slate-700 dark:text-slate-200'
           }`}
         onClick={close}
@@ -324,7 +324,7 @@ export function NavMenu({ items, labels }: NavMenuProps) {
                   <button
                   type="button"
                   className={`motion-link type-nav inline-flex shrink-0 items-center gap-1.5 rounded-full px-3 py-1 hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40 dark:hover:text-accent ${isActive
-                    ? 'bg-accent-soft text-accent-textLight dark:bg-slate-800 dark:text-accent'
+                    ? 'bg-accent-soft text-accent-textLight dark:bg-slate-800 dark:text-accent-textDark'
                     : 'text-slate-600 dark:text-slate-200'
                     }`}
                    aria-haspopup="menu"
@@ -363,7 +363,7 @@ export function NavMenu({ items, labels }: NavMenuProps) {
               transitionTypes={[...NAV_TRANSITION]}
               aria-current={getAriaCurrent(item.href)}
               className={`motion-link type-nav group relative inline-flex shrink-0 items-center gap-1.5 rounded-full px-3 py-1 hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40 dark:hover:text-accent ${isActive
-                ? 'bg-accent-soft text-accent-textLight dark:bg-slate-800 dark:text-accent'
+                ? 'bg-accent-soft text-accent-textLight dark:bg-slate-800 dark:text-accent-textDark'
                 : 'text-slate-600 dark:text-slate-200'
                 }`}
               onClick={close}

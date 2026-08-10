@@ -7,6 +7,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - `npm run dev` - Generate Velite data, then run the Velite watcher + Next.js with Turbopack concurrently
 - `npm run build` - Full production build: sync-assets → Velite generation → next build → Pagefind indexing → copy Pagefind to public
 - `npm run lint` - ESLint via `eslint .` (flat config)
+- `npm test` - Unit tests for lib contracts via Vitest
 - `npm run sync-assets` - Copy `content/assets/` to `public/assets/` (also runs automatically before build)
 
 No test framework is configured.

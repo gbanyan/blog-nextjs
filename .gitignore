@@ -43,3 +43,6 @@ pnpm-debug.log*
 # TypeScript
 *.tsbuildinfo
 /.serena/
+
+# Generated Lighthouse reports
+/reports

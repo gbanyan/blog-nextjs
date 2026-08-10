@@ -32,7 +32,7 @@ export function LanguageSwitcher({ manifest }: LanguageSwitcherProps = {}) {
   const fallbackHint = target.isFallback
     ? ` (${labels.fallback(targetLabel)})`
     : '';
-  const switchLabel = `${labels.switchTo(targetLabel)}${fallbackHint}`;
+  const switchLabel = `${labels.switchTo(targetLabel)} (${LOCALE_LABELS[targetLocale]})${fallbackHint}`;
 
   return (
     <Link
@@ -44,9 +44,6 @@ export function LanguageSwitcher({ manifest }: LanguageSwitcherProps = {}) {
       title={switchLabel}
     >
       <span aria-hidden="true">{LOCALE_LABELS[targetLocale]}</span>
-      <span className="sr-only">
-        {switchLabel}
-      </span>
     </Link>
   );
 }

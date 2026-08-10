@@ -368,6 +368,7 @@ This ensures your `content` folder matches the commit referenced in `blog-nextjs
 - `npm run build` – Generate Velite data, mirror and check assets, build Next.js, and index the output with Pagefind.
 - `npm run start` – Start the production server (after `npm run build`).
 - `npm run lint` – Run ESLint over the whole project (`eslint .`).
+- `npm test` – Run the unit tests for the pure lib contracts (Vitest).
 - `npm run check-i18n` / `npm run check-i18n-content` – Validate locale pairing of generated Velite records (also run during `build`).
 - `npm run sync-assets` – Copy `content/assets` to `public/assets`.
 

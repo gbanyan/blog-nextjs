@@ -9,7 +9,10 @@ import type { Locale } from '@/lib/locales';
  */
 export function socialImageUrl(featureImage?: string): string | null {
   if (!featureImage) return null;
-  return `${siteConfig.url}${featureImage.replace('../assets', '/assets')}`;
+  // Absolute remote URLs are already fully-qualified; keep them intact.
+  if (/^https?:\/\//.test(featureImage)) return featureImage;
+  const path = featureImage.replace('../assets', '/assets');
+  return `${siteConfig.url}${path.startsWith('/') ? '' : '/'}${path}`;
 }
 
 /** Dynamic OG card URL for documents or section pages. */
