@@ -46,13 +46,15 @@ export function DevEnvDeviceHero({ ariaLabel }: { ariaLabel: string }) {
                       <span className="dev-env-prompt">$</span> neofetch --ascii_distro arch,ubuntu,tux
                     </div>
                     <div className="dev-env-terminal-logos">
-                      <div className="dev-env-logo-svg" aria-label="Arch Linux logo">
+                      {/* Decorative duplicate of the hero's aria-label — hide from the
+                          accessibility tree instead of nesting img roles. */}
+                      <div className="dev-env-logo-svg" aria-hidden="true">
                         <SiArchlinux className="dev-env-svg-arch" size={36} />
                       </div>
-                      <div className="dev-env-logo-svg" aria-label="Ubuntu logo">
+                      <div className="dev-env-logo-svg" aria-hidden="true">
                         <SiUbuntu className="dev-env-svg-ubuntu" size={36} />
                       </div>
-                      <div className="dev-env-logo-svg" aria-label="Tux Linux penguin logo">
+                      <div className="dev-env-logo-svg" aria-hidden="true">
                         <SiLinux className="dev-env-svg-tux" size={36} />
                       </div>
                     </div>

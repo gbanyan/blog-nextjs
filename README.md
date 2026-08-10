@@ -352,6 +352,8 @@ git push
 
 Velite + Next.js will pick up the changes automatically through the Velite watcher in `npm run dev`, or during the next `npm run build`.
 
+> **Automated sync**: a scheduled GitHub Actions workflow (`.github/workflows/content-sync.yml`) bumps the submodule pointer to the latest `personal-blog` main every 30 minutes (or on manual dispatch), so new content deploys without the manual bump-and-push step below. The manual flow still works and is instantaneous.
+
 ### Cloning with submodule updates
 
 On a fresh clone where the submodule has moved, run:
@@ -426,6 +428,13 @@ This ensures your `content` folder matches the commit referenced in `blog-nextjs
 ### Creating a New Static Page
 
 Follow the same process as above, but create the file in `content/pages/` instead.
+
+## Automation & CI
+
+- **CI** (`.github/workflows/ci.yml`, on push to `main` / PRs): checkout with the content submodule → Velite generation → asset mirror checks → i18n pairing validation (`check-i18n-content` + `check-i18n`) → Vitest unit tests → ESLint → `tsc --noEmit` → production build + Pagefind indexing.
+- **Content sync** (`.github/workflows/content-sync.yml`): every 30 minutes (or manual dispatch) fetches the latest `personal-blog` `main` and commits the submodule pointer bump when it drifts; pushes use `GITHUB_TOKEN` and do not re-trigger the workflow.
+- **Unit tests** (`tests/`): Vitest covers the pure lib contracts — CJK reading-time, OG/social-card URLs, locale switching, SEO metadata (hreflang/x-default), and RSS/llms generation.
+- **Dependabot** (`.github/dependabot.yml`): weekly npm and monthly GitHub Actions update PRs, gated by CI.
 
 ## Deployment Notes
 

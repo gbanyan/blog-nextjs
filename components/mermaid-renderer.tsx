@@ -34,7 +34,10 @@ function attachViewer(wrapper: HTMLDivElement, viewport: HTMLDivElement) {
 
   const apply = () => {
     viewport.style.transform = `translate(${state.x}px, ${state.y}px) scale(${state.scale})`;
-    levelBtn.textContent = `${Math.round(state.scale * 100)}%`;
+    const value = `${Math.round(state.scale * 100)}%`;
+    levelBtn.textContent = value;
+    // Keep the accessible name in sync with the visible zoom level (WCAG 2.5.3).
+    levelBtn.setAttribute('aria-label', `${levelBtn.dataset.resetLabel ?? 'reset'} ${value}`);
   };
 
   const zoomTo = (newScale: number, cx: number, cy: number) => {
@@ -220,7 +223,10 @@ function buildShell(labels: Dictionary['mermaid']): { wrapper: HTMLDivElement; v
   const btnLevel = document.createElement('button');
   btnLevel.className = 'mermaid-zoom-btn mermaid-zoom-level';
   btnLevel.textContent = '100%';
-  btnLevel.ariaLabel = labels.reset;
+  // Include the visible zoom level from the start (WCAG 2.5.3) — `apply`
+  // keeps both text and label in sync while the viewer is used.
+  btnLevel.ariaLabel = `${labels.reset} 100%`;
+  btnLevel.dataset.resetLabel = labels.reset;
 
   const btnZoomIn = document.createElement('button');
   btnZoomIn.className = 'mermaid-zoom-btn mermaid-btn-zoomin';

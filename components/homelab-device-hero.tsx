@@ -25,8 +25,9 @@ export function HomeLabDeviceHero({ ariaLabel }: { ariaLabel: string }) {
                 <span className="homelab-led homelab-led-lan" aria-hidden />
               </div>
               <div className="homelab-router-logos">
-                <SiProxmox className="homelab-proxmox-logo homelab-logo-svg" aria-label="Proxmox VE" />
-                <FiServer className="homelab-router-icon homelab-logo-svg" aria-label="VyOS Router" />
+                {/* Decorative duplicates of the hero aria-label — hidden. */}
+                <SiProxmox className="homelab-proxmox-logo homelab-logo-svg" aria-hidden="true" />
+                <FiServer className="homelab-router-icon homelab-logo-svg" aria-hidden="true" />
               </div>
             </div>
           </div>
@@ -66,7 +67,7 @@ export function HomeLabDeviceHero({ ariaLabel }: { ariaLabel: string }) {
                   <div key={i} className="homelab-drive-slot" aria-hidden />
                 ))}
               </div>
-              <div className="homelab-nas-logo" aria-label="TrueNAS logo">
+              <div className="homelab-nas-logo" aria-hidden="true">
                 <SiTruenas className="homelab-truenas-logo" size={28} />
               </div>
             </div>

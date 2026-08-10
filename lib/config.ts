@@ -50,5 +50,4 @@ export const siteConfig = {
       | 'summary'
       | 'summary_large_image'
       | undefined) || 'summary_large_image',
-  analyticsId: process.env.NEXT_PUBLIC_ANALYTICS_ID || ''
 };

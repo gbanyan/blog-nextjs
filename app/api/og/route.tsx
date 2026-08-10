@@ -5,6 +5,7 @@ import { ImageResponse } from 'next/og';
 import { NextRequest } from 'next/server';
 import { getDictionary } from '@/lib/i18n/dictionaries';
 import { isLocale } from '@/lib/locales';
+import { siteConfig } from '@/lib/config';
 
 const FONT_DIR = path.join(process.cwd(), 'lib', 'og-fonts');
 const fontCache = new Map<string, ArrayBuffer>();
@@ -172,7 +173,7 @@ export async function GET(request: NextRequest) {
                 color: '#64748b',
               }}
             >
-              gbanyan.net
+              {new URL(siteConfig.url).host}
             </div>
           </div>
         </div>
