@@ -1,10 +1,6 @@
 import { isLocale, type Locale } from '@/lib/locales';
 import { localizedSitemapXml } from '@/lib/seo';
 
-export function generateStaticParams() {
-  return [{ locale: 'en' }, { locale: 'zh-TW' }];
-}
-
 export async function GET(
   _request: Request,
   { params }: { params: Promise<{ locale: string }> }
