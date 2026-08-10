@@ -58,15 +58,15 @@ The `content/` directory is a git submodule pointing to a separate `personal-blo
 
 ## Deployment
 
-Two Git remotes are involved: `git.gbanyan.net` (SSH, primary push target) and `gitea.gbanyan.net` (HTTPS, Gitea web UI). A crontab on the server automatically mirrors `git.gbanyan.net` → `gitea.gbanyan.net`. Push to `main` on `git.gbanyan.net` triggers CI/CD automatically (server-side hook). No Dockerfile or workflow file in this repo.
+GitHub (`github` remote, `git@github.com:gbanyan/blog-nextjs.git`) is the deployment source. Pushing to `main` on GitHub triggers the deployment pipeline. A self-hosted Gitea instance (`git.gbanyan.net` / `gitea.gbanyan.net`) mirrors the repository as a backup; it does not trigger deployments.
 
 **Content-only update** (new/edited posts) — both steps are required to trigger deploy:
 1. Commit and push inside `content/` submodule: `git -C content add . && git -C content commit -m "..." && git -C content push`
-2. Update main repo submodule pointer and push: `git add content && git commit -m "Update content submodule" && git push`
+2. Update main repo submodule pointer and push to GitHub: `git add content && git commit -m "Update content submodule" && git push github main`
 
-Pushing only to `content/` (personal-blog) does NOT trigger deployment. The main repo must also be pushed because CI/CD is bound to `blog-nextjs`, not `personal-blog`.
+Pushing only to `content/` (personal-blog) does NOT trigger deployment. The main repo must also be pushed to GitHub because the deployment pipeline is bound to `blog-nextjs`, not `personal-blog`.
 
-**Code changes**: Commit and push in the main repo as usual — `git push` to `main` triggers the pipeline.
+**Code changes**: Commit and push in the main repo as usual — `git push` to `main` (which goes to the GitHub deployment source) triggers the pipeline.
 
 ## Language
 
