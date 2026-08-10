@@ -1,13 +1,20 @@
+import {
+  defaultLocale as seedDefaultLocale,
+  isLocale,
+  locales as seedLocales,
+} from '@/lib/i18n/config';
 import { siteConfig } from '@/lib/config';
 
-export const SUPPORTED_LOCALES = ['zh-TW', 'en'] as const;
+export { isLocale } from '@/lib/i18n/config';
+
+export const SUPPORTED_LOCALES = seedLocales;
 export type Locale = (typeof SUPPORTED_LOCALES)[number];
 
-export const DEFAULT_LOCALE: Locale = SUPPORTED_LOCALES.includes(
+export const DEFAULT_LOCALE: Locale = (SUPPORTED_LOCALES as readonly string[]).includes(
   siteConfig.defaultLocale as Locale
 )
   ? (siteConfig.defaultLocale as Locale)
-  : 'zh-TW';
+  : seedDefaultLocale;
 
 export interface LocalizedDocumentLike {
   locale?: string;
@@ -22,10 +29,6 @@ export interface LocalizedDocumentLike {
   isPlaceholder?: boolean;
   url?: string;
   status?: string;
-}
-
-export function isLocale(value: string | undefined): value is Locale {
-  return !!value && (SUPPORTED_LOCALES as readonly string[]).includes(value);
 }
 
 export function normalizeLocale(value: string | undefined): Locale | undefined {

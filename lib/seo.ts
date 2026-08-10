@@ -277,7 +277,6 @@ function staticSitemapRecord(
   languages['x-default'] = languages[DEFAULT_LOCALE];
   return {
     url,
-    lastModified: new Date(),
     changeFrequency,
     priority,
     alternates: {
