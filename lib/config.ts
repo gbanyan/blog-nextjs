@@ -12,7 +12,7 @@ export const siteConfig = {
   description:
     process.env.NEXT_PUBLIC_SITE_DESCRIPTION ||
     'Personal homepage and blog.',
-  url: process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000',
+  url: process.env.NEXT_PUBLIC_SITE_URL || 'https://blog.gbanyan.net',
   author: process.env.NEXT_PUBLIC_SITE_AUTHOR || 'Your Name',
   tagline:
     process.env.NEXT_PUBLIC_SITE_TAGLINE ||

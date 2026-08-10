@@ -50,7 +50,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const post = getPostBySlug(slug, locale);
   if (!post) return { robots: { index: false, follow: false } };
 
-  const ogImageUrl = new URL('/api/og', process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000');
+  const ogImageUrl = new URL('/api/og', process.env.NEXT_PUBLIC_SITE_URL || 'https://blog.gbanyan.net');
   ogImageUrl.searchParams.set('locale', locale);
   ogImageUrl.searchParams.set('title', post.title);
   if (post.description) {
