@@ -10,9 +10,11 @@
     "velite:watch": "velite --watch",
     "sync-assets": "node scripts/sync-assets.mjs",
     "check-assets": "node scripts/check-assets.mjs",
-    "build": "npm run velite:build && npm run sync-assets && npm run check-assets && next build && npx pagefind --site .next/server/app --output-path public/_pagefind",
+    "check-i18n": "node scripts/check-i18n.mjs",
+    "check-i18n-content": "node scripts/check-i18n-content.mjs",
+    "build": "npm run velite:build && npm run sync-assets && npm run check-i18n-content && npm run check-assets && next build && npx pagefind --site .next/server/app --output-path public/_pagefind",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "eslint ."
   },
   "keywords": [],
   "author": "",

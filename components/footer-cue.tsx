@@ -11,8 +11,8 @@ export function FooterCue({ label }: { label: string }) {
     if (!el) return;
 
     if (!('IntersectionObserver' in window)) {
-      setActive(true);
-      return;
+      const id = requestAnimationFrame(() => setActive(true));
+      return () => cancelAnimationFrame(id);
     }
 
     const observer = new IntersectionObserver(

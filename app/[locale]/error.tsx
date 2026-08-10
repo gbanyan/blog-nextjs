@@ -1,6 +1,7 @@
 // Locale-aware error boundary.
 'use client';
 
+import Link from 'next/link';
 import { useEffect } from 'react';
 import { usePathname } from 'next/navigation';
 import { FiAlertTriangle } from 'react-icons/fi';
@@ -17,7 +18,9 @@ export default function Error({
   error,
   unstable_retry,
 }: AppErrorProps) {
-  const dictionary = getDictionary(getLocaleFromPathname(usePathname() ?? '/'));
+  const locale = getLocaleFromPathname(usePathname() ?? '/');
+  const dictionary = getDictionary(locale);
+  const homeUrl = locale === 'en' ? '/en' : '/';
   useEffect(() => {
     // Log the error to an error reporting service
     console.error('Application error:', error);
@@ -46,12 +49,12 @@ export default function Error({
             {dictionary.errors.retry}
           </button>
 
-          <a
-            href="/"
+          <Link
+            href={homeUrl}
             className="inline-flex items-center justify-center rounded-lg border border-slate-300 bg-white px-6 py-3 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700"
           >
             {dictionary.common.backHome}
-          </a>
+          </Link>
         </div>
 
         {error.digest && (

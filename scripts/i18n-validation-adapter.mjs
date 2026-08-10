@@ -74,7 +74,7 @@ const localeCounts = Object.fromEntries(
   ])
 );
 
-export default {
+const validationData = {
   records,
   routes,
   expected: {
@@ -83,3 +83,5 @@ export default {
     routeCount: records.length,
   },
 };
+
+export default validationData;

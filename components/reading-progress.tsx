@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useCallback } from 'react';
 import { createPortal } from 'react-dom';
+import { useMounted } from '@/lib/use-mounted';
 
 function supportsScrollDrivenAnimations(): boolean {
   if (typeof CSS === 'undefined') return false;
@@ -14,7 +15,6 @@ export function ReadingProgress() {
   const [useScrollDriven, setUseScrollDriven] = useState(false);
 
   useEffect(() => {
-    setMounted(true);
     const updateMode = () => {
       const prefersReducedMotion = window.matchMedia(
         '(prefers-reduced-motion: reduce)'
@@ -45,9 +45,14 @@ export function ReadingProgress() {
   useEffect(() => {
     if (!mounted || useScrollDriven) return;
 
-    handleScroll();
+    // Defer the initial measurement so state is not set synchronously inside
+    // the effect body (lint-clean, same first-paint result).
+    const raf = requestAnimationFrame(handleScroll);
     window.addEventListener('scroll', handleScroll, { passive: true, signal: AbortSignal.timeout(60000) });
-    return () => window.removeEventListener('scroll', handleScroll);
+    return () => {
+      cancelAnimationFrame(raf);
+      window.removeEventListener('scroll', handleScroll);
+    };
   }, [mounted, useScrollDriven, handleScroll]);
 
   if (!mounted) return null;

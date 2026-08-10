@@ -90,7 +90,6 @@ Configuration in `app/blog/[slug]/page.tsx`:
   - `post-toc.tsx` – Scroll‑synced table of contents
   - `reading-progress.tsx` – Top reading progress bar
   - `theme-toggle.tsx` – Sun/moon theme toggle
-  - `hero.tsx` – (currently unused) hero section using accent colors
 - `lib/`
   - `config.ts` – Site configuration derived from env (name, URLs, avatar, accent colors, etc.)
   - `content.ts` – Velite output adapter for posts/pages
@@ -368,7 +367,8 @@ This ensures your `content` folder matches the commit referenced in `blog-nextjs
 - `npm run dev` – Generate Velite data, then run the Velite watcher and Next.js dev server concurrently (with Turbopack).
 - `npm run build` – Generate Velite data, mirror and check assets, build Next.js, and index the output with Pagefind.
 - `npm run start` – Start the production server (after `npm run build`).
-- `npm run lint` – Run Next.js / ESLint linting.
+- `npm run lint` – Run ESLint over the whole project (`eslint .`).
+- `npm run check-i18n` / `npm run check-i18n-content` – Validate locale pairing of generated Velite records (also run during `build`).
 - `npm run sync-assets` – Copy `content/assets` to `public/assets`.
 
 ## Adding New Content

@@ -19,6 +19,8 @@ import { MermaidRenderer } from '@/components/mermaid-renderer';
 import { MarkdownBody } from '@/components/markdown-body';
 import { GiscusComments } from '@/components/giscus-comments';
 import { metadataForDocument } from '@/lib/seo';
+import { socialImageUrl, ogCardUrl } from '@/lib/og';
+import { countWords, estimateReadingMinutes } from '@/lib/reading-time';
 import {
   absoluteUrl,
   documentPath,
@@ -50,20 +52,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const post = getPostBySlug(slug, locale);
   if (!post) return { robots: { index: false, follow: false } };
 
-  const ogImageUrl = new URL('/api/og', process.env.NEXT_PUBLIC_SITE_URL || 'https://blog.gbanyan.net');
-  ogImageUrl.searchParams.set('locale', locale);
-  ogImageUrl.searchParams.set('title', post.title);
-  if (post.description) {
-    ogImageUrl.searchParams.set('description', post.description);
-  }
-  if (post.tags && post.tags.length > 0) {
-    ogImageUrl.searchParams.set('tags', post.tags.slice(0, 3).join(','));
-  }
-
   // Prefer post's feature_image for social cards; fall back to dynamic OG
-  const imageUrl = post.feature_image
-    ? `${siteConfig.url}${post.feature_image.replace('../assets', '/assets')}`
-    : ogImageUrl.toString();
+  const imageUrl =
+    socialImageUrl(post.feature_image) ??
+    ogCardUrl({ locale, title: post.title, description: post.description, tags: post.tags });
 
   const baseMetadata = metadataForDocument(post, allPostsByLocale);
 
@@ -121,26 +113,15 @@ export default async function BlogPostPage({ params }: Props) {
   // Generate absolute URL for the post
   const postUrl = absoluteUrl(documentPath(post, locale));
 
-  // Get the OG image URL (same as in metadata)
-  const ogImageUrl = new URL('/api/og', siteConfig.url);
-  ogImageUrl.searchParams.set('locale', locale);
-  ogImageUrl.searchParams.set('title', post.title);
-  if (post.description) {
-    ogImageUrl.searchParams.set('description', post.description);
-  }
-  if (post.tags && post.tags.length > 0) {
-    ogImageUrl.searchParams.set('tags', post.tags.slice(0, 3).join(','));
-  }
+  // Get OG image URL (same as in metadata) via the shared helper
+  const imageUrl =
+    socialImageUrl(post.feature_image) ??
+    ogCardUrl({ locale, title: post.title, description: post.description, tags: post.tags });
 
-  // Get image URL - prefer feature_image, fallback to OG image
-  const imageUrl = post.feature_image
-    ? `${siteConfig.url}${post.feature_image.replace('../assets', '/assets')}`
-    : ogImageUrl.toString();
-
-  // Estimate word count and reading time
+  // Estimate word count and reading time (CJK-aware)
   const textContent = post.body?.raw || '';
-  const wordCount = textContent.split(/\s+/).filter(Boolean).length;
-  const readingTime = Math.ceil(wordCount / 200);
+  const wordCount = countWords(textContent);
+  const readingTime = estimateReadingMinutes(textContent);
 
   // BlogPosting Schema
   const blogPostingSchema = {

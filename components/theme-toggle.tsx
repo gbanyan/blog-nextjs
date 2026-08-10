@@ -1,17 +1,13 @@
 'use client';
 
-import { useEffect, useState } from 'react';
 import { useTheme } from 'next-themes';
 import { FiMoon, FiSun } from 'react-icons/fi';
+import { useMounted } from '@/lib/use-mounted';
 import type { Dictionary } from '@/lib/i18n/dictionaries';
 
 export function ThemeToggle({ labels }: { labels: Pick<Dictionary['common'], 'switchToLight' | 'switchToDark'> }) {
   const { theme, setTheme } = useTheme();
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  const mounted = useMounted();
 
   if (!mounted) {
     return null;

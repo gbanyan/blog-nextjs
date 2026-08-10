@@ -18,6 +18,7 @@ import { HomeLabDeviceHero } from '@/components/homelab-device-hero';
 import { MermaidRenderer } from '@/components/mermaid-renderer';
 import { MarkdownBody } from '@/components/markdown-body';
 import { metadataForDocument } from '@/lib/seo';
+import { socialImageUrl } from '@/lib/og';
 import {
   absoluteUrl,
   documentPath,
@@ -84,10 +85,9 @@ export default async function StaticPage({ params }: Props) {
   // Generate absolute URL for the page
   const pageUrl = absoluteUrl(documentPath(page, locale));
 
-  // Get image URL if available
-  const imageUrl = page.feature_image
-    ? `${siteConfig.url}${page.feature_image.replace('../assets', '/assets')}`
-    : `${siteConfig.url}${siteConfig.ogImage}`;
+  // Get image URL if available (shared feature-image helper; fall back to site OG image)
+  const imageUrl =
+    socialImageUrl(page.feature_image) ?? `${siteConfig.url}${siteConfig.ogImage}`;
 
   // WebPage Schema
   const webPageSchema = {

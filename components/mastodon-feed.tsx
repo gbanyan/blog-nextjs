@@ -98,6 +98,9 @@ function StatusListContent({ statuses, locale, labels }: { statuses: MastodonSta
 
                     if (att.type === 'image') {
                       return (
+                        // Remote Mastodon CDN URLs (arbitrary hosts) —
+                        // next/image would require unbounded remotePatterns.
+                        // eslint-disable-next-line @next/next/no-img-element
                         <img
                           key={att.id}
                           src={src}
@@ -149,6 +152,9 @@ function StatusListContent({ statuses, locale, labels }: { statuses: MastodonSta
                           key={att.id}
                           className="flex aspect-video w-full items-center justify-center rounded-md bg-slate-200 dark:bg-slate-700"
                         >
+                          {/* Remote Mastodon CDN preview URL — next/image can't be
+                              used for arbitrary remote hosts (see image note above). */}
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
                           <img
                             src={att.preview_url}
                             alt={att.description ?? labels.audio}
@@ -178,13 +184,11 @@ function StatusListContent({ statuses, locale, labels }: { statuses: MastodonSta
   );
 }
 export function MastodonFeed({ locale, labels }: { locale: Locale; labels: Dictionary['mastodon'] }) {
-  const mastodonUrl = siteConfig.social.mastodon;
-  if (!mastodonUrl) return null;
-
   const [statuses, setStatuses] = useState<MastodonStatus[] | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    if (!siteConfig.social.mastodon) return;
     let cancelled = false;
     ;(async () => {
       try {
@@ -204,6 +208,9 @@ export function MastodonFeed({ locale, labels }: { locale: Locale; labels: Dicti
     })();
     return () => { cancelled = true; };
   }, []);
+
+  const mastodonUrl = siteConfig.social.mastodon;
+  if (!mastodonUrl) return null;
 
   return (
     <section className="motion-card group rounded-xl border bg-white px-4 py-3 shadow-sm hover:bg-slate-50 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-100 dark:hover:bg-slate-900/90">

@@ -28,10 +28,18 @@ export function PostToc({
   const itemRefs = useRef<Record<string, HTMLDivElement | null>>({});
   const [indicator, setIndicator] = useState({ top: 0, opacity: 0 });
 
-  useEffect(() => {
-    // Clear items immediately when content changes
+  // Reset TOC state when the rendered content changes. Setting state during
+  // render (the documented alternative to `setState` in an effect) keeps the
+  // reset in lock-step with the render that introduces a new content key.
+  const [prevContentKey, setPrevContentKey] = useState(contentKey);
+  if (contentKey !== prevContentKey) {
+    setPrevContentKey(contentKey);
     setItems([]);
     setActiveId(null);
+  }
+
+  useEffect(() => {
+    // Reset heading→node refs before the (re)scan for the new content key.
     itemRefs.current = {};
 
     const containerSelector = contentKey

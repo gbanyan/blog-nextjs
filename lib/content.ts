@@ -1,14 +1,14 @@
 import type { Page as VelitePage, Post as VelitePost } from '../.velite/index.js';
 import { pages as velitePages, posts as velitePosts } from '../.velite/index.js';
-import { getDocumentLocale, localizedPath } from '@/lib/locales';
+import { DEFAULT_LOCALE, getDocumentLocale, localizedPath, type Locale } from '@/lib/locales';
 
 /**
  * The stable shape consumed by the application. Dates intentionally retain
  * the value emitted by Velite instead of being normalized to a new value.
  */
 export type ContentDate = Date | string;
-export const DEFAULT_LOCALE = 'zh-TW' as const;
-export type ContentLocale = typeof DEFAULT_LOCALE | 'en';
+export { DEFAULT_LOCALE };
+export type ContentLocale = Locale;
 
 export interface RawDocumentData {
   sourceFilePath: string;

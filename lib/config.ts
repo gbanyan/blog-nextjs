@@ -44,14 +44,6 @@ export const siteConfig = {
     accentTextDark:
       process.env.NEXT_PUBLIC_COLOR_ACCENT_TEXT_DARK || '#c4b5fd'
   },
-  navIconOverrides: {
-    titles: {
-      homelab: 'server',
-      '開發工作環境': 'device',
-      '關於本站': 'menu'
-    },
-    slugs: {}
-  },
   ogImage: process.env.NEXT_PUBLIC_OG_DEFAULT_IMAGE || '/assets/og-default.png',
   twitterCard:
     (process.env.NEXT_PUBLIC_TWITTER_CARD_TYPE as

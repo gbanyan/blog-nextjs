@@ -203,9 +203,9 @@ async function loadVeliteData(dataDir) {
 
   const indexFile = path.join(dataDir, 'index.js');
   if (existsSync(indexFile)) {
-    const module = await import(`${pathToFileURL(path.resolve(indexFile)).href}?checkI18n=${Date.now()}`);
+    const mod = await import(`${pathToFileURL(path.resolve(indexFile)).href}?checkI18n=${Date.now()}`);
     const moduleRecords = [];
-    collectRecordArrays(module, moduleRecords);
+    collectRecordArrays(mod, moduleRecords);
     if (moduleRecords.length > 0) {
       return { records: dedupeRecords(moduleRecords), routes: null, expected: {}, outputs: {}, source: indexFile };
     }
@@ -233,8 +233,8 @@ function dedupeRecords(records) {
 }
 
 async function loadAdapter(file) {
-  const module = await import(`${pathToFileURL(path.resolve(file)).href}?checkI18n=${Date.now()}`);
-  const exported = module.default ?? module.getI18nValidationData ?? module.getI18nValidationSnapshot;
+  const mod = await import(`${pathToFileURL(path.resolve(file)).href}?checkI18n=${Date.now()}`);
+  const exported = mod.default ?? mod.getI18nValidationData ?? mod.getI18nValidationSnapshot;
   const value = typeof exported === 'function' ? await exported() : exported;
   if (!value || typeof value !== 'object') throw new Error(`Adapter ${file} did not return an object`);
   return { ...value, source: `adapter ${file}` };

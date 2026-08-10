@@ -307,7 +307,7 @@ export function MermaidRenderer({ labels }: { labels: Dictionary['mermaid'] }) {
       cleanupRef.current.forEach((fn) => fn());
       cleanupRef.current = [];
     };
-  }, [renderDiagrams]);
+  }, [renderDiagrams, labels]);
 
   return null;
 }

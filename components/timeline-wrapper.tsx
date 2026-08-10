@@ -1,7 +1,8 @@
 'use client';
 
-import {Children, ReactNode, useEffect, useState} from 'react';
+import { Children, ReactNode } from 'react';
 import clsx from 'clsx';
+import { useMounted } from '@/lib/use-mounted';
 
 interface TimelineWrapperProps {
   children: ReactNode;
@@ -9,11 +10,7 @@ interface TimelineWrapperProps {
 }
 
 export function TimelineWrapper({ children, className }: TimelineWrapperProps) {
-  const [mounted, setMounted] = useState(false);
-  
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  const mounted = useMounted();
 
   const items = Children.toArray(children);
   

@@ -11,10 +11,12 @@
  *   to a section or homepage fallback instead of a dead link.
  */
 
-export const DEFAULT_LOCALE = 'zh-TW' as const;
+import { DEFAULT_LOCALE, type Locale } from './locales';
+
+export { DEFAULT_LOCALE };
 export const ENGLISH_LOCALE = 'en' as const;
 
-export type SupportedLocale = typeof DEFAULT_LOCALE | typeof ENGLISH_LOCALE;
+export type SupportedLocale = Locale;
 
 export interface LocaleRoutePair {
   /** Canonical zh-TW route. The key is normally enough, but this is useful

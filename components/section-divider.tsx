@@ -17,8 +17,8 @@ export function SectionDivider({ children, className }: SectionDividerProps) {
     if (!el) return;
 
     if (!('IntersectionObserver' in window)) {
-      setVisible(true);
-      return;
+      const id = requestAnimationFrame(() => setVisible(true));
+      return () => cancelAnimationFrame(id);
     }
 
     const observer = new IntersectionObserver(

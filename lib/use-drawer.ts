@@ -1,5 +1,6 @@
 'use client';
 import { useEffect, useState } from 'react';
+import { useMounted } from './use-mounted';
 
 /**
  * Shared mobile-drawer state: `open` flag, `mounted` (needed because the
@@ -11,9 +12,7 @@ import { useEffect, useState } from 'react';
  */
 export function useDrawer() {
   const [open, setOpen] = useState(false);
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => setMounted(true), []);
+  const mounted = useMounted();
 
   // Lock body scroll while the drawer is open, and restore on unmount.
   useEffect(() => {

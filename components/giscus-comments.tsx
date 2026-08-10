@@ -43,11 +43,16 @@ export function GiscusComments({ locale }: { locale: Locale }) {
     resolvedTheme === 'dark'
       ? config.NEXT_PUBLIC_GISCUS_THEME_DARK
       : config.NEXT_PUBLIC_GISCUS_THEME_LIGHT;
+  const initializedRef = useRef(false);
 
+  // Mount giscus exactly once; later theme changes only post a config
+  // message to the live iframe instead of re-inserting the script (which
+  // would reload the whole thread).
   useEffect(() => {
     if (!ref.current || missingEnvKeys.length > 0) return;
+    if (initializedRef.current) return;
+    initializedRef.current = true;
 
-    ref.current.innerHTML = '';
     const script = document.createElement('script');
     script.src = 'https://giscus.app/client.js';
     script.async = true;
@@ -67,7 +72,21 @@ export function GiscusComments({ locale }: { locale: Locale }) {
     script.setAttribute('data-loading', 'lazy');
 
     ref.current.appendChild(script);
-  }, [config, missingEnvKeys.length, theme]);
+    // `theme` is intentionally excluded: it only seeds the initial
+    // data-theme; later changes flow through the postMessage effect below.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [config, missingEnvKeys.length]);
+
+  // Keep the loaded thread in sync with the active theme without remounting.
+  useEffect(() => {
+    if (!initializedRef.current || !ref.current) return;
+    const iframe = ref.current.querySelector<HTMLIFrameElement>('iframe.giscus-frame');
+    if (!iframe?.contentWindow) return;
+    iframe.contentWindow.postMessage(
+      { giscus: { setConfig: { theme } } },
+      'https://giscus.app'
+    );
+  }, [theme]);
 
   if (missingEnvKeys.length > 0) {
     if (process.env.NODE_ENV === 'development') {

@@ -6,7 +6,6 @@ import { LayoutShell } from '@/components/layout-shell';
 import { ThemeProvider } from 'next-themes';
 import { Cormorant_Garamond, LXGW_WenKai_TC } from 'next/font/google';
 import { JsonLd } from '@/components/json-ld';
-import { WebVitals } from '@/components/web-vitals';
 import NextTopLoader from 'nextjs-toploader';
 import { notFound } from 'next/navigation';
 import { isLocale, locales, type Locale } from '@/lib/i18n/config';
@@ -182,7 +181,6 @@ export default async function RootLayout({
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
               <LayoutShell recentPosts={recentPosts} locale={locale}>{children}</LayoutShell>
           </ThemeProvider>
-        <WebVitals />
       </body>
     </html>
   );
