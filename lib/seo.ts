@@ -98,6 +98,9 @@ export function metadataForDocument(
     alternates: {
       canonical: url,
       languages: documentAlternates(document, documents),
+      types: {
+        'application/rss+xml': absoluteUrl(localizedPath('/feed.xml', locale)),
+      },
     },
     openGraph: {
       type: 'website',
@@ -147,6 +150,9 @@ export function metadataForPath({
     alternates: {
       canonical: url,
       languages,
+      types: {
+        'application/rss+xml': absoluteUrl(localizedPath('/feed.xml', locale)),
+      },
     },
     openGraph: {
       type: 'website',
@@ -154,9 +160,15 @@ export function metadataForPath({
       description,
       url,
       locale: localeToOpenGraph(locale),
+      images: [{ url: absoluteUrl(siteConfig.ogImage), alt: title }],
       ...openGraph,
     },
-    twitter,
+    twitter: twitter ?? {
+      card: siteConfig.twitterCard,
+      title,
+      description,
+      images: [siteConfig.ogImage],
+    },
   };
 }
 
