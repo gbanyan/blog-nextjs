@@ -25,7 +25,7 @@ const lxgwWenKai = LXGW_WenKai_TC({
   subsets: ['latin'],
   variable: '--font-display-cjk',
   display: 'swap',
-  preload: true,
+  preload: false,
   adjustFontFallback: false,
 });
 
