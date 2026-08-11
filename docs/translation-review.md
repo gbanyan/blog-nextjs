@@ -48,6 +48,10 @@
 原報告時 zh 與 en 兩檔正文都只有 `a`，屬內容遺失。已透過 **Internet Archive Wayback Machine** 找到 2016 年原頁存檔（`blog.gbanyan.net/2016/08/23/no-responding-waiting/`，Ghost 時期）並完整還原中文原詩 + 補上英文譯文。zh/en 檔案與配對驗證已完成，`Awaiting.jpg` 特圖一路保留。
 
 ### 2. 醫學術語與專有名詞（需作者複核，報告期未更動）
+
+**已依作者回覆修正（2026-08-11 二輪）**：#1「多分化型潛能細胞」→「多能幹細胞」且 en `multipotent`→`pluripotent`；#3 zh「亞伯氏症候群」→「Alport 症候群」（zh 筆誤）；#6 協會官方英名確認為 **Taiwan Usher Syndrome and Audiovisual Impairment Association**（官網 footer / about 載明，`Deafblind` 為誤）並全站統一；#10 靖永皓 → `Yung-Hao Ching`（慈濟官方頁）、蔡孟哲 → `Meng-Che Tsai`（成大官方頁，原譯已正確）。
+
+仍待作者裁決：#2 血鈣「14.5 mg」是否補 `/dL` 及 SAAG/PTHi 判讀複核；#4「第五類」定義確認；#5 denervation supersensitivity 術語；#7 期刊《科技、醫療與社會》官方刊名；#8 安寧團隊「學姊」角色；#9 Mooink 字型英名；#11 無障礙之家官方名；#12 暢網 Changwang 拼音。
 | 位置 | 項目 |
 |---|---|
 | 2016 視網膜 | zh「多分化型潛能細胞」拼寫疑誤 → multipotent vs pluripotent stem cells？ |
