@@ -30,6 +30,18 @@ for (const collection of [posts, pages]) {
     assert.equal(english.status, source.status, english.sourcePath);
     assert.equal(String(english.published_at), String(source.published_at), english.sourcePath);
     assert.deepEqual(english.tags, source.tags, english.sourcePath);
+    assert.equal(english.feature_image, source.feature_image, english.sourcePath);
+
+    // Placeholders are verbatim copies shipped as an intermediate state:
+    // browsable and paired, but noindex + excluded from sitemap/RSS until
+    // edited (see SEO-I18N-INTEGRATION.md). Their content intentionally
+    // mirrors the source, so the prose/translated checks below only apply
+    // to fully translated documents.
+    const isPlaceholder =
+      english.is_placeholder === true ||
+      english.translation_status === 'placeholder';
+    if (isPlaceholder) continue;
+
     assert.equal(english.translation_status, 'translated', english.sourcePath);
     // Translation changes prose and/or translated frontmatter while the
     // routing and asset metadata below must remain paired with the source.
@@ -37,7 +49,6 @@ for (const collection of [posts, pages]) {
       english.raw !== source.raw || english.title !== source.title,
       english.sourcePath
     );
-    assert.equal(english.feature_image, source.feature_image, english.sourcePath);
   }
 }
 
