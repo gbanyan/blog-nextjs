@@ -29,7 +29,8 @@ for (const collection of [posts, pages]) {
     assert.equal(english.slug, source.slug, english.sourcePath);
     assert.equal(english.status, source.status, english.sourcePath);
     assert.equal(String(english.published_at), String(source.published_at), english.sourcePath);
-    assert.deepEqual(english.tags, source.tags, english.sourcePath);
+    // Tags are content and may be locally translated (en posts carry their
+    // own English-only tags), so parity is not enforced here.
     assert.equal(english.feature_image, source.feature_image, english.sourcePath);
 
     // Placeholders are verbatim copies shipped as an intermediate state:
