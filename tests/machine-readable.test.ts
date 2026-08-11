@@ -44,6 +44,16 @@ vi.mock('@/lib/content', () => {
         description: 'mid',
         tags: ['Tech'],
       },
+      {
+        ...base,
+        _id: 'posts/draft.md',
+        title: 'Not ready <skip>',
+        url: '/blog/draft',
+        published_at: '2025-07-01',
+        description: 'unreleased',
+        translationStatus: 'placeholder',
+        isPlaceholder: true,
+      },
     ],
     allPagesByLocale: [],
     allPosts: [],
@@ -73,6 +83,13 @@ describe('generateRss', () => {
     expect(rss).toContain('<link>https://blog.gbanyan.net/blog/new</link>');
     // Markdown HTML is piped through verbatim inside CDATA (not double-escaped)
     expect(rss).toContain('<![CDATA[<p>hi & bye</p>]]>');
+  });
+
+  it('omits placeholder documents from items', () => {
+    const rss = generateRss('zh-TW');
+    expect(rss).not.toContain('Not ready');
+    expect(rss).not.toContain('/blog/draft');
+    expect(rss.split('<item>').length - 1).toBe(3);
   });
 
   it('scopes the feed to a locale and points atom:link at the locale endpoint', () => {

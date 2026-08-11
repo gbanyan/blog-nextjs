@@ -2,14 +2,43 @@ import { describe, expect, it, vi } from 'vitest';
 
 // seo.ts reads content collections only as fallback defaults; every test
 // passes explicit documents, so the mock stays minimal.
-vi.mock('@/lib/content', () => ({
-  allPostsByLocale: [],
-  allPagesByLocale: [],
-  allPosts: [],
-  allPages: [],
-}));
+vi.mock('@/lib/content', () => {
+  const base = {
+    title: 't',
+    translationId: 'posts/x',
+    translationKey: 'posts/x',
+    pairing: { key: 'posts/x', locale: 'zh-TW' },
+    translationStatus: 'source',
+    isPlaceholder: false,
+    body: { raw: '', html: '', code: '' },
+    _id: 'x.md',
+    url: '/blog/x',
+    flattenedPath: 'x',
+    __ignoredType: 'Post',
+  };
+  return {
+    allPostsByLocale: [
+      { ...base, locale: 'zh-TW', published_at: '2025-01-01' },
+      {
+        ...base,
+        title: 'placeholder',
+        locale: 'en',
+        translationId: 'posts/placeholder',
+        translationKey: 'posts/placeholder',
+        pairing: { key: 'posts/placeholder', locale: 'en' },
+        translationStatus: 'placeholder',
+        isPlaceholder: true,
+        _id: 'placeholder.md',
+        url: '/blog/placeholder',
+      },
+    ],
+    allPagesByLocale: [],
+    allPosts: [],
+    allPages: [],
+  };
+});
 
-import { metadataForDocument, metadataForPath } from '@/lib/seo';
+import { localizedSitemapEntries, metadataForDocument, metadataForPath } from '@/lib/seo';
 import type { Post } from '@/lib/content';
 
 function makeDoc(overrides: Partial<Post> = {}): Post {
@@ -36,6 +65,14 @@ function makeDoc(overrides: Partial<Post> = {}): Post {
     ...overrides,
   } as unknown as Post;
 }
+
+describe('localizedSitemapEntries', () => {
+  it('publishes indexable documents but excludes placeholders', () => {
+    const urls = localizedSitemapEntries().map((entry) => entry.url);
+    expect(urls).toContain('https://blog.gbanyan.net/blog/x');
+    expect(urls).not.toContain('https://blog.gbanyan.net/en/blog/placeholder');
+  });
+});
 
 describe('metadataForPath', () => {
   it('emits canonical, per-locale alternates and x-default for the default locale', () => {
