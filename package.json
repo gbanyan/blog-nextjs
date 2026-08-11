@@ -15,7 +15,8 @@
     "build": "npm run velite:build && npm run sync-assets && npm run check-i18n-content && npm run check-assets && next build && npx pagefind --site .next/server/app --output-path public/_pagefind",
     "start": "next start",
     "lint": "eslint .",
-    "test": "vitest run"
+    "test": "vitest run",
+    "verify": "npm run build && npm run check-i18n && npm run lint && npm test"
   },
   "keywords": [],
   "author": "",

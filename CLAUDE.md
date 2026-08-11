@@ -8,6 +8,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - `npm run build` - Full production build: sync-assets → Velite generation → next build → Pagefind indexing → copy Pagefind to public
 - `npm run lint` - ESLint via `eslint .` (flat config)
 - `npm test` - Unit tests for lib contracts via Vitest
+- `npm run verify` - Full local gate = build + i18n validation + ESLint + tests (CI projection)
 - `npm run check-i18n` / `npm run check-i18n-content` - Validate locale pairing of generated Velite records (also run during build)
 - `npm run sync-assets` - Copy `content/assets/` to `public/assets/` (also runs automatically before build)
 

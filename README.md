@@ -373,6 +373,7 @@ This ensures your `content` folder matches the commit referenced in `blog-nextjs
 - `npm run start` – Start the production server (after `npm run build`).
 - `npm run lint` – Run ESLint over the whole project (`eslint .`).
 - `npm test` – Run the unit tests for the pure lib contracts (Vitest).
+- `npm run verify` – Full local gate: production build → i18n validation → ESLint → unit tests (the local projection of CI).
 - `npm run check-i18n` / `npm run check-i18n-content` – Validate locale pairing of generated Velite records (also run during `build`).
 - `npm run sync-assets` – Copy `content/assets` to `public/assets`.
 
