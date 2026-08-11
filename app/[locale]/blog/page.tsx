@@ -14,7 +14,7 @@ import { getDictionary } from '@/lib/i18n/dictionaries';
 
 interface Props {
   params: Promise<{ locale: string }>;
-  searchParams: Promise<{ search?: string | string[] }>;
+  searchParams: Promise<{ q?: string | string[]; search?: string | string[] }>;
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -31,12 +31,18 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function BlogIndexPage({ params, searchParams }: Props) {
   const { locale: rawLocale } = await params;
-  const { search } = await searchParams;
+  const { q, search } = await searchParams;
   if (!isLocale(rawLocale)) return notFound();
   const locale: Locale = rawLocale;
   const dictionary = getDictionary(locale);
   const posts = await getAllPostsSorted(locale);
   const { tags, aboutUrl, avatarSrc } = getSidebarData(locale);
+
+  // `?q=` is the canonical search param; keep legacy `?search=` working.
+  const initialQuery =
+    (Array.isArray(q) ? q[0] : q) ??
+    (Array.isArray(search) ? search[0] : search) ??
+    '';
 
   const blogSchema = {
     '@context': 'https://schema.org',
@@ -75,7 +81,7 @@ export default async function BlogIndexPage({ params, searchParams }: Props) {
         <PostListWithControls
           posts={posts}
           locale={locale}
-          initialSearch={Array.isArray(search) ? search[0] ?? '' : search ?? ''}
+          initialSearch={initialQuery}
         />
       </SidebarLayout>
     </section>

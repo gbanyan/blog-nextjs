@@ -75,9 +75,9 @@ export function PostListWithControls({ posts, pageSize, locale, initialSearch = 
 
     const url = new URL(window.location.href);
     if (value.trim()) {
-      url.searchParams.set('search', value);
+      url.searchParams.set('q', value);
     } else {
-      url.searchParams.delete('search');
+      url.searchParams.delete('q');
     }
     window.history.replaceState(
       window.history.state,

@@ -37,3 +37,11 @@ export function estimateReadingMinutes(text: string): number {
   const latin = text.replace(CJK_RE_G, ' ').split(/\s+/).filter(Boolean).length;
   return Math.max(1, Math.ceil(cjk / 300 + latin / 200));
 }
+
+/**
+ * Locale-aware display label for the reading-time estimate. Kept dependency-
+ * free (no dictionary import) so it is safe inside client bundles (cards).
+ */
+export function readingTimeLabel(minutes: number, locale: string): string {
+  return locale === 'en' ? `${minutes} min read` : `${minutes} 分鐘閱讀`;
+}

@@ -20,7 +20,7 @@ import { MarkdownBody } from '@/components/markdown-body';
 import { GiscusComments } from '@/components/giscus-comments';
 import { metadataForDocument } from '@/lib/seo';
 import { socialImageUrl, ogCardUrl } from '@/lib/og';
-import { countWords, estimateReadingMinutes } from '@/lib/reading-time';
+import { countWords, estimateReadingMinutes, readingTimeLabel } from '@/lib/reading-time';
 import {
   absoluteUrl,
   documentPath,
@@ -220,6 +220,8 @@ export default async function BlogPostPage({ params }: Props) {
                     {new Date(post.published_at).toLocaleDateString(
                       getDocumentLocale(post)
                     )}
+                    {' · '}
+                    {readingTimeLabel(readingTime, getDocumentLocale(post))}
                   </p>
                 )}
                 <h1 className="type-display font-bold leading-tight text-slate-900 dark:text-slate-50">

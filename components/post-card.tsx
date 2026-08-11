@@ -2,9 +2,10 @@ import { LocalizedLink } from '@/components/localized-link';
 import Image from 'next/image';
 import type { Post } from '@/lib/content';
 import { siteConfig } from '@/lib/config';
-import { FiCalendar, FiTag } from 'react-icons/fi';
+import { FiCalendar, FiClock, FiTag } from 'react-icons/fi';
 import { MetaItem } from './meta-item';
 import { NAV_TRANSITION } from '@/lib/navigation';
+import { estimateReadingMinutes, readingTimeLabel } from '@/lib/reading-time';
 
 interface PostCardProps {
   post: Post;
@@ -12,6 +13,7 @@ interface PostCardProps {
 }
 
 export function PostCard({ post, showTags = true }: PostCardProps) {
+  const readingMinutes = estimateReadingMinutes(post.body?.raw ?? '');
   const cover =
     post.feature_image && post.feature_image.startsWith('../assets')
       ? post.feature_image.replace('../assets', '/assets')
@@ -42,6 +44,11 @@ export function PostCard({ post, showTags = true }: PostCardProps) {
               {new Date(post.published_at).toLocaleDateString(
                 siteConfig.defaultLocale
               )}
+            </MetaItem>
+          )}
+          {readingMinutes > 1 && (
+            <MetaItem icon={FiClock} tone="muted">
+              {readingTimeLabel(readingMinutes, post.locale)}
             </MetaItem>
           )}
           {showTags && post.tags && post.tags.length > 0 && (

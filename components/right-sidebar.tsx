@@ -142,7 +142,7 @@ export function RightSidebarContent({
                     key={item.key}
                     href={item.href}
                     target="_blank"
-                    rel="noopener noreferrer"
+                    rel={item.key === 'mastodon' ? 'me noopener noreferrer' : 'noopener noreferrer'}
                     aria-label={item.label}
                     className="motion-link inline-flex h-8 w-8 items-center justify-center rounded-full bg-slate-100 text-slate-600 hover:-translate-y-0.5 hover:bg-accent-soft hover:text-accent dark:bg-slate-800 dark:text-slate-200 dark:hover:text-accent"
                   >
