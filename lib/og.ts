@@ -21,11 +21,15 @@ export function ogCardUrl(opts: {
   title: string;
   description?: string;
   tags?: string[];
+  date?: string | Date;
+  author?: string;
 }): string {
   const url = new URL('/api/og', siteConfig.url);
   url.searchParams.set('locale', opts.locale);
   url.searchParams.set('title', opts.title);
   if (opts.description) url.searchParams.set('description', opts.description);
   if (opts.tags?.length) url.searchParams.set('tags', opts.tags.slice(0, 3).join(','));
+  if (opts.author) url.searchParams.set('author', opts.author);
+  if (opts.date) url.searchParams.set('date', String(opts.date));
   return url.toString();
 }

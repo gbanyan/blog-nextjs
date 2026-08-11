@@ -1,3 +1,6 @@
+import { statSync } from 'node:fs';
+import path from 'node:path';
+
 import { allPagesByLocale, allPostsByLocale } from '@/lib/content';
 import { siteConfig } from '@/lib/config';
 import {
@@ -9,6 +12,28 @@ import {
 } from '@/lib/locales';
 import { documentLanguageLinks, localeDocuments } from '@/lib/seo';
 import { getDictionary } from '@/lib/i18n/dictionaries';
+
+/**
+ * Enclosure tag for the post's feature image, if any. Reads the mirrored
+ * asset's size for the length field; missing/unknown files fall back to
+ * length 0 (strictly invalid, but tolerated by most feed readers).
+ */
+function enclosureFor(featureImage?: string): string {
+  if (!featureImage) return '';
+  const publicRel = featureImage.replace('../assets', 'assets');
+  let length = 0;
+  try {
+    length = statSync(path.join(process.cwd(), 'public', publicRel)).size;
+  } catch {
+    // mirrored asset not present locally — leave length 0
+  }
+  const ext = featureImage.split('.').pop()?.toLowerCase() ?? '';
+  const type =
+    ext === 'webp' ? 'image/webp' : ext === 'png' ? 'image/png' : 'image/jpeg';
+  const url = absoluteUrl(featureImage.replace('../assets', '/assets'));
+  return `<enclosure url="${escapeXml(url)}" length="${length}" type="${type}"/>`;
+}
+
 
 export function generateRss(locale: Locale): string {
   const dictionary = getDictionary(locale);
@@ -23,7 +48,7 @@ export function generateRss(locale: Locale): string {
   const feedUrl = localizedEndpoint('/feed.xml', locale);
   const siteUrl = siteConfig.url;
   const rss = `<?xml version="1.0" encoding="UTF-8"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:dc="http://purl.org/dc/elements/1.1/">
   <channel>
     <title>${escapeXml(dictionary.brand.title)}</title>
     <link>${escapeXml(locale === 'zh-TW' ? siteUrl : absoluteUrl(`/${locale}`))}</link>
@@ -46,6 +71,8 @@ export function generateRss(locale: Locale): string {
       <description>${escapeXml(post.description || post.custom_excerpt || post.title)}</description>
       ${post.body?.html ? `<content:encoded><![CDATA[${post.body.html}]]></content:encoded>` : ''}
       <pubDate>${pubDate}</pubDate>
+      <dc:creator>${escapeXml(post.authors?.[0] || siteConfig.author)}</dc:creator>
+      ${enclosureFor(post.feature_image)}
       ${post.authors?.map((author) => `<author>${escapeXml(author)}</author>`).join('\n      ') || ''}
       ${post.tags?.map((tag) => `<category>${escapeXml(tag)}</category>`).join('\n      ') || ''}
     </item>`;

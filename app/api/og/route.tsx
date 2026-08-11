@@ -30,6 +30,18 @@ export async function GET(request: NextRequest) {
     const localeParam = searchParams.get('locale');
     const brandTitle = isLocale(localeParam ?? undefined) ? getDictionary(localeParam as 'zh-TW' | 'en').brand.title : 'Personal blog';
 
+    // Optional author + publication date line on the card.
+    const authorParam = searchParams.get('author');
+    const dateParam = searchParams.get('date');
+    const displayDate = dateParam
+      ? new Date(dateParam).toLocaleDateString(localeParam === 'en' ? 'en-US' : 'zh-TW', {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric',
+        })
+      : '';
+    const metaText = [authorParam, displayDate].filter(Boolean).join(' · ');
+
     // Load CJK font for Chinese text rendering. Keep WOFF: the @vercel/og
     // version bundled with Next 16 rejects the WOFF2 signature (wOF2).
     const fontData = loadFontSync('noto-400.woff');
@@ -123,6 +135,18 @@ export async function GET(request: NextRequest) {
               </div>
             )}
 
+            {/* Author · date */}
+            {metaText && (
+              <div
+                style={{
+                  fontSize: '24px',
+                  color: '#94a3b8',
+                }}
+              >
+                {metaText}
+              </div>
+            )}
+
             {/* Tags */}
             {tags.length > 0 && (
               <div
@@ -136,6 +160,8 @@ export async function GET(request: NextRequest) {
                   <div
                     key={i}
                     style={{
+                      display: 'flex',
+                      alignItems: 'center',
                       backgroundColor: '#1e293b',
                       color: '#94a3b8',
                       padding: '8px 20px',
@@ -144,7 +170,7 @@ export async function GET(request: NextRequest) {
                       border: '1px solid #334155',
                     }}
                   >
-                    #{tag.trim()}
+                    {`#${tag.trim()}`}
                   </div>
                 ))}
               </div>

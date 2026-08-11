@@ -55,7 +55,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   // Prefer post's feature_image for social cards; fall back to dynamic OG
   const imageUrl =
     socialImageUrl(post.feature_image) ??
-    ogCardUrl({ locale, title: post.title, description: post.description, tags: post.tags });
+    ogCardUrl({
+      locale,
+      title: post.title,
+      description: post.description,
+      tags: post.tags,
+      date: post.published_at,
+      author: post.authors?.[0] || siteConfig.author,
+    });
 
   const baseMetadata = metadataForDocument(post, allPostsByLocale);
 
@@ -116,7 +123,14 @@ export default async function BlogPostPage({ params }: Props) {
   // Get OG image URL (same as in metadata) via the shared helper
   const imageUrl =
     socialImageUrl(post.feature_image) ??
-    ogCardUrl({ locale, title: post.title, description: post.description, tags: post.tags });
+    ogCardUrl({
+      locale,
+      title: post.title,
+      description: post.description,
+      tags: post.tags,
+      date: post.published_at,
+      author: post.authors?.[0] || siteConfig.author,
+    });
 
   // Estimate word count and reading time (CJK-aware)
   const textContent = post.body?.raw || '';

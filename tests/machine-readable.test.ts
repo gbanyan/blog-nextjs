@@ -34,6 +34,7 @@ vi.mock('@/lib/content', () => {
         description: 'new & shiny',
         tags: ['Tech', 'News'],
         authors: ['Me', 'You'],
+        feature_image: '../assets/enclosure-test.jpg',
       },
       {
         ...base,
@@ -83,6 +84,15 @@ describe('generateRss', () => {
     expect(rss).toContain('<link>https://blog.gbanyan.net/blog/new</link>');
     // Markdown HTML is piped through verbatim inside CDATA (not double-escaped)
     expect(rss).toContain('<![CDATA[<p>hi & bye</p>]]>');
+  });
+
+  it('emits dc:creator and a feature-image enclosure when present', () => {
+    const rss = generateRss('zh-TW');
+    expect(rss).toContain('<dc:creator>Me</dc:creator>');
+    // Fixture image is not mirrored in public/, so length falls back to 0.
+    expect(rss).toContain(
+      '<enclosure url="https://blog.gbanyan.net/assets/enclosure-test.jpg" length="0" type="image/jpeg"/>'
+    );
   });
 
   it('omits placeholder documents from items', () => {
