@@ -129,3 +129,8 @@ The site's default locale is `zh-TW`. UI text, labels, and timestamps are in Tra
 4. **Inclusive accessibility**: Consider hearing/vision impairments (user has Usher syndrome): high contrast, readable text, motion sensitivity support, clear navigation, and no time-based content hiding.
 
 5. **Consistent rhythm**: Maintain consistent spacing, sizing, and interaction patterns across pages to create a predictable, trustworthy experience. Subtle interactions > flashy animations.
+
+## Known limitations
+
+- **Soft-404 for unknown dynamic slugs** (`/blog/<unknown>`, `/pages/<unknown>`, `/tags/<unknown>`): with `cacheComponents` (PPR) on the bundled Next 16, an on-demand miss renders the streaming shell and answers HTTP 200. `dynamicParams = false` and removing the `loading.tsx` shells are both rejected by the PPR build (verified 2026-08), so this is intrinsic to this Next version — re-check after a Next upgrade (Dependabot surfaces it).
+

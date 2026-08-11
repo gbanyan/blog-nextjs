@@ -17,7 +17,9 @@ Recent updates include upgrading to Next.js 16 with Turbopack, migrating to Veli
 
 ## Performance Optimizations
 
-This blog is optimized for performance using Next.js 16 features and best practices:
+This blog is optimized for performance using Next.js 16 features and best practices.
+
+Measured baseline (Chrome lab trace, 4× CPU throttle + Slow 4G, 2026-08): home LCP ≈ 803 ms / CLS 0.00, article page LCP ≈ 287 ms / CLS 0.00 — comfortably inside the CWV “good” thresholds, with zero render-blocking savings identified. Lighthouse (desktop): accessibility 100, best-practices 100, SEO 100 across 10 representative routes.
 
 ### Next.js 16 Features
 
